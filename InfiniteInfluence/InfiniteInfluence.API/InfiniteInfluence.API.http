@@ -1,0 +1,6 @@
+@InfiniteInfluence.API_HostAddress = http://localhost:5003
+
+GET {{InfiniteInfluence.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
