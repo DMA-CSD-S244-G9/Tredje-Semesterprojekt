@@ -29,24 +29,49 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 
     public Influencer? GetByUserId(int userId)
     {
-        string? query = @"
+        string? queryFindInfluencer = @"
                 SELECT
                     u.UserId, u.LoginEmail, u.PasswordHash,
-                    i.InfluencerId, i.IsInfluencerVerified, i.VerificationDate, i.DisplayName, i.FirstName, i.LastName,
-                    i.ProfileImageUrl, i.ListOfInfluencerDomains, i.Age, i.Gender, i.Country, i.State, i.City, i.Languages,
-                    i.Biography, i.InstagramProfileUrl, i.InstagramFollowers, i.YouTubeProfileUrl, i.YouTubeFollowers,
-                    i.TikTokProfileUrl, i.TikTokFollower, i.SnapchatProfileUrl, i.SnapchatFollowers,
-                    i.XProfileUrl, i.XFollowers, i.ContactPhoneNumber, i.ContactEmailAddress
 
-                FROM[User] u
-                INNER JOIN Influencer i ON i.UserId = u.UserId
+                    i.IsInfluencerVerified, i.VerificationDate,
+                    i.DisplayName, i.FirstName, i.LastName,
+                    i.ProfileImageUrl, i.Age, i.Gender, i.Country,
+                    i.InfluencerState, i.City, i.InfluencerLanguage, i.Biography,
+                    i.InstagramProfileUrl, i.InstagramFollowers,
+                    i.YouTubeProfileUrl, i.YouTubeFollowers,
+                    i.TikTokProfileUrl, i.TikTokFollower,
+                    i.SnapchatProfileUrl, i.SnapchatFollowers,
+                    i.XProfileUrl, i.XFollowers,
+                    i.ContactPhoneNumber, i.ContactEmailAddress
+
+                FROM [Users] u
+                INNER JOIN Influencers i ON i.UserId = u.UserId
                 WHERE u.UserId = @UserId;";
+
+
+        string? queryFindInfluencerDomains = @"
+                SELECT domain
+                FROM InfluencerDomains
+                WHERE UserId = @UserId;";
+
 
 
         using IDbConnection connection = CreateConnection();
         {
             // Dapper will be mapping both the BaseUser and the Influencer classes' properties
-            Influencer? foundInfluencer = connection.QuerySingleOrDefault<Influencer>(query, new { UserId = userId });
+            Influencer? foundInfluencer = connection.QuerySingleOrDefault<Influencer>(queryFindInfluencer, new { UserId = userId });
+
+            // Returns null if the influencer is not found using the guard clause
+            if (foundInfluencer == null)
+            {
+                return null;
+            }
+
+            // If the influencer is found then attempt to find the influencers' influencing domains from the InfluencerDomains table
+            IEnumerable<string> domains = connection.Query<string>(queryFindInfluencerDomains, new { UserId = userId });
+
+            // Adds the found domains to the list of influencer domains
+            foundInfluencer.InfluencerDomains = domains.ToList();
 
             return foundInfluencer;
         }
