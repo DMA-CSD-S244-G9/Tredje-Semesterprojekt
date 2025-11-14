@@ -100,8 +100,9 @@ CREATE TABLE Companys (
 
 -- COMPANY DOMAINS
 CREATE TABLE CompanyDomains (
-    userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
+    userId INT NOT NULL, -- Both primary and foreign key
     domain VARCHAR(50) NOT NULL,
+	PRIMARY KEY (userId, domain),
 
 -- CONSTRAINT
 -- Foreign key constraint from CompanyDomains to Companys
@@ -116,8 +117,9 @@ CREATE TABLE CompanyDomains (
 
 -- INFLUENCER DOMAINS
 CREATE TABLE InfluencerDomains (
-    userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
+    userId INT NOT NULL, -- Both primary and foreign key
     domain VARCHAR(50) NOT NULL,
+	PRIMARY KEY (userId, domain),
 
 -- CONSTRAINT
 -- Foreign key constraint from InfluencerDomains to Influencers
@@ -170,8 +172,9 @@ CREATE TABLE Announcements (
 
 -- ANNOUNCEMENT SUBJECTS
 CREATE TABLE AnnouncementSubjects (
-    announcementId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
-    announcementSubject VARCHAR(255) NOT NULL, 
+    announcementId INT NOT NULL, -- Both primary and foreign key
+    announcementSubject VARCHAR(255) NOT NULL,
+	PRIMARY KEY (announcementId, announcementSubject),
 
 -- CONSTRAINT
 -- Foreign key constraint from AnnouncementSubjects to Announcements

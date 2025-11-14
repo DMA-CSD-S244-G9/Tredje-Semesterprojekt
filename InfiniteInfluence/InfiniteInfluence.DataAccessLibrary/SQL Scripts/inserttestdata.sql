@@ -1,16 +1,16 @@
 
 -- USERS (10 users)
-INSERT INTO Users (loginEmail, passwordHash) VALUES
-('influencer1@mail.com', 'hash1'),
-('influencer2@mail.com', 'hash2'),
-('influencer3@mail.com', 'hash3'),
-('influencer4@mail.com', 'hash4'),
-('influencer5@mail.com', 'hash5'),
-('company1@mail.com', 'hash6'),
-('company2@mail.com', 'hash7'),
-('company3@mail.com', 'hash8'),
-('company4@mail.com', 'hash9'),
-('company5@mail.com', 'hash10');
+INSERT INTO Users (userId, loginEmail, passwordHash) VALUES
+(1, 'anna@mail.com', 'hash1'),
+(2, 'tom@mail.com', 'hash2'),
+(3, 'influencer3@mail.com', 'hash3'),
+(4, 'influencer4@mail.com', 'hash4'),
+(5, 'influencer5@mail.com', 'hash5'),
+(6, 'company1@mail.com', 'hash6'),
+(7, 'company2@mail.com', 'hash7'),
+(8, 'company3@mail.com', 'hash8'),
+(9, 'company4@mail.com', 'hash9'),
+(10, 'company5@mail.com', 'hash10');
 
 
 -- INFLUENCERS (5 influencers)
@@ -71,11 +71,11 @@ VALUES
 
 -- COMPANY DOMAINS
 INSERT INTO CompanyDomains (userId, domain) VALUES
-(1, 'Fashion'), (1, 'Lifestyle'), (1, 'Beauty'),
-(2, 'Technology'), (2, 'Gadgets'), (2, 'Gaming'),
-(3, 'Food'), (3, 'Cooking'), (3, 'Health'),
-(4, 'Fitness'), (4, 'Wellness'), (4, 'Motivation'),
-(5, 'Beauty'), (5, 'Makeup'), (5, 'Skincare');
+(6, 'Fashion'), (6, 'Lifestyle'), (6, 'Beauty'),
+(7, 'Technology'), (7, 'Gadgets'), (7, 'Gaming'),
+(8, 'Food'), (8, 'Cooking'), (8, 'Health'),
+(9, 'Fitness'), (9, 'Wellness'), (9, 'Motivation'),
+(10, 'Beauty'), (10, 'Makeup'), (10, 'Skincare');
 
 -- INFLUENCER DOMAINS
 INSERT INTO InfluencerDomains (userId, domain) VALUES
