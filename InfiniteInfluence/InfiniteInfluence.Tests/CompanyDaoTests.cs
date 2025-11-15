@@ -9,7 +9,7 @@ public class CompanyDaoTests
     private const string _dataBaseConnectionString = "Data Source=localhost;Initial Catalog=InfiniteInfluence;User ID=sa;Password=@12tf56so;Trust Server Certificate=True";
 
     private ICompanyDao _companyDao;
-    private Company? _testCompany;   // <–– Test data vi kan rydde op efter
+    private Company? _testCompany;
 
     [SetUp]
     public void Setup()
