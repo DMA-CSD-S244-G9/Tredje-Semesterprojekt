@@ -17,7 +17,7 @@ GO
 -- USERS
 CREATE TABLE Users (
     userId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    loginEmail VARCHAR(50) NOT NULL UNIQUE,
+    loginEmail VARCHAR(100) NOT NULL UNIQUE,
     passwordHash VARCHAR(100) NOT NULL
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE Users (
 CREATE TABLE Influencers (
     userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
     isInfluencerVerified BIT DEFAULT 0,
-    verificationDate datetime2 NOT NULL,
+    verificationDate datetime2,
     displayName NVARCHAR(100) NOT NULL,
     firstName NVARCHAR(100) NOT NULL,
     lastName NVARCHAR(100) NOT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE Influencers (
 CREATE TABLE Companys (
     userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
     isCompanyVerified BIT DEFAULT 0,
-    verificationDate datetime2 NOT NULL,
-    companyName NVARCHAR(255) NOT NULL,
+    verificationDate datetime2,
+    companyName NVARCHAR(100) NOT NULL,
     companyLogoUrl NVARCHAR(255),
     ceoName NVARCHAR(255) NOT NULL,
 	dateOfEstablishment datetime2 NOT NULL,
