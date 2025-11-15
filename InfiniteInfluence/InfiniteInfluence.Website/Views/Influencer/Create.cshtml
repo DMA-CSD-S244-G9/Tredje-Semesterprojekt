@@ -1,135 +1,227 @@
 ﻿@model InfiniteInfluence.Website.Models.InfluencerCreateViewModel
 
 @{
-    ViewData["Title"] = "Create Influencer";
+    ViewData["Title"] = "Create Influencer Profile";
 }
 
-<h1>Create Influencer</h1>
-<h4>Influencer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<h1 class="text-center mt-4 mb-2">Create Influencer Profile</h1>
+<p class="text-center mb-5" style="max-width: 700px; margin: 0 auto;">
+    Fill out the empty fields in order to create an influencer profile and connect with companies and brands.
+</p>
 
-@*         <form asp-action="Create"> *@
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Create" method="post">
 
-            <div class="mb-3">
-                <label asp-for="LoginEmail" class="form-label"></label>
-                <input asp-for="LoginEmail" class="form-control" />
-                <span asp-validation-for="LoginEmail" class="text-danger"></span>
-            </div>
+    <!-- GENERAL SECTION -->
+    <h3 class="text-center mb-1">General</h3>
+    <p class="text-center mb-4">Fill out the general information fields to help companies understand who you are.</p>
 
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" type="password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+    <div class="container mb-5">
+        <div class="row">
 
-            <div class="mb-3">
-                <label asp-for="DisplayName" class="form-label"></label>
-                <input asp-for="DisplayName" class="form-control" />
-                <span asp-validation-for="DisplayName" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="FirstName" class="form-label"></label>
-                <input asp-for="FirstName" class="form-control" />
+                <input asp-for="FirstName" class="form-control" placeholder="What is your first name?" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="LastName" class="form-label"></label>
-                <input asp-for="LastName" class="form-control" />
+                <input asp-for="LastName" class="form-control" placeholder="What is your last name?" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="ProfileImageUrl" class="form-label"></label>
-                <input asp-for="ProfileImageUrl" class="form-control" />
-                <span asp-validation-for="ProfileImageUrl" class="text-danger"></span>
+            <div class="col-md-6 mb-3">
+                <label asp-for="DisplayName" class="form-label"></label>
+                <input asp-for="DisplayName" class="form-control" placeholder="What is your alias online?" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="Age" class="form-label"></label>
-                <input asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control" placeholder="How old are you in years?" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="Gender" class="form-label"></label>
                 <select asp-for="Gender" asp-items="Model.GenderOptions" class="form-control"></select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="Country" class="form-label"></label>
-                <input asp-for="Country" class="form-control" />
+                <input asp-for="Country" class="form-control" placeholder="What country do you live in?" />
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="InfluencerState" class="form-label"></label>
-                <input asp-for="InfluencerState" class="form-control" />
+                <input asp-for="InfluencerState" class="form-control" placeholder="What state do you live in?" />
                 <span asp-validation-for="InfluencerState" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="City" class="form-label"></label>
-                <input asp-for="City" class="form-control" />
+                <input asp-for="City" class="form-control" placeholder="What city do you live in?" />
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-12 mb-3">
                 <label asp-for="InfluencerLanguage" class="form-label"></label>
-                <input asp-for="InfluencerLanguage" class="form-control" />
+                <input asp-for="InfluencerLanguage" class="form-control" placeholder="What is your main language?" />
                 <span asp-validation-for="InfluencerLanguage" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Biography" class="form-label"></label>
-                <textarea asp-for="Biography" class="form-control large-textarea" maxlength="1000" rows="12"></textarea>
-                <span asp-validation-for="Biography" class="text-danger"></span>
-            </div>
+        </div>
+    </div>
 
-            <div class="mb-3">
+
+    <!-- CONTACT INFORMATION SECTION -->
+    <h3 class="text-center mb-1">Contact Information</h3>
+    <p class="text-center mb-4">
+        Your contact details will only be visible to companies after they accept your application.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
                 <label asp-for="ContactPhoneNumber" class="form-label"></label>
-                <input asp-for="ContactPhoneNumber" class="form-control" />
+                <input asp-for="ContactPhoneNumber" class="form-control" placeholder="What is your phone number (include country)?" />
                 <span asp-validation-for="ContactPhoneNumber" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="ContactEmailAddress" class="form-label"></label>
-                <input asp-for="ContactEmailAddress" class="form-control" />
+                <input asp-for="ContactEmailAddress" class="form-control" placeholder="What is your e-mail address?" />
                 <span asp-validation-for="ContactEmailAddress" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Domain1" class="form-label"></label>
-                <input asp-for="Domain1" class="form-control" maxlength="20" />
+        </div>
+    </div>
+
+
+    <!-- INFLUENCING DOMAINS SECTION -->
+    <h3 class="text-center mb-1">Influencer Domains</h3>
+    <p class="text-center mb-4">
+        Add the domain fields to categorize what topics you influence people in.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="Domain1" class="form-label">Domain 1</label>
+                <input asp-for="Domain1" class="form-control" placeholder="e.g. Fashion" />
                 <span asp-validation-for="Domain1" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Domain2" class="form-label"></label>
-                <input asp-for="Domain2" class="form-control" maxlength="20" />
+            <div class="col-md-4 mb-3">
+                <label asp-for="Domain2" class="form-label">Domain 2</label>
+                <input asp-for="Domain2" class="form-control" placeholder="e.g. Beauty" />
                 <span asp-validation-for="Domain2" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Domain3" class="form-label"></label>
-                <input asp-for="Domain3" class="form-control" maxlength="20" />
+            <div class="col-md-4 mb-3">
+                <label asp-for="Domain3" class="form-label">Domain 3</label>
+                <input asp-for="Domain3" class="form-control" placeholder="e.g. Lifestyle" />
                 <span asp-validation-for="Domain3" class="text-danger"></span>
             </div>
 
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-               @*  <button type="submit" class="btn btn-primary">Create</button> *@
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+
+
+    <!-- SOCIAL MEDIA AND FOLLOWERS SECTION -->
+    <h3 class="text-center mb-1">Social Media</h3>
+    <p class="text-center mb-4">Add your social profile links and follower counts.</p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="InstagramProfileUrl" class="form-label"></label>
+                <input asp-for="InstagramProfileUrl" class="form-control" placeholder="What is the URL address to your profile?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="InstagramFollowers" class="form-label"></label>
+                <input asp-for="InstagramFollowers" class="form-control" placeholder="What is your follower count on the platform?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="YouTubeProfileUrl" class="form-label"></label>
+                <input asp-for="YouTubeProfileUrl" class="form-control" placeholder="What is the URL address to your profile?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="YouTubeFollowers" class="form-label"></label>
+                <input asp-for="YouTubeFollowers" class="form-control" placeholder="What is your follower count on the platform?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="TikTokProfileUrl" class="form-label"></label>
+                <input asp-for="TikTokProfileUrl" class="form-control" placeholder="What is the URL address to your profile?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="TikTokFollower" class="form-label"></label>
+                <input asp-for="TikTokFollower" class="form-control" placeholder="What is your follower count on the platform?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="SnapchatProfileUrl" class="form-label"></label>
+                <input asp-for="SnapchatProfileUrl" class="form-control" placeholder="What is the URL address to your profile?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="SnapchatFollowers" class="form-label"></label>
+                <input asp-for="SnapchatFollowers" class="form-control" placeholder="What is your follower count on the platform?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="XProfileUrl" class="form-label"></label>
+                <input asp-for="XProfileUrl" class="form-control" placeholder="What is the URL address to your profile?" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="XFollowers" class="form-label"></label>
+                <input asp-for="XFollowers" class="form-control" placeholder="What is your follower count on the platform?" />
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- BIOGRAPHY -->
+    <h3 class="text-center mb-1">Biography</h3>
+    <p class="text-center mb-4">
+        Add information about yourself, what type of content you create and your collaboration aspirations.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <label asp-for="Biography" class="form-label"></label>
+                <textarea asp-for="Biography"
+                          class="form-control"
+                          maxlength="1000"
+                          rows="5"
+                          placeholder="What are your interests and what products are you passionate about? (max 1000 characters)">
+                </textarea>
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- BUTTON SUBMIT -->
+    <div class="text-center mb-5">
+        <button type="submit" class="btn btn-primary px-5 py-2">Create Profile</button>
+    </div>
+
+</form>
+
 
 
 @section Scripts {
