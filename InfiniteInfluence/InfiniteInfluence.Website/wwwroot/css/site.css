@@ -1,22 +1,282 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+
+/*---------------------*/
+/* - Main components - */
+/*---------------------*/
+
+/*Main colors*/
+:root {
+    --bs-body-color: #fff !important; /*Font color*/
+    --bs-body-bg: #363042 !important; /*Background color*/
+}
+
+/*Link - color changes*/
+a {
+    color: #A494FF !important;
+}
+
+    /*Link - hover color effect*/
+    a:hover {
+        color: #8874C3 !important;
+    }
+
+/*Hero - adds more padding and make the width fill the entire width*/
+.container-hero {
+    display: flex;
+    align-items: center; /* vertically centers your content */
+    width: 100% !important;
+}
+
+/*Hero - Make the div have no margin and a surden height*/
+/*Made for the image is max size*/
+.container-hero-div {
+    width: 100% !important;
+    min-height: 68vh !important;
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+/*Hero - Gives padding for the div*/
+.container-hero-padding {
+    padding-left: 70px !important;
+    padding-right: 70px !important;
+}
+
+/*Hero - Bagground image for the right div*/
+.bg-star-login {
+    background-image: url('../img/hero-image_v02.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    height: 68vh;
+    margin-top: 0px !important;
+}
+
+.col-lg-left {
+    flex: 0 0 auto;
+    width: 40%;
+}
+
+.col-lg-right {
+    /*flex: 0 0 auto;*/
+    width: 60%;
+    display: flex;
+    justify-content: center !important;
+}
+
+
+/*---------------------*/
+/* - Menu navigation - */
+/*---------------------*/
+
+/*Nav - font color*/
+.nav-link {
+    color: #fff !important;
+}
+
+    /*Nav - Hover effect*/
+    .nav-link:hover {
+        color: #A494FF !important;
+    }
+
+/*Nav - Add padding*/
+.container-fluid {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+/*Nav - changed burger menu to white*/
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/*Nav - removed square around burger menu*/
+.navbar-toggler {
+    border-color: none !important; /* removed outline */
+}
+
+/*Nav - removed square around burger menu in hover mode*/
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: none !important; /* removed hover outline */
+    box-shadow: none !important; /* removed hover shadow */
+    border-color: none !important; /* removed hover border-color */
+}
+
+
+
+/*-----------*/
+/* - Login - */
+/*-----------*/
+
+/*Login - layout for login*/
+.container-login {
+    align-items: center !important;
+    width: 50vh;
+    padding-top: 50px !important;
+    padding-bottom: 70px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    margin-left: 180px;
+}
+
+
+/*-----------*/
+/* - Input - */
+/*-----------*/
+/*Login - form background color and padding*/
+.form-floating > .form-control {
+    height: 50px !important;
+    margin-bottom: 10px;
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+    padding: 10px !important;
+    line-height: 1px !important;
+}
+
+.form-control {
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+}
+
+
+.form-control:focus {
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+}
+
+/*Form - center text*/
+.form-floating > label {
+    padding: 11px !important;
+}
+
+/*------------*/
+/* - Button - */
+/*------------*/
+/*Button - Color*/
+.btn-primary {
+    background-color: #6D54B5 !important;
+    border: 0px !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+}
+
+/*Button - Hover*/
+.btn-primary:hover {
+    background-color: #402864 !important;
+    border: 0px !important;
+}
+
+/*Adding buttom padding to the page*/
+.pb-3 {
+    padding-bottom: 100px !important;
+}
+
+.btn-secondary {
+    background-color: #2C2138 !important;
+    border: 1px solid #6D54B5 !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+}
+
+.btn-secondary:hover {
+    background-color: #402864 !important;
+    border: 1px solid #402864 !important;
+}
+
+
+
+/*--------------------*/
+/* - Footer changes - */
+/*--------------------*/
+
+/*Footer - color, border and position change*/
+footer {
+    background-color: #2C2138;
+    text-align: left;
+    padding: 1rem 0;
+}
+
+/*Footer - adds more padding and make the width fill the entire width*/
+.container-footer {
+    padding-left: 40px !important;
+    padding-right: 0px !important;
+}
+
+/*Footer - change padding for the links*/
+.footer[b-3kehg3qema] {
+    line-height: 22px !important;
+}
+
+/*Nav - font color*/
+.footer-link {
+    color: #fff !important;
+    padding-left: 0px !important;
+    text-decoration: none !important;
+}
+
+/*Nav - Hover effect*/
+.footer-link:hover {
+    color: #A494FF !important;
+}
+
+/*Footer - line above privary*/
+.border-top {
+    border-top: 1px solid #363042 !important;
+}
+
+.site-footer {
+    z-index: 1000;
+    width: 100% !important;
+    left: 0;
+    right: 0;
+    overflow-x: hidden !important;
+}
+
+/* Sticky footer ONLY for frontpage */
+body.home-footer .site-footer {
+    position: fixed !important;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Standard footer for every page */
+body:not(.home-footer) .site-footer {
+    position: static !important;
+}
+
+
+/*-----------*/
+/* - color - */
+/*-----------*/
+.txt-gray {
+    color: #B1B1B1;
+}
+
+.bg-dark-purple {
+    background-color: #2C2138;
 }

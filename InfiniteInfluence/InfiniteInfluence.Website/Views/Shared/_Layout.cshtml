@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/InfiniteInfluence.Website.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+@* viewdata["BodyClass"]- Makes the footer only be sticky on the front pages *@
+<body class="@(ViewData["BodyClass"] ?? "")">
     <header>
-        <partial name="_Notifications" />
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark-purple box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InfiniteInfluence.Website</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="img/logo_liggene_white_v01.png" alt="Infinite Influence logo" width="150"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -31,15 +32,61 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div>
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - InfiniteInfluence.Website - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+
+    <footer class="footer text-muted site-footer">
+        <div>
+            <div class="container-footer row">
+                <div class="col-6 col-md">
+                    <h5>Company</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="footer-link" href="#">About us</a></li>
+                        <li><a class="footer-link" href="#">Our Team</a></li>
+                        <li><a class="footer-link" href="#">Careers</a></li>
+                        <li><a class="footer-link" href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="footer-link" href="#">Web Design</a></li>
+                        <li><a class="footer-link" href="#">App Development</a></li>
+                        <li><a class="footer-link" href="#">Consulting</a></li>
+                        <li><a class="footer-link" href="#">Verification</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Support</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="footer-link" href="#">Help Center</a></li>
+                        <li><a class="footer-link" href="#">Documentation</a></li>
+                        <li><a class="footer-link" href="#">Community</a></li>
+                        <li><a class="footer-link" href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-md">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a class="footer-link" href="#">Get In Touch</a></li>
+                        <li><a class="footer-link" href="#">Sales</a></li>
+                        <li><a class="footer-link" href="#">Partners</a></li>
+                        <li><a class="footer-link" href="#">Media</a></li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="border-top">
+                <div class="container-footer">
+                    &copy; 2025 - Infinite Influencer <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </div>
+
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
