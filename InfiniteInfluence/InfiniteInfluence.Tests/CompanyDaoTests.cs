@@ -55,7 +55,7 @@ public class CompanyDaoTests
 
         // Act
         // Using the DAO to create the Company
-        _companyDao.CreateCompany(_testCompany);
+        _companyDao.Create(_testCompany);
 
         // Assert
         // If the insert is successful, the userId should be set 
@@ -70,7 +70,7 @@ public class CompanyDaoTests
     {
         if (_testCompany != null)
         {
-            _companyDao.DeleteCompany(_testCompany.UserId);   
+            _companyDao.Delete(_testCompany.UserId);   
         }
     }
 
@@ -79,7 +79,7 @@ public class CompanyDaoTests
     {
         // Act
         //Existing user in DB with with UserId 6
-        Company user = _companyDao.GetOneCompany(6);
+        Company user = _companyDao.GetOne(6);
 
         // Assert
         Assert.IsNotNull(user);

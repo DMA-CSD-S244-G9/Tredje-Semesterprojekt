@@ -9,10 +9,10 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 
 public interface ICompanyDao
 {
-    int CreateCompany(Company company);
+    int Create(Company company);
 
-    Company? GetOneCompany(int userId);
+    Company? GetOne(int userId);
 
-    bool DeleteCompany(int userId);
+    bool Delete(int userId);
 
 }

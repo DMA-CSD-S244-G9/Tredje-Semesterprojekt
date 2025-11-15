@@ -12,14 +12,14 @@ public class Company : BaseUser
     #region Properties
     public bool IsCompanyVerified { get; set; }
     public DateTime VerificationDate { get; set; }
-    public string CompanyName { get; set; }
-    public object CompanyLogoUrl { get; set; }
-    public List<string> ListOfCompanyDomains { get; set; }
+    public string? CompanyName { get; set; }
+    public string CompanyLogoUrl { get; set; }
+    public List<string> CompanyDomains { get; set; }
     public string CeoName { get; set; }
     public DateTime DateOfEstablishment { get; set; }
     public string OrganisationNumber { get; set; }
     public string StandardIndustryClassification { get; set; }
-    public object WebsiteUrl { get; set; }
+    public string? WebsiteUrl { get; set; }
     public string CompanyEmail { get; set; }
     public string CompanyPhoneNumber { get; set; }
     public string Country { get; set; }
@@ -43,7 +43,7 @@ public class Company : BaseUser
     /// Construtor to create a new Company before they have an UserId
     /// It inherits LoginEmail and PasswordHash from BaseUser
     /// </summary>
-    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, object companyLogoUrl, List<string> listOfCompanyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, object websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string? companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         LoginEmail = loginEmail;
         PasswordHash = passwordHash;
@@ -51,7 +51,7 @@ public class Company : BaseUser
         VerificationDate = verificationDate;
         CompanyName = companyName;
         CompanyLogoUrl = companyLogoUrl;
-        ListOfCompanyDomains = listOfCompanyDomains;
+        CompanyDomains = companyDomains;
         CeoName = ceoName;
         DateOfEstablishment = dateOfEstablishment;
         OrganisationNumber = organisationNumber;
@@ -74,7 +74,7 @@ public class Company : BaseUser
     /// To create a Company with an userId when retrieving from the database)
     /// It inherits UserId, LoginEmail and PasswordHash from BaseUser
     /// </summary>
-    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, object companyLogoUrl, List<string> listOfCompanyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, object websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string? companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         UserId = userId;
         LoginEmail = email;
@@ -83,7 +83,7 @@ public class Company : BaseUser
         VerificationDate = verificationDate;
         CompanyName = companyName;
         CompanyLogoUrl = companyLogoUrl;
-        ListOfCompanyDomains = listOfCompanyDomains;
+        CompanyDomains = companyDomains;
         CeoName = ceoName;
         DateOfEstablishment = dateOfEstablishment;
         OrganisationNumber = organisationNumber;

@@ -11,78 +11,90 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
+
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
+
 
 public class CompanyDao : BaseConnectionDao, ICompanyDao
 {
+    #region Constructors
     public CompanyDao(string connectionString) : base(connectionString)
     {
+
     }
+    #endregion
 
-    public int CreateCompany(Company company)
+
+    public int Create(Company company)
     {
-        
-            // SQL statement for inserting a new user and retrieving the new UserId
-            string? queryInsertUser = @"
-            INSERT INTO [Users] (loginEmail, passwordHash)
-            VALUES (@LoginEmail, @PasswordHash);
+        // SQL statement for inserting a new user and retrieving the new UserId
+        string? queryInsertUser = @"
+        INSERT INTO [Users] (loginEmail, passwordHash)
+        VALUES (@LoginEmail, @PasswordHash);
 
-            SELECT CAST(SCOPE_IDENTITY() AS INT); ";
+        SELECT CAST(SCOPE_IDENTITY() AS INT); ";
+        // ^-- We use Scope_Identity to retrieve the new ID that was created
 
-            // 2. Insert into Companys table
-            string? queryInsertCompany = @"INSERT INTO Companys(
-                        userId, 
-                        isCompanyVerified, 
-                        verificationDate, 
-                        companyName, 
-                        companyLogoUrl, 
-                        ceoName, 
-                        dateOfEstablishment, 
-                        organisationNumber, 
-                        standardIndustryClassification,
-                        websiteUrl, 
-                        companyEmail, 
-                        companyPhoneNumber, 
-                        country, 
-                        companyState, 
-                        city, 
-                        companyAddress, 
-                        companyLanguage, 
-                        biography, 
-                        contactPerson, 
-                        contactEmailAddress,
-                        contactPhoneNumber)
 
-                        VALUES
-                        (@UserId,
-                        @IsCompanyVerified, 
-                        @VerificationDate, 
-                        @CompanyName, 
-                        @CompanyLogoUrl,
-                        @CeoName, 
-                        @DateOfEstablishment, 
-                        @OrganisationNumber, 
-                        @StandardIndustryClassification,
-                        @WebsiteUrl, 
-                        @CompanyEmail, 
-                        @CompanyPhoneNumber, 
-                        @Country, 
-                        @State, 
-                        @City,
-                        @Address, 
-                        @Languages, 
-                        @Biography, 
-                        @ContactPerson, 
-                        @ContactEmailAddress,
-                        @ContactPhoneNumber);";
+        // SQL statement for inserting the company specific details
+        string? queryInsertCompany = @"
+        INSERT INTO Companys(
+            userId, 
+            isCompanyVerified, 
+            verificationDate, 
+            companyName, 
+            companyLogoUrl, 
+            ceoName, 
+            dateOfEstablishment, 
+            organisationNumber, 
+            standardIndustryClassification,
+            websiteUrl, 
+            companyEmail, 
+            companyPhoneNumber, 
+            country, 
+            companyState, 
+            city, 
+            companyAddress, 
+            companyLanguage, 
+            biography, 
+            contactPerson, 
+            contactEmailAddress,
+            contactPhoneNumber)
 
-            // SQL for inserting domains into the InfluencerDomains table
-            string? queryInsertCompanyDomain = @"
-            INSERT INTO CompanyDomains (userId, domain)
-            VALUES (@UserId, @Domain); ";
+            VALUES
+            (@UserId,
+            @IsCompanyVerified, 
+            @VerificationDate, 
+            @CompanyName, 
+            @CompanyLogoUrl,
+            @CeoName, 
+            @DateOfEstablishment, 
+            @OrganisationNumber, 
+            @StandardIndustryClassification,
+            @WebsiteUrl, 
+            @CompanyEmail, 
+            @CompanyPhoneNumber, 
+            @Country, 
+            @State, 
+            @City,
+            @Address, 
+            @Languages, 
+            @Biography, 
+            @ContactPerson, 
+            @ContactEmailAddress,
+            @ContactPhoneNumber);";
 
-        using var connection = CreateConnection();
+
+        // SQL for inserting domains into the companyDomains table
+        string? queryInsertCompanyDomain = @"
+        INSERT INTO CompanyDomains (userId, domain)
+        VALUES (@UserId, @Domain); ";
+
+
+
+        using IDbConnection connection = CreateConnection();
         connection.Open();
+
 
         // Begins a transaction Since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
@@ -93,13 +105,12 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
             // Uses dapper to insert into the Users table and return the newest generated UserId using SCOPE_IDENTITY()
             int newUserId = connection.QuerySingle<int>(queryInsertUser, new { company.LoginEmail, company.PasswordHash }, transaction);
 
-            // Updates the influencer's UserId to match the newly generated UserId
+            // Updates the company's UserId to match the newly generated UserId
             company.UserId = newUserId;
 
-            connection.Execute(queryInsertCompany,
-                new
+            connection.Execute(queryInsertCompany, new
                 {
-                    UserId = newUserId,
+                    UserId = company.UserId,
                     company.IsCompanyVerified,
                     company.VerificationDate,
                     company.CompanyName,
@@ -120,27 +131,26 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
                     company.ContactPerson,
                     company.ContactEmailAddress,
                     company.ContactPhoneNumber
-                },
-                transaction
-            );
+                }, transaction);
 
-            // 3. Insert domains
-            if (company.ListOfCompanyDomains != null)
+
+            // Inserts zero or more company domains in to the CompanyDomain table 
+            if (company.CompanyDomains != null)
             {
-                foreach (var domain in company.ListOfCompanyDomains)
+                foreach (string domain in company.CompanyDomains)
                 {
-                    connection.Execute(
-                        queryInsertCompanyDomain,
-                        new { UserId = newUserId, Domain = domain },
-                        transaction
-                    );
+                    connection.Execute(queryInsertCompanyDomain, new { UserId = company.UserId, Domain = domain }, transaction);
                 }
             }
 
+            // Commits the transactions
             transaction.Commit();
 
+
+            // Returns the newly generated primary key
             return newUserId;
         }
+
         catch (Exception exception)
         {
             // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
@@ -150,128 +160,9 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         }
     }
 
-    /*
-    public int CreateCompany(Company company)
-    {
-        using var connection = CreateConnection();
-        connection.Open(); 
-        using var transaction = connection.BeginTransaction();
 
-        try
-        {
-            // 1. Insert into Users table
-            string userSql = @"INSERT INTO Users (loginEmail, passwordHash)
-                                    OUTPUT INSERTED.userId
-                                    VALUES (@Email, @PasswordHash);";
 
-            int newUserId = connection.QuerySingle<int>(userSql,
-                new
-                {
-                    Email = company.LoginEmail,
-                    PasswordHash = BCryptTool.HashPassword(company.PasswordHash)
-                },
-                transaction
-            );
-
-            // 2. Insert into Companys table
-            string companySql = @"INSERT INTO Companys(
-                        userId, 
-                        isCompanyVerified, 
-                        verificationDate, 
-                        companyName, 
-                        companyLogoUrl, 
-                        ceoName, 
-                        dateOfEstablishment, 
-                        organisationNumber, 
-                        standardIndustryClassification,
-                        websiteUrl, 
-                        companyEmail, 
-                        companyPhoneNumber, 
-                        country, 
-                        companyState, 
-                        city, 
-                        companyAddress, 
-                        companyLanguage, 
-                        biography, 
-                        contactPerson, 
-                        contactEmailAddress,
-                        contactPhoneNumber)
-
-                        VALUES
-                        (@UserId,
-                        @IsCompanyVerified, 
-                        @VerificationDate, 
-                        @CompanyName, 
-                        @CompanyLogoUrl,
-                        @CeoName, 
-                        @DateOfEstablishment, 
-                        @OrganisationNumber, 
-                        @StandardIndustryClassification,
-                        @WebsiteUrl, 
-                        @CompanyEmail, 
-                        @CompanyPhoneNumber, 
-                        @Country, 
-                        @State, 
-                        @City,
-                        @Address, 
-                        @Languages, 
-                        @Biography, 
-                        @ContactPerson, 
-                        @ContactEmailAddress,
-                        @ContactPhoneNumber);";
-
-            connection.Execute(companySql,
-                new
-                {
-                    UserId = newUserId,
-                    IsCompanyVerified = company.IsCompanyVerified,
-                    VerificationDate = company.VerificationDate,
-                    CompanyName = company.CompanyName,
-                    CompanyLogoUrl = company.CompanyLogoUrl,
-                    CeoName = company.CeoName,
-                    DateOfEstablishment = company.DateOfEstablishment,
-                    OrganisationNumber = company.OrganisationNumber,
-                    StandardIndustryClassification = company.StandardIndustryClassification,
-                    WebsiteUrl = company.WebsiteUrl,
-                    CompanyEmail = company.CompanyEmail,
-                    CompanyPhoneNumber = company.CompanyPhoneNumber,
-                    Country = company.Country,
-                    State = company.State,
-                    City = company.City,
-                    Address = company.Address,
-                    Languages = company.Languages,
-                    Biography = company.Biography,
-                    ContactPerson = company.ContactPerson,
-                    ContactEmailAddress = company.ContactEmailAddress,
-                    ContactPhoneNumber = company.ContactPhoneNumber
-                },
-                transaction
-            );
-
-            // 3. Insert domains
-            if (company.ListOfCompanyDomains != null)
-            {
-                foreach (var domain in company.ListOfCompanyDomains)
-                {
-                    connection.Execute(
-                        "INSERT INTO CompanyDomains (userId, domain) VALUES (@UserId, @Domain)",
-                        new { UserId = newUserId, Domain = domain },
-                        transaction
-                    );
-                }
-            }
-
-            transaction.Commit();
-            return newUserId;
-        }
-        catch
-        {
-            transaction.Rollback();
-            throw;
-        }
-    }*/
-
-    public bool DeleteCompany(int userId)
+    public bool Delete(int userId)
     {
         var sqlQuery = "DELETE FROM Companys WHERE userId = @UserId";
         using var connection = CreateConnection();
@@ -279,7 +170,9 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         return rows > 0;
     }
 
-    public Company? GetOneCompany(int userId)
+
+
+    public Company? GetOne(int userId)
     {
         var query = "SELECT * FROM Companys WHERE userId = @UserId";
         using var connection = CreateConnection();

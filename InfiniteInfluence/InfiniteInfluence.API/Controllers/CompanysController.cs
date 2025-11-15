@@ -1,4 +1,5 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,32 +9,45 @@ namespace InfiniteInfluence.API.Controllers
     [Route("[controller]")]
     public class CompanysController : Controller
     {
+        private readonly ILogger<CompanysController> _logger;
         ICompanyDao _companyDao;
 
-        public CompanysController(ICompanyDao companyDao)
+
+        // This constructor might appear to have no references, but are called internally by the framework
+        public CompanysController(ILogger<CompanysController> logger, ICompanyDao companyDao)
         {
+            _logger = logger;
             _companyDao = companyDao;
         }
+
+
 
         [HttpPost]
         public ActionResult<int> CreateCompany(Company company)
         {
             try
             {
-                return Ok(_companyDao.CreateCompany(company));
+                return Ok(_companyDao.Create(company));
             }
-            catch (Exception ex)
+
+            catch (Exception exception)
             {
-                return StatusCode(500, $"An error occurred trying to create the company.");
+                _logger.LogError(exception, "An error has occured when attempting to create a Company.");
+
+                var innerMessage = exception.InnerException?.Message;
+
+                return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
             }
         }
+
+
 
         [HttpGet("{userId}")]
         public ActionResult<Company> Get(int userId)
         {
             try
             {
-                Company? company = _companyDao.GetOneCompany(userId);
+                Company? company = _companyDao.GetOne(userId);
                 if (company == null)
                 {
                     return NoContent();
@@ -47,13 +61,15 @@ namespace InfiniteInfluence.API.Controllers
             }
         }
 
+
+
         [HttpDelete("{userId}")]
         public ActionResult<bool> DeleteCompany(int userId)
         {
             try
             {
 
-                var deleted = _companyDao.DeleteCompany(userId);
+                var deleted = _companyDao.Delete(userId);
                 if (!deleted)
                 {
                     return NoContent();
