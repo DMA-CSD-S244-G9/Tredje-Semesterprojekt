@@ -10,9 +10,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InfiniteInfluence.ApiClient\InfiniteInfluence.ApiClient.csproj" />
     <ProjectReference Include="..\InfiniteInfluence.DataAccessLibrary\InfiniteInfluence.DataAccessLibrary.csproj" />
   </ItemGroup>
 

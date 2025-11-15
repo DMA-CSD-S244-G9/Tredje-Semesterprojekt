@@ -10,5 +10,8 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 
 public interface IInfluencerDao
 {
-    Influencer? GetByUserId(int userId);
+    int Create(Influencer influencer);
+    Influencer? GetOne(int userId);
+
+
 }
