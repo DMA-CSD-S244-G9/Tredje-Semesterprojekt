@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Choose Your Profile Type";
+}
+
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="row w-100">
+        <div class="col-12 text-center">
+
+            <!-- Heading -->
+            <h1 class="display-4 mb-4">Choose Your Profile Type</h1>
+
+            
+            <!-- Introduction Text -->
+            <p class="lead mb-5">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+
+
+            <!-- Moves the buttons using flexbox so that they are next to each other -->
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+
+                <!--<a href="C:\Users\Chris\Documents\GitHub\Tredje-Semesterprojekt\InfiniteInfluence\InfiniteInfluence.DataAccessLibrary\Model\Influencer.cs">C:\Users\Chris\Documents\GitHub\Tredje-Semesterprojekt\InfiniteInfluence\InfiniteInfluence.DataAccessLibrary\Model\Influencer.cs</a> Button for influencer -->
+                <a asp-controller="Influencer" asp-action="Create"
+                   class="btn btn-primary btn-lg px-4">
+                    I am an Influencer
+                </a>
+
+
+                <!-- Button for company / brand -->
+                <a asp-controller="Company" asp-action="Create"
+                   class="btn btn-primary btn-lg px-4">
+                    I am a Company
+                </a>
+            </div>
+
+
+        </div>
+    </div>
+</div>
