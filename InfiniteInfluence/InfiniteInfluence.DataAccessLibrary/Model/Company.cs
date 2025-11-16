@@ -11,12 +11,12 @@ public class Company : BaseUser
 {
     #region Properties
     public bool IsCompanyVerified { get; set; }
-    public DateTime VerificationDate { get; set; }
+    public DateTime? VerificationDate { get; set; }
     public string? CompanyName { get; set; }
     public string CompanyLogoUrl { get; set; } = string.Empty;
     public List<string> CompanyDomains { get; set; } = new List<string>();
     public string CeoName { get; set; }
-    public DateTime DateOfEstablishment { get; set; }
+    public DateTime? DateOfEstablishment { get; set; }
     public string OrganisationNumber { get; set; }
     public string StandardIndustryClassification { get; set; }
     public string? WebsiteUrl { get; set; }
