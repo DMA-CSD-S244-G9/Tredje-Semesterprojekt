@@ -60,7 +60,7 @@ public class InfluencerController : Controller
             int newUserId = _InfluencerApiClient.Create(influencer);
 
             // Defines a success message that can be that is stored in the users session or cookies and then shown 
-            TempData["SuccessMessage"] = "Influencer was created successfully.";
+            TempData["SuccessMessage"] = "The influencer profile was successfully created.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
             return RedirectToAction("Index", "Home");

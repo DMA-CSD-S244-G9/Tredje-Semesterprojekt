@@ -9,7 +9,6 @@ namespace InfiniteInfluence.API;
 public class Program
 {
     // The database connection string used for dependency injection of any of the DAO classes (InfluencerDao, CompanyDao etc.)
-    // 
     private const string _dataBaseConnectionString = "Data Source=host.docker.internal;Initial Catalog=InfiniteInfluence;Persist Security Info=True;User ID=sa;Password=@12tf56so;Encrypt=True;Trust Server Certificate=True";
 
     public static void Main(string[] args)
