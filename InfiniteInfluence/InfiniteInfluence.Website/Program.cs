@@ -1,3 +1,6 @@
+using InfiniteInfluence.ApiClient;
+using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+
 namespace InfiniteInfluence.Website
 {
     public class Program
@@ -8,6 +11,9 @@ namespace InfiniteInfluence.Website
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Sets up the dependency injection using the IInfluencerDao in the API
+            builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:32777"));
 
             var app = builder.Build();
 

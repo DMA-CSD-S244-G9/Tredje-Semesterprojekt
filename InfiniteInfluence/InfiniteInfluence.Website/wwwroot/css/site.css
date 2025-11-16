@@ -1,22 +1,542 @@
-html {
-  font-size: 14px;
+﻿html {
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+
+
+/*---------------------*/
+/* - Main components - */
+/*---------------------*/
+
+/*Main colors*/
+:root {
+    --bs-body-color: #fff !important; /*Font color*/
+    --bs-body-bg: #363042 !important; /*Background color*/
 }
+
+/*Link - color changes*/
+a {
+    color: #A494FF !important;
+}
+
+/*Link - hover color effect*/
+a:hover {
+    color: #8874C3 !important;
+}
+
+
+/* Hero - Determines the height by filling out the entire viewport's height minus the footer bar's height which is 258px */
+.container-hero {
+    display: flex;
+    width: 100% !important;
+    min-height: calc(100vh - 258px); /* 258px - footer bar height */
+}
+
+
+/*Hero - Makes the div have no margins and a height filling out the area */
+.container-hero-div {
+    width: 100% !important;
+    display: flex;
+    /* Makes the placement of the items and flow start from the top specifically*/
+    align-items: flex-start;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+
+/* Adds padding for the div container holding the hero section */
+.container-hero-padding {
+    padding-left: 70px !important;
+    padding-right: 70px !important;
+}
+
+/* our starry background picture in the right side side's div container */
+.bg-star-login {
+    background-image: url('../img/hero-image_v02.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: cover;
+    height: 100%;
+    margin-top: 0 !important;
+}
+
+.col-lg-left {
+    flex: 0 0 auto;
+    width: 40%;
+}
+
+.col-lg-right {
+    width: 60%;
+    display: flex;
+    justify-content: center !important;
+}
+
+
+
+/*---------------------*/
+/* - Menu navigation - */
+/*---------------------*/
+
+/*Nav - font color*/
+.nav-link 
+{
+    color: #fff !important;
+}
+
+/*Nav - Hover effect*/
+.nav-link:hover {
+    color: #A494FF !important;
+}
+
+/*Nav - Add padding*/
+.container-fluid {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+/*Nav - changed burger menu to white*/
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/*Nav - removed square around burger menu*/
+.navbar-toggler {
+    border-color: none !important; /* removed outline */
+}
+
+/*Nav - removed square around burger menu in hover mode*/
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: none !important; /* removed hover outline */
+    box-shadow: none !important; /* removed hover shadow */
+    border-color: none !important; /* removed hover border-color */
+}
+
+/* Nav - profile and company icons */
+.nav-icon-link {
+    font-size: 1.4rem;
+    color: #ffffff !important;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
+
+
+/*-----------*/
+/* - Login - */
+/*-----------*/
+
+/*Login - layout for login*/
+.container-login {
+    align-items: center !important;
+    width: 25vw;
+    padding-top: 50px !important;
+    padding-bottom: 70px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    margin-left: 180px;
+}
+
+/* Remember me & Forgot Password text coloring */
+.remember-label, .forgot-link {
+    color: #9190AA !important;
+    font-size: 12px;
+}
+
+.forgot-link {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.login-introtext-topmargin-spacer
+{
+    margin-top: 64px;
+}
+
+.login-topbutton-topmargin-spacer {
+    margin-top: 32px;
+}
+
+
+
+/*--------------------*/
+/* - Login Checkbox - */
+/*--------------------*/
+
+/* Changes the visuals of the checkbox to match with our mockup */
+.remember-checkbox {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #9190AA;
+    border-radius: 4px;
+    background-color: #3C364C;
+    cursor: pointer;
+    position: relative;
+}
+
+
+/* This sets the check mark in the right spot and colors it purple */
+.remember-checkbox:checked::after {
+    content: "✔";
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    top: -2px;
+    left: -1px;
+}
+
+
+
+/*-----------*/
+/* - Input - */
+/*-----------*/
+
+/*Login - form background color and padding*/
+.form-floating > .form-control {
+    height: 50px !important;
+    margin-bottom: 10px;
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+    padding: 10px !important;
+    line-height: 1px !important;
+}
+
+/*input fields inputted values fore-coloring */
+input.form-control, textarea.form-control, select.form-control {
+    color: #ffffff !important;
+}
+
+.form-control {
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+}
+
+
+.form-control:focus {
+    border-radius: 10px !important;
+    background: #3C364C;
+    border: 1px solid #9690AA;
+}
+
+/*Form - center text*/
+.form-floating > label {
+    padding: 11px !important;
+}
+
+
+/*Glow around the input field box upon selection*/
+input.form-control:focus, textarea.form-control:focus, select.form-control:focus {
+    border-color: #c29bff !important;
+    box-shadow: 0 0 0 0.1rem rgba(194, 155, 255, 0.35) !important;
+    outline: none !important;
+}
+
+
+
+/*----------------------------*/
+/* - Input Browser Autofill - */
+/*----------------------------*/
+
+
+/* Stylling for the autofill fields - this is only tested in edge, safari and chrome but not firefox 
+    this can be done in a future iteration if anything.
+*/
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+    background-color: #3C364C !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: 1px solid #9690AA !important;
+
+    /* Adding transition supposingly solves a yellow highlighting in chrome */
+    transition: background-color 9999s ease-in-out 0s;
+    caret-color: #ffffff !important;
+}
+
+
+/* Styling for the autofill fields, when the field is active and in-focus.
+    Like the other section just above, this is not tested in firefox.
+*/
+input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-autofill:focus {
+    background-color: #3C364C !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: 1px solid #c29bff !important;
+    box-shadow: 0 0 0 0.1rem rgba(194, 155, 255, 0.35) !important;
+}
+
+
+
+/*------------*/
+/* - Button - */
+/*------------*/
+
+/*Button - Color*/
+.btn-primary {
+    background-color: #6D54B5 !important;
+    border: 0px !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+}
+
+/*Button - Hover*/
+.btn-primary:hover {
+    background-color: #402864 !important;
+    border: 0px !important;
+}
+
+/*Adding buttom padding to the page*/
+.pb-3 {
+    padding-bottom: 100px !important;
+}
+
+.btn-secondary {
+    background-color: #2C2138 !important;
+    border: 1px solid #6D54B5 !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+}
+
+.btn-secondary:hover {
+    background-color: #402864 !important;
+    border: 1px solid #402864 !important;
+/*    color: #ffffff;*/
+}
+
+
+/* Ensures that all primary buttons including anchors have white text*/
+a.btn-primary, a.btn-primary:visited, a.btn.btn-primary {
+    color: #ffffff !important;
+}
+
+/* Makes the button hover text color stay white */
+a.btn-primary:hover, a.btn-primary:focus {
+    color: #ffffff !important;
+}
+
+/* Adds a purple glow instead of the blue one when the button is pressed */
+button:focus, button:active, a.btn-primary:focus, a.btn-primary:active, a.btn-secondary:focus, a.btn-secondary:active {
+    outline: none !important;
+    box-shadow: 0 0 0 0.1rem rgba(194, 155, 255, 0.35) !important;
+}
+
+
+
+/*--------------------*/
+/* - Footer styling - */
+/*--------------------*/
+
+/*Footer - color, border and position change*/
+footer {
+    background-color: #2C2138;
+    text-align: left;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/*Footer - adds more padding and make the width fill the entire width*/
+.container-footer {
+    padding-left: 40px !important;
+    padding-right: 0px !important;
+}
+
+.container-copyright {
+    padding-top: 8px;
+    padding-bottom: 0px;
+    font-size: 12px;
+}
+
+
+/*Footer - change padding for the links*/
+.footer[b-3kehg3qema] {
+    line-height: 22px !important;
+}
+
+.footer-heading {
+    color: #ffffff !important;
+}
+
+/*Nav - font color*/
+.footer-link {
+    color: #fff !important;
+    padding-left: 0px !important;
+    text-decoration: none !important;
+}
+
+/*Nav - Hover effect*/
+.footer-link:hover {
+    color: #A494FF !important;
+}
+
+/*Footer - line above privary*/
+.border-top {
+    border-top: 1px solid #363042 !important;
+}
+
+.site-footer {
+    z-index: 1000;
+    width: 100% !important;
+    left: 0;
+    right: 0;
+    overflow-x: hidden !important;
+}
+
+/* Sticky footer ONLY for frontpage */
+body.home-footer .site-footer {
+    position: fixed !important;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Standard footer for every page */
+body:not(.home-footer) .site-footer {
+    position: static !important;
+}
+
+
+
+/*-----------*/
+/* - color - */
+/*-----------*/
+.txt-gray {
+    color: #B1B1B1;
+}
+
+.bg-dark-purple {
+    background-color: #2C2138;
+}
+
+
+
+/*---------------------*/
+/* - Heading Styling - */
+/*---------------------*/
+
+.main-heading-margins {
+    margin-top: 120px;
+}
+
+.main-introduction-margins {
+    margin-bottom: 96px !important;
+}
+
+
+
+
+/*--------------------------*/
+/* - Notification Styling - */
+/*--------------------------*/
+
+
+/* Notification container */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #6C4ACD;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    min-width: 280px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(100px);
+    animation: slideIn 0.4s forwards;
+}
+
+
+.notification.hide {
+    animation: slideOut 0.4s forwards;
+}
+
+
+/* Check mark icon) */
+.notification-icon {
+    font-size: 20px;
+    margin-right: 16px;
+    margin-left: 4px;
+    color: #ffffff;
+}
+
+
+/* Tekst */
+.notification-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+
+
+.notification-message {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+
+/* Animation for sliding in the notification from the right side */
+@keyframes slideIn 
+{
+    from 
+    {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to 
+    {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* Animation for sliding out the notification from the left side to the right */
+@keyframes slideOut
+{
+    from 
+    {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to
+    {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+
+
+
+
+

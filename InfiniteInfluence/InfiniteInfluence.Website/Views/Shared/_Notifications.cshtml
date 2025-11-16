@@ -1,0 +1,51 @@
+﻿
+@{
+    string notificationMessage = TempData["SuccessMessage"] as string;
+}
+
+
+@if (!string.IsNullOrEmpty(notificationMessage))
+{
+    <div id="notification-container">
+        <div class="notification success">
+
+            @* The SVG Icon used is the check mark *@
+            <span class="notification-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                </svg>
+            </span>
+
+            @* The message stored in the TempData that should be dispalyed in the notification after the redirecting occurs *@
+            <div class="text">@notificationMessage</div>
+        </div>
+    </div>
+
+
+
+    @* this is a javascript to handle the hiding and removal of notifications *@
+    <script>
+        @* // This function hides the notification when it is called upon *@
+        function hideNotification()
+        {
+            @* // Finds the first HTML-element with the class 'notification' using the queryselector which works like
+            // an instruction to find an element on the site *@
+            const box = document.querySelector('.notification');
+
+            @* // Checks whether the element actually exists on the site *@
+            if (box)
+            {
+                @* // Adds the css class 'hide' to the box which makes the box slide away *@
+                box.classList.add('hide');
+
+                @* // Adds a timeout which waits for a specified duration in this case about a second
+                // then the box gets removed from the HTML page *@
+                setTimeout(() => box.remove(), 1000);
+            }
+        }
+
+        @* // This line runs the hide notification function automatically after 5 seconds which essentially means 
+        // hide the notification after 5 seconds has passeed *@
+        setTimeout(() => hideNotification(), 5000);
+    </script>
+}
