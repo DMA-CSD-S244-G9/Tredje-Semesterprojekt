@@ -1,40 +1,40 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace InfiniteInfluence.ApiClient;
 
-
-public class InfluencerApiClient : IInfluencerDao
+public class CompanyApiClient : ICompanyDao
 {
-    // The rest client from restsharp to call the server
-    private readonly RestClient _restClient;
+    #region attributes and constructor
+    //The address of the API server
     private readonly string _apiUri;
 
+    //the rest client from restsharp to call the server
+    private readonly RestClient _restClient;
 
-    // Utilises Dependency injection from the Website project's Program.cs 
-    public InfluencerApiClient(string apiUri)
+    public CompanyApiClient(string apiUri)
     {
         _apiUri = apiUri;
-        _restClient = new RestClient(_apiUri);
+        _restClient = new RestClient(apiUri);
     }
+    #endregion
 
-
-    //TODO: Make this code prettier during refactoring
-    public int Create(Influencer influencer)
+    public int Create(Company company)
     {
-        RestRequest? request = new RestRequest("influencers", Method.Post);
+        var request = new RestRequest("companys", Method.Post);
+        request.AddJsonBody(company);
 
-//        request.AddJsonBody(influencer);
-
-//        var response = _restClient.Execute<int>(request);
-
+        var response = _restClient.Execute<int>(request);
         if (response == null)
         {
             throw new Exception("Connection Failure: There were no response from the server.");
         }
-
         if (!response.IsSuccessful)
         {
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
@@ -45,17 +45,15 @@ public class InfluencerApiClient : IInfluencerDao
             // throw new Exception("Server reply: Unsuccessful request");
             throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
-
-        //if (response.Data == null)
-        //{
-        //    throw new Exception("Server response did not contain an integer id.");
-        //}
-
         return response.Data;
     }
 
+    public bool Delete(int userId)
+    {
+        throw new NotImplementedException();
+    }
 
-    public Influencer? GetOne(int userId)
+    public Company? GetOne(int userId)
     {
         throw new NotImplementedException();
     }
