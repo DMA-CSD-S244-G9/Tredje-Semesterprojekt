@@ -1,8 +1,69 @@
 ﻿@{
+    @* Makes the footer only be sticky on the front pages *@
+    ViewData["BodyClass"] = "home-footer";
+
+
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+<div class="container-hero">
+    <div class="container-hero-div row flex-lg-row-reverse align-items-center g-5 ">
+        
+     
+        <div class="col-10 col-sm-8 col-lg-right bg-star-login">
+            <div class="form-signin text-center align-content-center">
+                <form class="container-login bg-dark-purple">
+                    <h2 class="h5 fw-bold mb-3 fw-normal">Welcome back!</h2>
+                    <p class="txt-gray">We missed you please enter your details</p>
+                    
+                    <div class="form-floating login-introtext-topmargin-spacer">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="E-Mail address">
+                        <label for="floatingInput" class=" txt-gray">E-Mail address</label>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                        <label for="floatingPassword" class=" txt-gray">Password</label>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <!-- Remember me checkbox -->
+                        <label class="remember-label mb-0 d-flex align-items-center">
+                            <input type="checkbox" value="remember-me" class="remember-checkbox me-2">
+                            Remember me
+                        </label>
+
+                        <!-- Forgot password link -->
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+
+                    <!-- Button Sign In -->
+                    <a asp-controller="Home" asp-action="Index"
+                       class="w-100 btn btn-lg btn-primary mb-2 login-topbutton-topmargin-spacer">
+                       Sign In
+                    </a>
+
+                    <!-- Button Sign Up -->
+                    <a asp-controller="Home" asp-action="ChooseProfileType"
+                       class="w-100 btn btn-lg btn-secondary mb-2">
+                       Sign Up
+                    </a>
+
+                </form>
+            </div>
+        </div>
+        
+        <div class="container-hero-padding col-lg-left">
+            <h1 class="display-5 lh-1 mb-3">Influencer & Brand collaboration - infinitely easier!</h1>
+            <p class="lead">
+                By signing up you will be able to connect with sponsors of brands world wide looking for collaborators to promote their products.
+            </p>
+        </div>
+
+    </div>
 </div>
+

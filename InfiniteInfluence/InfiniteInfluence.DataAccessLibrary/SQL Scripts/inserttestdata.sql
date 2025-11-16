@@ -1,16 +1,19 @@
+USE InfiniteInfluence;
+GO
+
 
 -- USERS (10 users)
-INSERT INTO Users (userId, loginEmail, passwordHash) VALUES
-(1, 'anna@mail.com', 'hash1'),
-(2, 'tom@mail.com', 'hash2'),
-(3, 'influencer3@mail.com', 'hash3'),
-(4, 'influencer4@mail.com', 'hash4'),
-(5, 'influencer5@mail.com', 'hash5'),
-(6, 'company1@mail.com', 'hash6'),
-(7, 'company2@mail.com', 'hash7'),
-(8, 'company3@mail.com', 'hash8'),
-(9, 'company4@mail.com', 'hash9'),
-(10, 'company5@mail.com', 'hash10');
+INSERT INTO Users (loginEmail, passwordHash) VALUES
+('anna@mail.com', 'hash1'),
+('tom@mail.com', 'hash2'),
+('influencer3@mail.com', 'hash3'),
+('influencer4@mail.com', 'hash4'),
+('influencer5@mail.com', 'hash5'),
+('company1@mail.com', 'hash6'),
+('company2@mail.com', 'hash7'),
+('company3@mail.com', 'hash8'),
+('company4@mail.com', 'hash9'),
+('company5@mail.com', 'hash10');
 
 
 -- INFLUENCERS (5 influencers)
@@ -79,11 +82,11 @@ INSERT INTO CompanyDomains (userId, domain) VALUES
 
 -- INFLUENCER DOMAINS
 INSERT INTO InfluencerDomains (userId, domain) VALUES
-(6, 'Technology'), (6, 'Software'), (6, 'Electronics'),
-(7, 'Food'), (7, 'Snacks'), (7, 'Health'),
-(8, 'Fashion'), (8, 'Sustainability'), (8, 'Clothing'),
-(9, 'Sports'), (9, 'Fitness'), (9, 'Equipment'),
-(10, 'Beauty'), (10, 'Cosmetics'), (10, 'Skincare');
+(1, 'Fashion'), (1, 'Beauty'), (1, 'Lifestyle'),
+(2, 'Technology'), (2, 'Gadgets'), (2, 'Software'),
+(3, 'Food'), (3, 'Recipes'), (3, 'Health'),
+(4, 'Fitness'), (4, 'Training'), (4, 'Motivation'),
+(5, 'Beauty'), (5, 'Makeup'), (5, 'Skincare');
 
 
 -- ANNOUNCEMENTS (5 announcements)

@@ -17,7 +17,7 @@ GO
 -- USERS
 CREATE TABLE Users (
     userId INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-    loginEmail VARCHAR(50) NOT NULL UNIQUE,
+    loginEmail VARCHAR(64) NOT NULL UNIQUE,
     passwordHash VARCHAR(100) NOT NULL
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE Users (
 CREATE TABLE Influencers (
     userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
     isInfluencerVerified BIT DEFAULT 0,
-    verificationDate datetime2 NOT NULL,
+    verificationDate datetime2 NULL,
     displayName NVARCHAR(100) NOT NULL,
     firstName NVARCHAR(100) NOT NULL,
     lastName NVARCHAR(100) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE Influencers (
     xProfileUrl NVARCHAR(255),
     xFollowers INT DEFAULT 0,
     contactPhoneNumber NVARCHAR(20) NOT NULL,
-    contactEmailAddress NVARCHAR(50) NOT NULL,
+    contactEmailAddress NVARCHAR(64) NOT NULL,
 
 -- CONSTRAINT
 -- Foreign key constraint from Influencers to Users
@@ -66,15 +66,15 @@ CREATE TABLE Influencers (
 CREATE TABLE Companys (
     userId INT NOT NULL PRIMARY KEY, -- Both primary and foreign key
     isCompanyVerified BIT DEFAULT 0,
-    verificationDate datetime2 NOT NULL,
+    verificationDate datetime2 NULL,
     companyName NVARCHAR(255) NOT NULL,
-    companyLogoUrl NVARCHAR(255),
+    companyLogoUrl NVARCHAR(255) NULL,
     ceoName NVARCHAR(255) NOT NULL,
-	dateOfEstablishment datetime2 NOT NULL,
-	organisationNumber NVARCHAR(50) NOT NULL,
+	  dateOfEstablishment datetime2 NULL,
+	  organisationNumber NVARCHAR(50) NOT NULL,
     standardIndustryClassification NVARCHAR(255) NOT NULL,
-    websiteUrl NVARCHAR(255),
-    companyEmail NVARCHAR(50) NOT NULL,
+    websiteUrl NVARCHAR(255) NULL,
+    companyEmail NVARCHAR(64) NOT NULL,
     companyPhoneNumber NVARCHAR(20) NOT NULL,
     country NVARCHAR(100) NOT NULL,
     companyState NVARCHAR(100) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE Companys (
     companyLanguage NVARCHAR(100) NOT NULL,
     biography NVARCHAR(max) NOT NULL,
     contactPerson NVARCHAR(100) NOT NULL,
-    contactEmailAddress NVARCHAR(50) NOT NULL,
+    contactEmailAddress NVARCHAR(64) NOT NULL,
     contactPhoneNumber NVARCHAR(20) NOT NULL,
 
 
@@ -139,10 +139,10 @@ CREATE TABLE Announcements (
     title VARCHAR(255) NOT NULL,
     companyName VARCHAR(255) NOT NULL,
     companyLogo VARCHAR(255),
-    creationDateTime datetime2 NOT NULL,
-    lastEditDateTime datetime2 NOT NULL,
-    startDisplayDateTime datetime2 NOT NULL,
-    endDisplayDateTime datetime2 NOT NULL,
+    creationDateTime datetime2 NULL,
+    lastEditDateTime datetime2 NULL,
+    startDisplayDateTime datetime2 NULL,
+    endDisplayDateTime datetime2 NULL,
     currentApplicants INT NOT NULL,
     maximumApplicants INT NOT NULL,
     minimumFollowersRequired INT,
@@ -155,7 +155,7 @@ CREATE TABLE Announcements (
     shortDescriptionText NVARCHAR(max) NOT NULL,
     additionalInformationText NVARCHAR(max) NOT NULL,
     companyContactPerson NVARCHAR(255) NOT NULL,
-    companyContactEmailAddress NVARCHAR(50) NOT NULL,
+    companyContactEmailAddress NVARCHAR(64) NOT NULL,
     companyContactPhoneNumber NVARCHAR(20) NOT NULL,
     statusType NVARCHAR(50),
     isVisible BIT DEFAULT 0,

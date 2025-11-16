@@ -2,31 +2,29 @@
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
 
+
 namespace InfiniteInfluence.ApiClient;
 
 
 public class InfluencerApiClient : IInfluencerDao
 {
-    //the rest client from restsharp to call the server
+    // The rest client from restsharp to call the server
     private readonly RestClient _restClient;
-
-    //The address of the API server
-    private readonly string _apiUri = "https://localhost:7249/";
+    private readonly string _apiUri;
 
 
-    //TODO: This should have the API url inside the constructor so it can be used from elsewhere later on
-    public InfluencerApiClient()
+    // Utilises Dependency injection from the Website project's Program.cs 
+    public InfluencerApiClient(string apiUri)
     {
+        _apiUri = apiUri;
         _restClient = new RestClient(_apiUri);
     }
 
 
-
-
-
+    //TODO: Make this code prettier during refactoring
     public int Create(Influencer influencer)
     {
-        var request = new RestRequest("authors", Method.Post);
+        RestRequest? request = new RestRequest("influencers", Method.Post);
 
         request.AddJsonBody(influencer);
 
@@ -34,14 +32,31 @@ public class InfluencerApiClient : IInfluencerDao
 
         if (response == null)
         {
-            throw new Exception("Connection: There were no response from the server.");
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        if (!response.IsSuccessful)
+        {
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception("Server reply: Unsuccessful request");
+            // throw new Exception("Server reply: Unsuccessful request");
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
+        //if (response.Data == null)
+        //{
+        //    throw new Exception("Server response did not contain an integer id.");
+        //}
+
         return response.Data;
+    }
+
+
+    public Influencer? GetOne(int userId)
+    {
+        throw new NotImplementedException();
     }
 }
