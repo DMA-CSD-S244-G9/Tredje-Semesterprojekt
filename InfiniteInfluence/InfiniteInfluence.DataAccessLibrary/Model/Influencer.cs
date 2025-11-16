@@ -28,23 +28,23 @@ public class Influencer : BaseUser
     public string Biography { get; set; } = string.Empty;
 
     
-    public string InstagramProfileUrl { get; set; } = string.Empty;
+    public string? InstagramProfileUrl { get; set; } = string.Empty;
     public int InstagramFollowers { get; set; }
 
 
-    public string YouTubeProfileUrl { get; set; } = string.Empty;
+    public string? YouTubeProfileUrl { get; set; } = string.Empty;
     public int YouTubeFollowers { get; set; }
 
 
-    public string TikTokProfileUrl { get; set; } = string.Empty;
+    public string? TikTokProfileUrl { get; set; } = string.Empty;
     public int TikTokFollower { get; set; }
 
 
-    public string SnapchatProfileUrl { get; set; } = string.Empty;
+    public string? SnapchatProfileUrl { get; set; } = string.Empty;
     public int SnapchatFollowers { get; set; }
 
 
-    public string XProfileUrl { get; set; } = string.Empty;
+    public string? XProfileUrl { get; set; } = string.Empty;
     public int XFollowers { get; set; }
 
 
