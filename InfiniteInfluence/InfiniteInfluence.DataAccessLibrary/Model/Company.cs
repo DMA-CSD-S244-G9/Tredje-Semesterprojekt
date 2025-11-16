@@ -13,8 +13,8 @@ public class Company : BaseUser
     public bool IsCompanyVerified { get; set; }
     public DateTime VerificationDate { get; set; }
     public string? CompanyName { get; set; }
-    public string CompanyLogoUrl { get; set; }
-    public List<string> CompanyDomains { get; set; }
+    public string CompanyLogoUrl { get; set; } = string.Empty;
+    public List<string> CompanyDomains { get; set; } = new List<string>();
     public string CeoName { get; set; }
     public DateTime DateOfEstablishment { get; set; }
     public string OrganisationNumber { get; set; }
@@ -23,10 +23,10 @@ public class Company : BaseUser
     public string CompanyEmail { get; set; }
     public string CompanyPhoneNumber { get; set; }
     public string Country { get; set; }
-    public string State { get; set; }
+    public string CompanyState { get; set; }
     public string City { get; set; }
-    public string Address { get; set; }
-    public string Languages { get; set; }
+    public string CompanyAddress { get; set; }
+    public string CompanyLanguage { get; set; }
     public string Biography { get; set; }
     public string ContactPerson { get; set; }
     public string ContactEmailAddress { get; set; }
@@ -43,7 +43,7 @@ public class Company : BaseUser
     /// Construtor to create a new Company before they have an UserId
     /// It inherits LoginEmail and PasswordHash from BaseUser
     /// </summary>
-    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string? companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string companyState, string city, string companyAddress, string companyLanguage, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         LoginEmail = loginEmail;
         PasswordHash = passwordHash;
@@ -60,10 +60,10 @@ public class Company : BaseUser
         CompanyEmail = companyEmail;
         CompanyPhoneNumber = companyPhoneNumber;
         Country = country;
-        State = state;
+        CompanyState = companyState;
         City = city;
-        Address = address;
-        Languages = languages;
+        CompanyAddress = companyAddress;
+        CompanyLanguage = companyLanguage;
         Biography = biography;
         ContactPerson = contactPerson;
         ContactEmailAddress = contactEmailAddress;
@@ -74,7 +74,7 @@ public class Company : BaseUser
     /// To create a Company with an userId when retrieving from the database)
     /// It inherits UserId, LoginEmail and PasswordHash from BaseUser
     /// </summary>
-    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string? companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string languages, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string language, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         UserId = userId;
         LoginEmail = email;
@@ -92,10 +92,10 @@ public class Company : BaseUser
         CompanyEmail = companyEmail;
         CompanyPhoneNumber = companyPhoneNumber;
         Country = country;
-        State = state;
+        CompanyState = state;
         City = city;
-        Address = address;
-        Languages = languages;
+        CompanyAddress = address;
+        CompanyLanguage = language;
         Biography = biography;
         ContactPerson = contactPerson;
         ContactEmailAddress = contactEmailAddress;

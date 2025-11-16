@@ -2,6 +2,7 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace InfiniteInfluence.API.Controllers
 {
@@ -23,10 +24,11 @@ namespace InfiniteInfluence.API.Controllers
 
 
         [HttpPost]
-        public ActionResult<int> CreateCompany(Company company)
+        public ActionResult<int> Create(Company company)
         {
             try
             {
+                //TODO: Validate input
                 return Ok(_companyDao.Create(company));
             }
 
@@ -43,7 +45,7 @@ namespace InfiniteInfluence.API.Controllers
 
 
         [HttpGet("{userId}")]
-        public ActionResult<Company> Get(int userId)
+        public ActionResult<Company> GetOne(int userId)
         {
             try
             {
@@ -55,16 +57,20 @@ namespace InfiniteInfluence.API.Controllers
 
                 return Ok(company);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return StatusCode(500, $"An error occurred trying to retrieve the company with user id {userId}.");
+                _logger.LogError(exception, $"An error occurred trying to retrieve the company with user id {userId}.");
+
+                var innerMessage = exception.InnerException?.Message;
+
+                return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
             }
         }
 
 
 
         [HttpDelete("{userId}")]
-        public ActionResult<bool> DeleteCompany(int userId)
+        public ActionResult<bool> Delete(int userId)
         {
             try
             {
@@ -77,9 +83,13 @@ namespace InfiniteInfluence.API.Controllers
 
                 return Ok(true);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return StatusCode(500, $"An error occurred trying to delete the author with id {userId}.");
+                _logger.LogError(exception, $"An error occurred trying to delete the author with id {userId}.");
+
+                var innerMessage = exception.InnerException?.Message;
+
+                return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
             }
         }
     }
