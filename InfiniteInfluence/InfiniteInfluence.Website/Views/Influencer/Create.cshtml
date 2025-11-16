@@ -4,12 +4,39 @@
     ViewData["Title"] = "Create Influencer Profile";
 }
 
-<h1 class="text-center mt-4 mb-2">Create Influencer Profile</h1>
-<p class="text-center mb-5" style="max-width: 700px; margin: 0 auto;">
+
+<h1 class="text-center mb-1 main-heading-margins">Create Influencer Profile</h1>
+<p class="text-center mb-5 main-introduction-margins">
     Fill out the empty fields in order to create an influencer profile and connect with companies and brands.
 </p>
 
+
 <form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+
+    <!-- ACCOUNT SECTION -->
+    <h3 class="text-center mb-1">Account</h3>
+    <p class="text-center mb-4">Fill out the account information fields to specify the e-mail and password you will use for logging in to your account in the future.</p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="LoginEmail" class="form-label"></label>
+                <input asp-for="LoginEmail" class="form-control" type="email" placeholder="What is your private e-mail address?" />
+                <span asp-validation-for="LoginEmail" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="What should your password be?" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>   
+            
+        </div>
+    </div>
+
 
     <!-- GENERAL SECTION -->
     <h3 class="text-center mb-1">General</h3>
@@ -30,6 +57,7 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
 
+
             <div class="col-md-6 mb-3">
                 <label asp-for="DisplayName" class="form-label"></label>
                 <input asp-for="DisplayName" class="form-control" placeholder="What is your alias online?" />
@@ -41,6 +69,7 @@
                 <input asp-for="Age" class="form-control" placeholder="How old are you in years?" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
+
 
             <div class="col-md-6 mb-3">
                 <label asp-for="Gender" class="form-label"></label>
@@ -54,6 +83,7 @@
                 <span asp-validation-for="Country" class="text-danger"></span>
             </div>
 
+
             <div class="col-md-6 mb-3">
                 <label asp-for="InfluencerState" class="form-label"></label>
                 <input asp-for="InfluencerState" class="form-control" placeholder="What state do you live in?" />
@@ -66,11 +96,14 @@
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
 
-            <div class="col-12 mb-3">
+            <div class="col-md-6 mb-3">
                 <label asp-for="InfluencerLanguage" class="form-label"></label>
                 <input asp-for="InfluencerLanguage" class="form-control" placeholder="What is your main language?" />
                 <span asp-validation-for="InfluencerLanguage" class="text-danger"></span>
             </div>
+
+            <!-- Add an empty field, that wont be displayed, in order to make the language field half the size to make it fit with the other fields -->
+            <div class="col-md-6 mb-3"></div>
 
         </div>
     </div>
@@ -93,7 +126,7 @@
 
             <div class="col-md-6 mb-3">
                 <label asp-for="ContactEmailAddress" class="form-label"></label>
-                <input asp-for="ContactEmailAddress" class="form-control" placeholder="What is your e-mail address?" />
+                <input asp-for="ContactEmailAddress" class="form-control" type="email" placeholder="What is your e-mail address?" />
                 <span asp-validation-for="ContactEmailAddress" class="text-danger"></span>
             </div>
 
@@ -203,12 +236,7 @@
         <div class="row">
             <div class="col-md-12">
                 <label asp-for="Biography" class="form-label"></label>
-                <textarea asp-for="Biography"
-                          class="form-control"
-                          maxlength="1000"
-                          rows="5"
-                          placeholder="What are your interests and what products are you passionate about? (max 1000 characters)">
-                </textarea>
+                <textarea asp-for="Biography" class="form-control" maxlength="1000" rows="5" placeholder="What are your interests and what products are you passionate about? (max 1000 characters)"></textarea>
                 <span asp-validation-for="Biography" class="text-danger"></span>
             </div>
         </div>

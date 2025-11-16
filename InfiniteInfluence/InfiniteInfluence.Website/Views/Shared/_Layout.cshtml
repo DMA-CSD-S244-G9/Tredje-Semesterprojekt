@@ -14,7 +14,19 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark-purple box-shadow">
             <div class="container-fluid">
+                
+                @* 
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="img/logo_liggene_white_v01.png" alt="Infinite Influence logo" width="150"></a>
+                 *@
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo_liggene_white_v01.png"
+                         asp-append-version="true"
+                         alt="Infinite Influence logo"
+                         width="150" />
+                </a>
+
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,6 +44,10 @@
             </div>
         </nav>
     </header>
+
+    @* This is our box that will appear and contain the tempdata messages when actions are performed such as create, delete and so on *@
+    @await Html.PartialAsync("_Notifications")
+    
     <div>
         <main role="main">
             @RenderBody()
@@ -43,7 +59,7 @@
         <div>
             <div class="container-footer row">
                 <div class="col-6 col-md">
-                    <h5>Company</h5>
+                    <h5 class="footer-heading">Company</h5>
                     <ul class="list-unstyled text-small">
                         <li><a class="footer-link" href="#">About us</a></li>
                         <li><a class="footer-link" href="#">Our Team</a></li>
@@ -52,16 +68,16 @@
                     </ul>
                 </div>
                 <div class="col-6 col-md">
-                    <h5>Services</h5>
+                    <h5 class="footer-heading">Legal</h5>
                     <ul class="list-unstyled text-small">
-                        <li><a class="footer-link" href="#">Web Design</a></li>
-                        <li><a class="footer-link" href="#">App Development</a></li>
-                        <li><a class="footer-link" href="#">Consulting</a></li>
-                        <li><a class="footer-link" href="#">Verification</a></li>
+                        <li><a class="footer-link" href="#">Cookie Policy</a></li>
+                        <li><a class="footer-link" href="/home/privacy">Privacy Policy</a></a></li>
+                        <li><a class="footer-link" href="#">Terms of Service</a></li>
+                        <li><a class="footer-link" href="#">GDPR Guidelines</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-md">
-                    <h5>Support</h5>
+                    <h5 class="footer-heading">Support</h5>
                     <ul class="list-unstyled text-small">
                         <li><a class="footer-link" href="#">Help Center</a></li>
                         <li><a class="footer-link" href="#">Documentation</a></li>
@@ -70,20 +86,20 @@
                     </ul>
                 </div>
                 <div class="col-6 col-md">
-                    <h5>Contact</h5>
+                    <h5 class="footer-heading">Contact</h5>
                     <ul class="list-unstyled text-small">
                         <li><a class="footer-link" href="#">Get In Touch</a></li>
-                        <li><a class="footer-link" href="#">Sales</a></li>
                         <li><a class="footer-link" href="#">Partners</a></li>
                         <li><a class="footer-link" href="#">Media</a></li>
+                        <li><a class="footer-link" href="#">Sales</a></li>
                     </ul>
                 </div>
 
 
             </div>
             <div class="border-top">
-                <div class="container-footer">
-                    &copy; 2025 - Infinite Influencer <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <div class="container-footer container-copyright">
+                    &copy; 2025 - Infinite Influencer
                 </div>
             </div>
 

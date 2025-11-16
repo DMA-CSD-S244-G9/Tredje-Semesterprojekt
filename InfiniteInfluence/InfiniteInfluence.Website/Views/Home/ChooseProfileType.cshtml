@@ -21,21 +21,23 @@
             <!-- Moves the buttons using flexbox so that they are next to each other -->
             <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
 
-                <!--<a href="C:\Users\Chris\Documents\GitHub\Tredje-Semesterprojekt\InfiniteInfluence\InfiniteInfluence.DataAccessLibrary\Model\Influencer.cs">C:\Users\Chris\Documents\GitHub\Tredje-Semesterprojekt\InfiniteInfluence\InfiniteInfluence.DataAccessLibrary\Model\Influencer.cs</a> Button for influencer -->
-                <a asp-controller="Influencer" asp-action="Create"
-                   class="btn btn-primary btn-lg px-4">
-                    I am an Influencer
-                </a>
-
+                <!-- Button for Influencers -->
+                <div class="text-center mb-4">
+                    <a asp-controller="Influencer" asp-action="Create"
+                       class="btn btn-primary px-5 py-2 d-inline-block text-decoration-none">
+                        I am an Influencer
+                    </a>
+                </div>
 
                 <!-- Button for company / brand -->
-                <a asp-controller="Company" asp-action="Create"
-                   class="btn btn-primary btn-lg px-4">
-                    I am a Company
-                </a>
+                <div class="text-center mb-4">
+                    <a asp-controller="Company" asp-action="Create"
+                       class="btn btn-primary px-5 py-2 d-inline-block text-decoration-none">
+                        I am a Company
+                    </a>
+                </div>
+
             </div>
-
-
         </div>
     </div>
 </div>
