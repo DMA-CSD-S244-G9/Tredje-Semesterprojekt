@@ -131,6 +131,15 @@ a:hover {
     border-color: none !important; /* removed hover border-color */
 }
 
+/* Nav - profile and company icons */
+.nav-icon-link {
+    font-size: 1.4rem;
+    color: #ffffff !important;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
 
 
 /*-----------*/
@@ -525,3 +534,9 @@ body:not(.home-footer) .site-footer {
         transform: translateX(100px);
     }
 }
+
+
+
+
+
+
