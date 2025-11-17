@@ -13,7 +13,12 @@ namespace InfiniteInfluence.Website
             builder.Services.AddControllersWithViews();
 
             // Sets up the dependency injection using the IInfluencerDao in the API
-            builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:32777"));
+            //builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:32777"));
+            builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:7777"));
+
+            // Sets up the dependency injection using the IcompanyDao in the API
+            //builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:32777"));
+            builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:7777"));
 
             var app = builder.Build();
 
