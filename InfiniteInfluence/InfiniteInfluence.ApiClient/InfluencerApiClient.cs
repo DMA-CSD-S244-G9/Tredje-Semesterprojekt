@@ -26,9 +26,9 @@ public class InfluencerApiClient : IInfluencerDao
     {
         RestRequest? request = new RestRequest("influencers", Method.Post);
 
-//        request.AddJsonBody(influencer);
+        request.AddJsonBody(influencer);
 
-//        var response = _restClient.Execute<int>(request);
+        var response = _restClient.Execute<int>(request);
 
         if (response == null)
         {
