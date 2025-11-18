@@ -38,7 +38,7 @@ public class CompanyDaoTests
             ceoName: "Catch Ceo Name",
             dateOfEstablishment: new DateTime(1995, 3, 1),
             organisationNumber: "12345OrgNumber",
-            standardIndustryClassification: "12345StandardIC",
+            standardIndustryClassification: 1234,
             websiteUrl: "websiteUrl",
             companyEmail: "CatchSushi@gmail.com",
             companyPhoneNumber: "+4512341234",
