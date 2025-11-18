@@ -10,13 +10,12 @@
     Fill out the empty fields in order to create an influencer profile and connect with companies and brands.
 </p>
 
-
 <form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
     <!-- ACCOUNT SECTION -->
-    <h3 class="text-center mb-1">Account</h3>
+    <h2 class="text-center mb-1">Account</h2>
     <p class="text-center mb-4">Fill out the account information fields to specify the e-mail and password you will use for logging in to your account in the future.</p>
 
     <div class="container mb-5">
@@ -39,7 +38,7 @@
 
 
     <!-- GENERAL SECTION -->
-    <h3 class="text-center mb-1">General</h3>
+    <h2 class="text-center mb-1">General</h2>
     <p class="text-center mb-4">Fill out the general information fields to help companies understand who you are.</p>
 
     <div class="container mb-5">
@@ -110,7 +109,7 @@
 
 
     <!-- CONTACT INFORMATION SECTION -->
-    <h3 class="text-center mb-1">Contact Information</h3>
+    <h2 class="text-center mb-1">Contact Information</h2>
     <p class="text-center mb-4">
         Your contact details will only be visible to companies after they accept your application.
     </p>
@@ -135,7 +134,7 @@
 
 
     <!-- INFLUENCING DOMAINS SECTION -->
-    <h3 class="text-center mb-1">Influencer Domains</h3>
+    <h2 class="text-center mb-1">Influencer Domains</h2>
     <p class="text-center mb-4">
         Add the domain fields to categorize what topics you influence people in.
     </p>
@@ -166,7 +165,7 @@
 
 
     <!-- SOCIAL MEDIA AND FOLLOWERS SECTION -->
-    <h3 class="text-center mb-1">Social Media</h3>
+    <h2 class="text-center mb-1">Social Media</h2>
     <p class="text-center mb-4">Add your social profile links and follower counts.</p>
 
     <div class="container mb-5">
@@ -227,7 +226,7 @@
 
 
     <!-- BIOGRAPHY -->
-    <h3 class="text-center mb-1">Biography</h3>
+    <h2 class="text-center mb-1">Biography</h2>
     <p class="text-center mb-4">
         Add information about yourself, what type of content you create and your collaboration aspirations.
     </p>
@@ -236,7 +235,7 @@
         <div class="row">
             <div class="col-md-12">
                 <label asp-for="Biography" class="form-label"></label>
-                <textarea asp-for="Biography" class="form-control" maxlength="1000" rows="5" placeholder="What are your interests and what products are you passionate about? (max 1000 characters)"></textarea>
+                <textarea asp-for="Biography" class="form-control" maxlength="1000" rows="5" placeholder="What are your interests and what products are you passionate about? (max 500 characters)"></textarea>
                 <span asp-validation-for="Biography" class="text-danger"></span>
             </div>
         </div>
