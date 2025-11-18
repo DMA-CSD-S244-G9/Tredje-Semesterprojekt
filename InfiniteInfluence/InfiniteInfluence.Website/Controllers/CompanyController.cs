@@ -20,7 +20,22 @@ public class CompanyController : Controller
         _logger = logger;
     }
 
-    // GET: /Company/Create
+
+    /// <summary>
+    /// Displays the form for creating a new company.
+    /// GET: /Company/Create
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Initializes the <see cref="CompanyCreateViewModel"/> with default values, including setting
+    /// the <c>DateOfEstablishment</c> field to the current date. This ensures the form does not default to an invalid
+    /// or unexpected date.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An <see cref="IActionResult"/> that renders the "Create" view with the pre-populated <see
+    /// cref="CompanyCreateViewModel"/>.
+    /// </returns>
     [HttpGet]
     public IActionResult Create()
     {
@@ -34,7 +49,26 @@ public class CompanyController : Controller
         return View(model);
     }
 
-
+    /// <summary>
+    /// Handles the creation of a new company profile based on the provided view model.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This method validates the input model, converts it to a format suitable for the API, and
+    /// attempts to create a new company profile using the API client. If the operation is successful, a success message
+    /// is stored in <see cref="TempData"/> and the user is redirected to the home page. If an error occurs, the
+    /// exception details are logged, and an error message is added to the model state.
+    /// </remarks>
+    /// 
+    /// <param name="companyModel">
+    /// The view model containing the data required to create a new company profile.
+    /// </param>
+    /// 
+    /// <returns>
+    /// An <see cref="IActionResult"/> that renders the view with validation errors if the model state is invalid,
+    /// redirects to the home page upon successful creation, or re-renders the view with an error message if an
+    /// exception occurs.
+    /// </returns>
     [HttpPost]
     public IActionResult Create(CompanyCreateViewModel companyModel)
     {
@@ -85,6 +119,7 @@ public class CompanyController : Controller
     /// </summary>
     /// 
     /// <param name="model">The data submitted from the MVC Create form.</param>
+    /// 
     /// <returns>A Company object ready to be sent to the API for creation.</returns>
     private Company ConvertFromViewModelToApiInfluencer(CompanyCreateViewModel model)
     {
@@ -171,7 +206,9 @@ public class CompanyController : Controller
         }
     }
 
-    // Remote method used in CompanyCreateViewModel to validate date on server side 
+    /// <summary>
+    /// Remote method used to validate the date of establishment on the server side.
+    /// </summary>
     public IActionResult ValidateEstablishmentDate(DateTime dateOfEstablishment)
     {
         if (dateOfEstablishment >= DateTime.Today)
