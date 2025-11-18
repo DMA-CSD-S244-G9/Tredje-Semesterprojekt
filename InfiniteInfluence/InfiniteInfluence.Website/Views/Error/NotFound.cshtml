@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Page not found";
+}
+
+
+<div class="error-404-wrapper">
+
+    @* This div is simply to make the rest of the items align properly  *@
+    <div>
+        <h1 class="error-404-code">404</h1>
+        <p class="error-404-text">
+            It looks like you have wandered off
+            <br />and gotten lost among the stars
+        </p>
+
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary error-404-btn">
+            Wander Back Home
+        </a>
+
+    </div>
+</div>

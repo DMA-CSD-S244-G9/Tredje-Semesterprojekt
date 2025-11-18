@@ -32,6 +32,11 @@ namespace InfiniteInfluence.Website
 
             app.UseAuthorization();
 
+
+            // Sends 404 and other status codes to the Error/404 page
+            app.UseStatusCodePagesWithReExecute("/Error/404");
+
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
