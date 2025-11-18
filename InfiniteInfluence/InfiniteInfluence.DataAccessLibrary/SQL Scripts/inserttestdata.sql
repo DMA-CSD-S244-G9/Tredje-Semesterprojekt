@@ -51,23 +51,23 @@ INSERT INTO Companys (
     contactPhoneNumber
 )
 VALUES
-(6, 1, GETDATE(), 'NordicTech', NULL, 'Peter Jensen', '2010-01-01', 'NT12345', 'Technology',
+(6, 1, GETDATE(), 'NordicTech', NULL, 'Peter Jensen', '2010-01-01', 'NT12345', 1234,
  'nordictech.com', 'contact@nordictech.com', '+4588888888', 'Denmark', 'Hovedstaden', 'Copenhagen',
  'Tech Street 10', 'English', 'Leading Nordic tech firm.', 'Line Sørensen', 'line@nordictech.com', '+4544444444'),
 
-(7, 0, GETDATE(), 'FreshSnacks', NULL, 'Maria Gustafsson', '2018-04-10', 'FS98765', 'Food',
+(7, 0, GETDATE(), 'FreshSnacks', NULL, 'Maria Gustafsson', '2018-04-10', 'FS98765', 5678,
  'freshsnacks.com', 'info@freshsnacks.com', '+4677777777', 'Sweden', 'Stockholm', 'Stockholm',
  'Food Road 5', 'Swedish', 'Healthy snack company.', 'Jonas Berg', 'jonas@freshsnacks.com', '+4675555555'),
 
-(8, 1, GETDATE(), 'EcoWear', NULL, 'Nina Rasmussen', '2015-06-12', 'EW54321', 'Fashion',
+(8, 1, GETDATE(), 'EcoWear', NULL, 'Nina Rasmussen', '2015-06-12', 'EW54321', 1357,
  'ecowear.com', 'support@ecowear.com', '+4533333333', 'Denmark', 'Fyn', 'Odense',
  'Green Street 12', 'Danish', 'Sustainable clothing brand.', 'Olivia Madsen', 'olivia@ecowear.com', '+4577777777'),
 
-(9, 0, GETDATE(), 'FitGear', NULL, 'Karl Olsson', '2012-09-20', 'FG11223', 'Sports',
+(9, 0, GETDATE(), 'FitGear', NULL, 'Karl Olsson', '2012-09-20', 'FG11223', 2468,
  'fitgear.com', 'help@fitgear.com', '+4699999999', 'Norway', 'Oslo', 'Oslo',
  'Energy Road 22', 'Norwegian', 'High-quality sports gear.', 'Erik Sørlie', 'erik@fitgear.com', '+4788888888'),
 
-(10, 1, GETDATE(), 'BeautyBox', NULL, 'Emma Thomsen', '2017-11-15', 'BB73648', 'Beauty',
+(10, 1, GETDATE(), 'BeautyBox', NULL, 'Emma Thomsen', '2017-11-15', 'BB73648', 1256,
  'beautybox.com', 'service@beautybox.com', '+4566666666', 'Denmark', 'Hovedstaden', 'Copenhagen',
  'Glow Avenue 3', 'Danish', 'Cosmetics and beauty products.', 'Sofie Lauritsen', 'sofie@beautybox.com', '+4561111111');
 
