@@ -26,9 +26,11 @@ public class InfluencerApiClient : IInfluencerDao
     {
         RestRequest? request = new RestRequest("influencers", Method.Post);
 
-//        request.AddJsonBody(influencer);
+        // Sends the Announcement object as JSON format in the request body
+        request.AddJsonBody(influencer);
 
-//        var response = _restClient.Execute<int>(request);
+        // Calls upon the API and expects an integer back in the form of a UserId
+        var response = _restClient.Execute<int>(request);
 
         if (response == null)
         {

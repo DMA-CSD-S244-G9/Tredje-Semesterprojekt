@@ -14,7 +14,7 @@ public class InfluencerCreateViewModel
     public string LoginEmail { get; set; } = string.Empty;
 
 
-    // Her kunne du hashe senere – nu holder vi det simpelt
+    //TODO: Maybe implement salting and hashing later
     [Required]
     [Display(Name = "Password")]
     public string Password { get; set; } = string.Empty;
