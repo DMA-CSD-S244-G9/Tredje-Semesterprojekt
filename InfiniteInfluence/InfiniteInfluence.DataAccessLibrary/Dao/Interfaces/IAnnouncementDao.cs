@@ -13,4 +13,10 @@ public interface IAnnouncementDao
     /// Creates a new Announcement in the database and returns the generated AnnouncementId.
     /// </summary>
     int Create(Announcement announcement);
+
+
+    /// <summary>
+    /// Returns all of the announcements from the database.
+    /// </summary>
+    IEnumerable<Announcement> GetAll();
 }

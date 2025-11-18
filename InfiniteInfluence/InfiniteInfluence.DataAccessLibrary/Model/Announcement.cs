@@ -15,6 +15,9 @@ public class Announcement
     // This is used as the foreign key to the company table
     public int UserId { get; set; }
 
+    // NOTE: The CompanyName is not saved in the database it is simply a derived field that we fetch through joining of tables in the AnnouncementDao class 
+    public string? CompanyName { get; set; }
+
 
     public string Title { get; set; } = string.Empty;
 

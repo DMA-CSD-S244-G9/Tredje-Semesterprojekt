@@ -79,10 +79,36 @@ public class AnnouncementController : Controller
     }
 
 
+    //public IActionResult Index()
+    //{
+    //    return View();
+    //}
+
+
+    // GET: /Announcement
     public IActionResult Index()
     {
-        return View();
+        try
+        {
+            List<Announcement> announcements = _announcementApiClient.GetAll().ToList();
+
+            return View(announcements);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while retrieving announcements from MVC.");
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            //HACK: ??? note I do not know if this is bad practice but it does the trick for now
+            // Returns an empty list of announcements to prevent the view from crashing
+            return View(new List<Announcement>());
+        }
     }
+
+
 
 
 

@@ -55,4 +55,37 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+
+
+    public IEnumerable<Announcement> GetAll()
+    {
+        RestRequest? request = new RestRequest("announcements", Method.Get);
+
+        // Calls upon the API and expects a list of Announcement objects back
+        var response = _restClient.Execute<List<Announcement>>(request);
+
+
+        if (response == null)
+        {
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        if (!response.IsSuccessful)
+        {
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        // Since the response data can be null then we return an empty list in that case
+        if (response.Data == null)
+        {
+            return new List<Announcement>();
+        }
+
+        return response.Data;
+    }
 }

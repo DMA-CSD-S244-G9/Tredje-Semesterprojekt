@@ -44,4 +44,25 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+
+
+
+
+    [HttpGet]
+    public ActionResult<IEnumerable<Announcement>> GetAll()
+    {
+        try
+        {
+            return Ok(_announcementDao.GetAll());
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "An error has occured when attempting to get all Announcements.");
+
+            var innerMessage = exception.InnerException?.Message;
+
+            return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
+        }
+    }
 }
