@@ -12,13 +12,13 @@ public class Company : BaseUser
     #region Properties
     public bool IsCompanyVerified { get; set; }
     public DateTime? VerificationDate { get; set; }
-    public string? CompanyName { get; set; }
-    public string CompanyLogoUrl { get; set; } = string.Empty;
-    public List<string> CompanyDomains { get; set; } = new List<string>();
+    public string CompanyName { get; set; }
+    public string? CompanyLogoUrl { get; set; } 
+    public List<string>? CompanyDomains { get; set; } = new List<string>();
     public string CeoName { get; set; }
     public DateTime? DateOfEstablishment { get; set; }
     public string OrganisationNumber { get; set; }
-    public string StandardIndustryClassification { get; set; }
+    public int StandardIndustryClassification { get; set; }
     public string? WebsiteUrl { get; set; }
     public string CompanyEmail { get; set; }
     public string CompanyPhoneNumber { get; set; }
@@ -35,15 +35,30 @@ public class Company : BaseUser
 
     #region Constructor
 
+    /// <summary>
+    /// Required by:
+    /// - ASP.NET MVC model binding (HTML form to Company object)
+    /// - JSON serializers/deserializers (API client and API)
+    /// 
+    /// Model binding: 
+    /// From input fields in the mvc views called 'create' 
+    /// to the CompanyController that converts the data into a Company object.
+    /// 
+    /// Serializers: 
+    /// Company is serialized into JSON when sent from the MVC site to the API.
+    /// 
+    /// Deserializers: 
+    /// When the API receives JSON, it creates a Company() instance and fills properties during deserialization.
+    /// </summary>
     public Company()
     {
     }
 
     /// <summary>
-    /// Construtor to create a new Company before they have an UserId
-    /// It inherits LoginEmail and PasswordHash from BaseUser
+    /// It's used in companyDaoTest to manually constructor a Company object in code.
+    /// The Construtor is optional and exists only if developers prefer to use it.
     /// </summary>
-    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string companyState, string city, string companyAddress, string companyLanguage, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string companyState, string city, string companyAddress, string companyLanguage, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         LoginEmail = loginEmail;
         PasswordHash = passwordHash;
@@ -71,10 +86,19 @@ public class Company : BaseUser
     }
 
     /// <summary>
-    /// To create a Company with an userId when retrieving from the database)
-    /// It inherits UserId, LoginEmail and PasswordHash from BaseUser
+    /// In the CompanyDao it's used by dapper to relational data to a company object in c#.
+    /// 
+    /// When running:
+    /// 'connection.Query<Company>("SELECT ... FROM Companys")',
+    /// 
+    /// Dapper attempts to use the constructor whose parameters match the column names.
+    /// If all parameters match, Dapper calls this constructor to map database values
+    /// directly into a Company instance.
+    /// 
+    /// If the parameter names do NOT match the SQL columns,
+    /// Dapper falls back to the empty constructor + property mapping.
     /// </summary>
-    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, string standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string language, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string language, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
     {
         UserId = userId;
         LoginEmail = email;
