@@ -30,7 +30,7 @@ public class InfluencerController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        var model = new InfluencerCreateViewModel();
+        InfluencerCreateViewModel model = new InfluencerCreateViewModel();
         PopulateGenderOptions(model);
 
         // We pass model so that the view gets all of the InfluencerCreateViewModel's properties and gender selection works
@@ -38,7 +38,7 @@ public class InfluencerController : Controller
     }
 
 
-    // POST: InfluencerController/Create
+    // POST: Influencer/Create
     [HttpPost]
     public IActionResult Create(InfluencerCreateViewModel influencerModel)
     {
@@ -59,19 +59,19 @@ public class InfluencerController : Controller
 
             int newUserId = _InfluencerApiClient.Create(influencer);
 
-            // Defines a success message that can be that is stored in the users session or cookies and then shown 
+            // Defines a success message that is stored in the users session or cookies and then shown
             TempData["SuccessMessage"] = "The influencer profile was successfully created.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
             return RedirectToAction("Index", "Home");
         }
 
-        catch (Exception exxception)
+        catch (Exception exception)
         {
-            _logger.LogError(exxception, "Error while creating influencer from MVC.");
+            _logger.LogError(exception, "Error while creating influencer from MVC.");
 
-            // Midlertidigt: vis den rigtige fejltekst fra API'et
-            ModelState.AddModelError(string.Empty, $"The following api error occured: {exxception.Message}");
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
 
             // When errors occur we recreate the dropdown data the Gender field else we might lose it
             PopulateGenderOptions(influencerModel);
@@ -103,51 +103,52 @@ public class InfluencerController : Controller
     /// 
     /// <param name="model">The data submitted from the MVC Create form.</param>
     /// <returns>An Influencer object ready to be sent to the API for creation.</returns>
-    private Influencer ConvertFromViewModelToApiInfluencer(InfluencerCreateViewModel model)
+    private Influencer ConvertFromViewModelToApiInfluencer(InfluencerCreateViewModel influencerCreateViewModel)
     {
-        var influencer = new Influencer
+        Influencer influencer = new Influencer
         {
             // BaseUser related fields
-            LoginEmail = model.LoginEmail,
+            LoginEmail = influencerCreateViewModel.LoginEmail,
+
             // TODO: This should be hashed later on
-            PasswordHash = model.Password,
+            PasswordHash = influencerCreateViewModel.Password,
 
 
             // Influencer related fields
             IsInfluencerVerified = false,
             VerificationDate = null,
-            DisplayName = model.DisplayName,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            ProfileImageUrl = model.ProfileImageUrl,
-            Age = model.Age,
-            Gender = model.Gender,
-            Country = model.Country,
-            InfluencerState = model.InfluencerState,
-            City = model.City,
-            InfluencerLanguage = model.InfluencerLanguage,
-            Biography = model.Biography,
-            ContactPhoneNumber = model.ContactPhoneNumber,
-            ContactEmailAddress = model.ContactEmailAddress,
-            InstagramProfileUrl = model.InstagramProfileUrl,
-            InstagramFollowers = model.InstagramFollowers,
-            YouTubeProfileUrl = model.YouTubeProfileUrl,
-            YouTubeFollowers = model.YouTubeFollowers,
-            TikTokProfileUrl = model.TikTokProfileUrl,
-            TikTokFollower = model.TikTokFollower,
-            SnapchatProfileUrl = model.SnapchatProfileUrl,
-            SnapchatFollowers = model.SnapchatFollowers,
-            XProfileUrl = model.XProfileUrl,
-            XFollowers = model.XFollowers,
+            DisplayName = influencerCreateViewModel.DisplayName,
+            FirstName = influencerCreateViewModel.FirstName,
+            LastName = influencerCreateViewModel.LastName,
+            ProfileImageUrl = influencerCreateViewModel.ProfileImageUrl,
+            Age = influencerCreateViewModel.Age,
+            Gender = influencerCreateViewModel.Gender,
+            Country = influencerCreateViewModel.Country,
+            InfluencerState = influencerCreateViewModel.InfluencerState,
+            City = influencerCreateViewModel.City,
+            InfluencerLanguage = influencerCreateViewModel.InfluencerLanguage,
+            Biography = influencerCreateViewModel.Biography,
+            ContactPhoneNumber = influencerCreateViewModel.ContactPhoneNumber,
+            ContactEmailAddress = influencerCreateViewModel.ContactEmailAddress,
+            InstagramProfileUrl = influencerCreateViewModel.InstagramProfileUrl,
+            InstagramFollowers = influencerCreateViewModel.InstagramFollowers,
+            YouTubeProfileUrl = influencerCreateViewModel.YouTubeProfileUrl,
+            YouTubeFollowers = influencerCreateViewModel.YouTubeFollowers,
+            TikTokProfileUrl = influencerCreateViewModel.TikTokProfileUrl,
+            TikTokFollower = influencerCreateViewModel.TikTokFollower,
+            SnapchatProfileUrl = influencerCreateViewModel.SnapchatProfileUrl,
+            SnapchatFollowers = influencerCreateViewModel.SnapchatFollowers,
+            XProfileUrl = influencerCreateViewModel.XProfileUrl,
+            XFollowers = influencerCreateViewModel.XFollowers,
         };
 
 
         // Creates a list of string objects that can hold up to three domain fields
         List<string> domains = new List<string>();
 
-        AddDomainIfValid(domains, model.Domain1);
-        AddDomainIfValid(domains, model.Domain2);
-        AddDomainIfValid(domains, model.Domain3);
+        AddDomainIfValid(domains, influencerCreateViewModel.Domain1);
+        AddDomainIfValid(domains, influencerCreateViewModel.Domain2);
+        AddDomainIfValid(domains, influencerCreateViewModel.Domain3);
 
         // Only assign the domains if they actually have any values
         if (domains.Any())
@@ -161,9 +162,9 @@ public class InfluencerController : Controller
 
     // Helper method to set the dropdown values for the gender dropdown 
     // TODO: (Maybe we should add 'other' as an option later?)
-    private void PopulateGenderOptions(InfluencerCreateViewModel model)
+    private void PopulateGenderOptions(InfluencerCreateViewModel influencerCreateViewModel)
     {
-        model.GenderOptions = new List<SelectListItem>
+        influencerCreateViewModel.GenderOptions = new List<SelectListItem>
         {
             new SelectListItem { Text = "Male", Value = "Male" },
             new SelectListItem { Text = "Female", Value = "Female" }

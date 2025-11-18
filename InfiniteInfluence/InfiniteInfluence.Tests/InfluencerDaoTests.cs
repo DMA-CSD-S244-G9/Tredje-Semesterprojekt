@@ -25,14 +25,27 @@ public class InfluencerDaoTests
     [Test]
     public void CreateConnection_WithValidConnectionString_ShouldOpenConnection()
     {
-        // Arrange - This has been done in [Setup] instantiating _influencerDao
+        /////////////////
+        // - Arrange - //
+        /////////////////
 
+        // Arrange - This has been done in [Setup] instantiating _influencerDao
         using IDbConnection connection = _influencerDao.CreateConnection();
 
-        // Act
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        
         connection.Open();
 
-        // Assert
+
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+        
         Assert.That(connection.State, Is.EqualTo(ConnectionState.Open));
     }
 
@@ -41,14 +54,18 @@ public class InfluencerDaoTests
     [Test]
     public void Create_WithValidInfluencer_ShouldReturnNewUserId()
     {
-        // Arrange
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        
         Influencer influencer = new Influencer
         {
-            // User
+            // User properties
             LoginEmail = "NUnitTestCreateValid@example.com",
             PasswordHash = "PassedWord1234",
 
-            // Influencer
+
+            // Influencer properties
             IsInfluencerVerified = false,
             VerificationDate = DateTime.Now,
             DisplayName = "Test Influencer",
@@ -82,10 +99,20 @@ public class InfluencerDaoTests
             }
         };
 
-        // Act
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        
         int newUserId = _influencerDao.Create(influencer);
 
-        // Assert
+
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+        
         Assert.That(newUserId, Is.GreaterThan(0), "The Create method should return a UserId that is above 0");
         Assert.That(influencer.UserId, Is.EqualTo(newUserId), "The Influencer.UserId should be updated and be equals to that of the newly generated UserID.");
     }
@@ -99,22 +126,26 @@ public class InfluencerDaoTests
     [Test]
     public void GetOne_WithExistingUserId_ShouldReturnMatchingInfluencer()
     {
-        // ARRANGE
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        
         // We first create a new influencer using the Create method,
         // so the test does not depend on external seed data.
 
-//        string uniqueSuffix = Guid.NewGuid().ToString("N");
+        //        string uniqueSuffix = Guid.NewGuid().ToString("N");
         string uniqueSuffix = Guid.NewGuid().ToString("N").Substring(0, 10);
 
 
         Influencer influencerToCreate = new Influencer
         {
-            // BaseUser fields
+            // User properties
             LoginEmail = $"g_{uniqueSuffix}@x.com",
 //            LoginEmail = $"U_{uniqueSuffix}@example.com",
             PasswordHash = "SomeHashedPassword",
 
-            // Influencer fields
+
+            // Influencer properties
             IsInfluencerVerified = true,
             VerificationDate = DateTime.UtcNow,
             DisplayName = "GetOne Test Influencer",
@@ -151,14 +182,24 @@ public class InfluencerDaoTests
 
         int createdUserId = _influencerDao.Create(influencerToCreate);
 
-        // ACT
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        
         Influencer? foundInfluencer = _influencerDao.GetOne(createdUserId);
 
-        // ASSERT
+
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+        
         Assert.That(foundInfluencer, Is.Not.Null, "GetOne should return an influencer for an existing UserId.");
         Assert.That(foundInfluencer!.UserId, Is.EqualTo(createdUserId));
 
-        // Check some base fields
+        // Checks if the base fields have the expected values
         Assert.That(foundInfluencer.LoginEmail, Is.EqualTo(influencerToCreate.LoginEmail));
         Assert.That(foundInfluencer.DisplayName, Is.EqualTo(influencerToCreate.DisplayName));
         Assert.That(foundInfluencer.FirstName, Is.EqualTo(influencerToCreate.FirstName));
@@ -167,29 +208,34 @@ public class InfluencerDaoTests
         // Check domains were loaded from InfluencerDomains
         Assert.That(foundInfluencer.InfluencerDomains, Is.Not.Null);
         Assert.That(foundInfluencer.InfluencerDomains.Count, Is.EqualTo(3));
-        CollectionAssert.AreEquivalent(
-            influencerToCreate.InfluencerDomains,
-            foundInfluencer.InfluencerDomains,
-            "InfluencerDomains should match the domains inserted during Create.");
+        CollectionAssert.AreEquivalent(influencerToCreate.InfluencerDomains, foundInfluencer.InfluencerDomains, "InfluencerDomains should match the domains inserted during Create.");
     }
-
-
 
 
 
     [Test]
     public void GetOne_WithNonExistingUserId_ShouldReturnNull()
     {
-        // ARRANGE
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        
         int nonExistingUserId = 500;
 
-        // ACT
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        
         Influencer? foundInfluencer = _influencerDao.GetOne(nonExistingUserId);
 
-        // ASSERT
+
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+        
         Assert.That(foundInfluencer, Is.Null, "GetOne should return null for a non-existing UserId.");
     }
-
-
-
 }

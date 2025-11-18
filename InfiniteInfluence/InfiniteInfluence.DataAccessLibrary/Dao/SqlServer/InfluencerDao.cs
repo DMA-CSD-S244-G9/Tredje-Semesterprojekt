@@ -157,7 +157,7 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
             // Uses dapper to insert into the Users table and return the newest generated UserId using SCOPE_IDENTITY()
             int newUserId = connection.QuerySingle<int>(queryInsertUser, new { influencer.LoginEmail, influencer.PasswordHash }, transaction );
 
-            // Updates the influencer's UserId to match the newly generated UserId
+            // Assigns the influencer's UserId to match the newly generated UserId
             influencer.UserId = newUserId;
 
 
@@ -202,9 +202,9 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
                 }
             }
 
+
             // Commits the transactions
             transaction.Commit();
-
 
             // Returns the newly generated primary key
             return newUserId;
