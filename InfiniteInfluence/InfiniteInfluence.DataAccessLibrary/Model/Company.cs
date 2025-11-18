@@ -3,9 +3,6 @@
 /// <summary>
 /// This class represents a Company user in the Infinite Influence system.
 /// Inherits from BaseUser and includes properties specific to companies.
-/// 
-/// @author Line Bertelsen
-/// @Date 2025-15-11
 /// </summary>
 public class Company : BaseUser
 {
