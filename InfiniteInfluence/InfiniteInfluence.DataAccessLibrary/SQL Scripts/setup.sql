@@ -72,7 +72,7 @@ CREATE TABLE Companys (
     ceoName NVARCHAR(255) NOT NULL,
 	  dateOfEstablishment datetime2 NULL,
 	  organisationNumber NVARCHAR(50) NOT NULL,
-    standardIndustryClassification NVARCHAR(255) NOT NULL,
+    standardIndustryClassification int NOT NULL,
     websiteUrl NVARCHAR(255) NULL,
     companyEmail NVARCHAR(64) NOT NULL,
     companyPhoneNumber NVARCHAR(20) NOT NULL,
