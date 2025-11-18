@@ -13,12 +13,15 @@ namespace InfiniteInfluence.Website
             builder.Services.AddControllersWithViews();
 
             // Sets up the dependency injection using the IInfluencerDao in the API
-            //builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:32777"));
-            builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:7777"));
-
+            //builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:7777"));
+            builder.Services.AddScoped<IInfluencerDao>((_) => new InfluencerApiClient("https://localhost:32781"));
+          
             // Sets up the dependency injection using the IcompanyDao in the API
-            //builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:32777"));
-            builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:7777"));
+            //builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:7777"));
+            builder.Services.AddScoped<ICompanyDao>((_) => new CompanyApiClient("https://localhost:32781"));
+            
+            //builder.Services.AddScoped<IAnnouncementDao>((_) => new AnnouncementApiClient("https://localhost:7777"));
+            builder.Services.AddScoped<IAnnouncementDao>((_) => new AnnouncementApiClient("https://localhost:32781"));
 
             var app = builder.Build();
 
@@ -36,6 +39,11 @@ namespace InfiniteInfluence.Website
             app.UseRouting();
 
             app.UseAuthorization();
+
+
+            // Sends 404 and other status codes to the Error/404 page
+            app.UseStatusCodePagesWithReExecute("/Error/404");
+
 
             app.MapControllerRoute(
                 name: "default",

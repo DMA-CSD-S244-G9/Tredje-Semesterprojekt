@@ -51,23 +51,23 @@ INSERT INTO Companys (
     contactPhoneNumber
 )
 VALUES
-(6, 1, GETDATE(), 'NordicTech', NULL, 'Peter Jensen', '2010-01-01', 'NT12345', 1234,
+(6, 1, GETDATE(), 'NordicTech', NULL, 'Peter Jensen', '2010-01-01', 'NT12345', 1400,
  'nordictech.com', 'contact@nordictech.com', '+4588888888', 'Denmark', 'Hovedstaden', 'Copenhagen',
  'Tech Street 10', 'English', 'Leading Nordic tech firm.', 'Line Sørensen', 'line@nordictech.com', '+4544444444'),
 
-(7, 0, GETDATE(), 'FreshSnacks', NULL, 'Maria Gustafsson', '2018-04-10', 'FS98765', 5678,
+(7, 0, GETDATE(), 'FreshSnacks', NULL, 'Maria Gustafsson', '2018-04-10', 'FS98765', 1100,
  'freshsnacks.com', 'info@freshsnacks.com', '+4677777777', 'Sweden', 'Stockholm', 'Stockholm',
  'Food Road 5', 'Swedish', 'Healthy snack company.', 'Jonas Berg', 'jonas@freshsnacks.com', '+4675555555'),
 
-(8, 1, GETDATE(), 'EcoWear', NULL, 'Nina Rasmussen', '2015-06-12', 'EW54321', 1357,
+(8, 1, GETDATE(), 'EcoWear', NULL, 'Nina Rasmussen', '2015-06-12', 'EW54321', 1329,
  'ecowear.com', 'support@ecowear.com', '+4533333333', 'Denmark', 'Fyn', 'Odense',
  'Green Street 12', 'Danish', 'Sustainable clothing brand.', 'Olivia Madsen', 'olivia@ecowear.com', '+4577777777'),
 
-(9, 0, GETDATE(), 'FitGear', NULL, 'Karl Olsson', '2012-09-20', 'FG11223', 2468,
+(9, 0, GETDATE(), 'FitGear', NULL, 'Karl Olsson', '2012-09-20', 'FG11223', 285,
  'fitgear.com', 'help@fitgear.com', '+4699999999', 'Norway', 'Oslo', 'Oslo',
  'Energy Road 22', 'Norwegian', 'High-quality sports gear.', 'Erik Sørlie', 'erik@fitgear.com', '+4788888888'),
 
-(10, 1, GETDATE(), 'BeautyBox', NULL, 'Emma Thomsen', '2017-11-15', 'BB73648', 1256,
+(10, 1, GETDATE(), 'BeautyBox', NULL, 'Emma Thomsen', '2017-11-15', 'BB73648', 780,
  'beautybox.com', 'service@beautybox.com', '+4566666666', 'Denmark', 'Hovedstaden', 'Copenhagen',
  'Glow Avenue 3', 'Danish', 'Cosmetics and beauty products.', 'Sofie Lauritsen', 'sofie@beautybox.com', '+4561111111');
 
@@ -91,48 +91,42 @@ INSERT INTO InfluencerDomains (userId, domain) VALUES
 
 -- ANNOUNCEMENTS (5 announcements)
 INSERT INTO Announcements (
-    userId, title, companyName, companyLogo, creationDateTime, lastEditDateTime,
+    userId, title, creationDateTime, lastEditDateTime,
     startDisplayDateTime, endDisplayDateTime, currentApplicants, maximumApplicants,
     minimumFollowersRequired, communicationType, announcementlanguage, isKeepProducts,
-    isPayoutNegotiable, isPayout, totalPayoutAmount, shortDescriptionText,
-    additionalInformationText, companyContactPerson, companyContactEmailAddress,
-    companyContactPhoneNumber, statusType, isVisible
+    isPayoutNegotiable, totalPayoutAmount, shortDescriptionText,
+    additionalInformationText, statusType, isVisible
 )
 VALUES
 -- Announcement 1 (NordicTech - Technology)
-(6, 'Review Our New Smart Device', 'NordicTech', NULL, GETDATE(), GETDATE(),
+(6, 'Review Our New Smart Device', GETDATE(), GETDATE(),
  GETDATE(), DATEADD(DAY, 30, GETDATE()), 0, 10, 20000, 'Email', 'English',
- 0, 1, 1, 5000.00, 'We are seeking tech influencers to review a new smart device.',
- 'You will receive the product for testing.', 'Line Sørensen', 'line@nordictech.com',
- '+4544444444', 'Active', 1),
+ 0, 1, 5000.00, 'We are seeking tech influencers to review a new smart device.',
+ 'You will receive the product for testing.', 'Active', 1),
 
 -- Announcement 2 (FreshSnacks - Food)
-(7, 'Healthy Snack Promotion', 'FreshSnacks', NULL, GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 20, GETDATE()), 0, 8, NULL, 'Email', 'Swedish',
- 1, 0, 0, NULL, 'Promote our new healthy snack box.',
- 'Influencer keeps products after collaboration.', 'Jonas Berg', 'jonas@freshsnacks.com',
- '+4675555555', 'Active', 1),
+(7, 'Healthy Snack Promotion', GETDATE(), GETDATE(),
+ GETDATE(), DATEADD(DAY, 20, GETDATE()), 0, 8, 0, 'Email', 'Swedish',
+ 1, 0, 0.00, 'Promote our new healthy snack box.',
+ 'Influencer keeps products after collaboration.', 'Active', 1),
 
 -- Announcement 3 (EcoWear - Fashion)
-(8, 'Eco-Friendly Clothing Campaign', 'EcoWear', NULL, GETDATE(), GETDATE(),
+(8, 'Eco-Friendly Clothing Campaign', GETDATE(), GETDATE(),
  GETDATE(), DATEADD(DAY, 25, GETDATE()), 0, 12, 15000, 'Phone', 'Danish',
- 1, 1, 0, NULL, 'Showcase our sustainable clothing line.',
- 'Free clothing included.', 'Olivia Madsen', 'olivia@ecowear.com',
- '+4577777777', 'Active', 1),
+ 1, 0, 0.00, 'Showcase our sustainable clothing line.',
+ 'Free clothing included.', 'Active', 1),
 
 -- Announcement 4 (FitGear - Sports)
-(9, 'Fitness Gear Review', 'FitGear', NULL, GETDATE(), GETDATE(),
+(9, 'Fitness Gear Review', GETDATE(), GETDATE(),
  GETDATE(), DATEADD(DAY, 28, GETDATE()), 0, 6, 10000, 'Email', 'Norwegian',
- 0, 0, 1, 2500.00, 'Review our newest training equipment.',
- 'Equipment must be returned unless otherwise agreed.', 'Erik Sørlie', 'erik@fitgear.com',
- '+4788888888', 'Active', 1),
+ 0, 1, 2500.00, 'Review our newest training equipment.',
+ 'Equipment must be returned unless otherwise agreed.', 'Active', 1),
 
 -- Announcement 5 (BeautyBox - Beauty)
-(10, 'Beauty Product Showcase', 'BeautyBox', NULL, GETDATE(), GETDATE(),
+(10, 'Beauty Product Showcase', GETDATE(), GETDATE(),
  GETDATE(), DATEADD(DAY, 35, GETDATE()), 0, 5, 12000, 'Email', 'Danish',
- 1, 1, 1, 3500.00, 'Showcase our new beauty product line.',
- 'Products included for free.', 'Sofie Lauritsen', 'sofie@beautybox.com',
- '+4561111111', 'Active', 1);
+ 1, 1, 3500.00, 'Showcase our new beauty product line.',
+ 'Products included for free.', 'Active', 1);
 
 
 
