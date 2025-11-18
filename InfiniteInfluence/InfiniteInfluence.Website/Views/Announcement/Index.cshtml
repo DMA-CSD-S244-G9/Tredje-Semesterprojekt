@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Announcements";
+}
+
+@using InfiniteInfluence.DataAccessLibrary.Model
+@model IEnumerable<Announcement>
+
+
+
+<div class="container">
+    <h1 class="text-center mb-1 main-heading-margins">Connect With Brands</h1>
+    <p class="text-center mb-5">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+        <br />ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.
+        <br />exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </p>
+
+    <!-- Button for Create Announcement -->
+    <div class="text-center mb-5">
+        <a asp-controller="Announcement" asp-action="Create"
+           class="btn btn-primary px-5 py-2">
+            Create Announcement
+        </a>
+    </div>
+</div>
+
+
+
+<div class="announcement-board-container">
+    <div class="announcement-board">
+
+        <!-- Filter bar -->
+        <div class="announcement-board-header">
+
+
+
+            <div class="filters-container">
+
+                <!-- Language filter -->
+                <div class="language-filter">
+                    @* <label>Filter by my languages:</label> *@
+                    <select class="form-select announcement-language-filter custom-dropdown">
+                        <option value="">All languages</option>
+                        <option value="English">English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="French">French</option>
+                        <option value="Danish">Danish</option>
+                    </select>
+                </div>
+
+                <!-- Search box -->
+                <div class="search-box">
+                    <input type="text" class="form-control announcement-search" placeholder="Search..." />
+                </div>
+
+            </div>
+
+
+
+
+
+@*             <div class="announcement-filter-left">
+                <span>Filter by my languages:</span>
+
+                <select class="form-select custom-dropdown announcement-language-filter">
+                    <option value="">All languages</option>
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                    <option value="Danish">Danish</option>
+                </select>
+            </div>
+
+            <div 
+                class="announcement-filter-right"> <input type="text"  class="form-control announcement-search" placeholder="Search..." />
+            </div> *@
+
+
+
+
+        </div>
+
+
+        <!-- Announcement cards -->
+        @foreach (var item in Model)
+        {
+            <div class="announcement-card">
+                <div class="announcement-card-main">
+                    
+                    <!-- Logo placeholder – byt ud med rigtigt logo senere -->
+                    <div class="announcement-logo">
+                        @item.UserId
+                    </div>
+
+                    <div class="announcement-card-body">
+                        
+                        <div class="announcement-company-name">
+                            <!-- Når du har CompanyName i dit viewmodel, sæt det ind her -->
+                            @item.CompanyName?.ToUpper()
+                        </div>
+
+
+                        <h3 class="announcement-title">
+                            @item.Title
+                        </h3>
+
+
+                        <p class="announcement-short-description">
+                            @item.ShortDescriptionText
+                        </p>
+
+
+                        <p class="announcement-subjects">
+                            <span class="label">Subject:</span>
+                            @if (item.ListOfSubjects != null && item.ListOfSubjects.Any())
+                            {
+                                @string.Join(", ",
+                                item.ListOfSubjects.Select(s => "#" + s))
+                                                }
+                            else
+                            {
+                                @:None specified
+                            }
+                        </p>
+
+                    </div>
+                </div>
+
+
+
+                <div class="announcement-card-side">
+                    
+                    <div class="announcement-applicants">
+                        Applicants: @item.CurrentApplicants / @item.MaximumApplicants
+                    </div>
+
+                    <a asp-action="Details"
+                       asp-route-id="@item.AnnouncementId"
+                       class="btn btn-primary btn-sm announcement-readmore-btn">
+                        Read more
+                    </a>
+
+                </div>
+
+
+            </div>
+        }
+    </div>
+</div>

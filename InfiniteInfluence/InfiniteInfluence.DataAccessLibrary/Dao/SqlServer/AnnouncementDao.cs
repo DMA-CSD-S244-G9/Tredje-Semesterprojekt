@@ -58,6 +58,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         VALUES (@AnnouncementId, @AnnouncementSubject); ";
 
 
+        // Creates and opens the database connection
         using IDbConnection connection = CreateConnection();
         connection.Open();
 
@@ -120,5 +121,96 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
+    }
+
+
+
+
+
+    /// <summary>
+    /// Returns all of the announcements from the database with their respective subjects from the AnnouncementSubjects table,
+    /// and includes the related company name from the Companys table.
+    /// Retrieves all announcements from the database, including their related company name from the Companys table and their
+    /// list of subjects from the AnnouncementSubjects table
+    /// </summary>
+    /// 
+    /// <returns>
+    /// A collection of <see cref="Announcement"/> objects, each populated with
+    /// its company name and a list of associated subjects.
+    /// </returns>
+    public IEnumerable<Announcement> GetAll()
+    {
+        // SQL query that returns all announcements and their related company name
+        // We join on userId to connect Announcements with Companys
+        const string SqlAnnouncements = @"
+        SELECT
+            a.*,
+            c.companyName AS CompanyName
+        FROM Announcements a
+        INNER JOIN Companys c ON a.userId = c.userId";
+
+        // SQL query that returns all subjects for a given set of announcement IDs
+        // Results will be grouped in memory by AnnouncementId
+        const string SqlAnnouncementSubjects = @"
+        SELECT
+            announcementId AS AnnouncementId,
+            announcementSubject AS AnnouncementSubject
+        FROM AnnouncementSubjects
+        WHERE announcementId IN @Ids";
+
+        // Creates and opens the database connection
+        using IDbConnection databaseConnection = CreateConnection();
+        databaseConnection.Open();
+
+        // 1) Get all announcements with their company name from the database
+        var announcements = databaseConnection.Query<Announcement>(SqlAnnouncements).ToList();
+
+        
+        // If there are no announcements we will simply return the empty list
+        if (announcements.Count == 0)
+        {
+            return announcements;
+        }
+
+        // Collect the IDs of all announcements we just fetched these are used to fetch all related subjects in a single query
+        var announcementIds = announcements.Select(announcement => announcement.AnnouncementId).ToArray();
+
+        // Retrieve all subject rows for the announcements in one batch
+        var announcementSubjectRows = databaseConnection.Query<AnnouncementSubjectRow>(SqlAnnouncementSubjects, new { Ids = announcementIds }).ToList();
+
+
+        // Group the subjects by AnnouncementId so we can easily look them up per announcement
+        var subjectsLookupByAnnouncementId = announcementSubjectRows.GroupBy(subjectRow => subjectRow.AnnouncementId).ToDictionary(group => group.Key, group => group.Select(subjectRow => subjectRow.AnnouncementSubject).ToList());
+
+        // Assigns the ListOfSubjects property on each Announcement
+        foreach (var announcement in announcements)
+        {
+            // Tries to get the list of subjects for the current announcement
+            if (subjectsLookupByAnnouncementId.TryGetValue(announcement.AnnouncementId, out var subjectsForAnnouncement))
+            {
+                // Subjects found are assigned to the list
+                announcement.ListOfSubjects = subjectsForAnnouncement;
+            }
+
+            else
+            {
+                // If there are no subjects then an empty list is assigned to avoid null checks elsewhere
+                announcement.ListOfSubjects = new List<string>();
+            }
+        }
+
+        // Return all announcements, each enriched with its subjects and company name
+        return announcements;
+    }
+
+
+
+    /// <summary>
+    /// An helper class used to map rows from the AnnouncementSubjects query and represents a single subject entry for a specific announcement.
+    /// </summary>
+    private class AnnouncementSubjectRow
+    {
+        public int AnnouncementId { get; set; }
+        public string AnnouncementSubject { get; set; } = string.Empty;
     }
 }
