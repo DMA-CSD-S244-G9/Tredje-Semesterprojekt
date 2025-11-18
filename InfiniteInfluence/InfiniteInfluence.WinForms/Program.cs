@@ -1,4 +1,4 @@
-namespace InfiniteInfluence.WinForms
+namespace InfiniteInfluence.WinFormsApp
 {
     internal static class Program
     {

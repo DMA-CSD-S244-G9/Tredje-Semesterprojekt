@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteInfluence.Website",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteInfluence.ApiClient", "InfiniteInfluence.ApiClient\InfiniteInfluence.ApiClient.csproj", "{82788C63-DC75-44B3-8F71-2ECF50CABDE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteInfluence.WinForms", "InfiniteInfluence.WinForms\InfiniteInfluence.WinForms.csproj", "{E94739EC-C38B-45DF-BE02-4A29864682AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfiniteInfluence.WinForms", "InfiniteInfluence.WinForms\InfiniteInfluence.WinForms.csproj", "{5B6D39F6-A361-9A52-55F4-0689FB3B5BB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{82788C63-DC75-44B3-8F71-2ECF50CABDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82788C63-DC75-44B3-8F71-2ECF50CABDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82788C63-DC75-44B3-8F71-2ECF50CABDE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E94739EC-C38B-45DF-BE02-4A29864682AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E94739EC-C38B-45DF-BE02-4A29864682AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E94739EC-C38B-45DF-BE02-4A29864682AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E94739EC-C38B-45DF-BE02-4A29864682AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B6D39F6-A361-9A52-55F4-0689FB3B5BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B6D39F6-A361-9A52-55F4-0689FB3B5BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B6D39F6-A361-9A52-55F4-0689FB3B5BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B6D39F6-A361-9A52-55F4-0689FB3B5BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
