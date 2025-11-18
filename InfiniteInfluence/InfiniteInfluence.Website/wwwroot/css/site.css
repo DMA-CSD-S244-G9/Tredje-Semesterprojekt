@@ -348,12 +348,14 @@ input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-au
     border: 0px !important;
     border-radius: 10px !important;
     font-size: 16px !important;
+    text-transform: capitalize;
 }
 
 /*Button - Hover*/
 .btn-primary:hover {
     background-color: #402864 !important;
     border: 0px !important;
+    text-transform: capitalize;
 }
 
 /*Adding buttom padding to the page*/
@@ -627,3 +629,47 @@ body:not(.home-footer) .site-footer {
 
 
 
+
+
+
+
+
+
+/*--------------------------------*/
+/* - 404 Not Found Page Styling - */
+/*--------------------------------*/
+
+
+/* 404 page styling */
+.error-404-wrapper {
+    min-height: calc(100vh - 258px); /* 258px - footer bar height */
+    background-image: url('/img/Background_404NotFound.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    
+    padding-top: 48px;
+    color: #ffffff;
+}
+
+.error-404-code {
+    font-size: 160px;
+    font-weight: 700;
+    color: #E0DAFF;
+}
+
+.error-404-text {
+    margin-top: -8px;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.error-404-btn {
+    margin-top: 24px;
+    padding: 10px 28px;
+    font-size: 16px;
+}
