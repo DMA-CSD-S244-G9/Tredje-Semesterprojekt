@@ -1,4 +1,10 @@
-﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
 
@@ -6,7 +12,7 @@ using RestSharp;
 namespace InfiniteInfluence.ApiClient;
 
 
-public class InfluencerApiClient : IInfluencerDao
+public class AnnouncementApiClient : IAnnouncementDao
 {
     // The rest client from restsharp to call the server
     private readonly RestClient _restClient;
@@ -14,23 +20,23 @@ public class InfluencerApiClient : IInfluencerDao
 
 
     // Utilises Dependency injection from the Website project's Program.cs 
-    public InfluencerApiClient(string apiUri)
+    public AnnouncementApiClient(string apiUri)
     {
         _apiUri = apiUri;
-        _restClient = new RestClient(_apiUri);
+        _restClient = new RestClient(apiUri);
     }
 
 
-    //TODO: Make this code prettier during refactoring
-    public int Create(Influencer influencer)
+    public int Create(Announcement announcement)
     {
-        RestRequest? request = new RestRequest("influencers", Method.Post);
+        RestRequest? request = new RestRequest("announcements", Method.Post);
 
         // Sends the Announcement object as JSON format in the request body
-        request.AddJsonBody(influencer);
+        request.AddJsonBody(announcement);
 
-        // Calls upon the API and expects an integer back in the form of a UserId
+        // Calls upon the API and expects an integer back in the form of an announcementId
         var response = _restClient.Execute<int>(request);
+
 
         if (response == null)
         {
@@ -44,21 +50,9 @@ public class InfluencerApiClient : IInfluencerDao
 
         if (!response.IsSuccessStatusCode)
         {
-            // throw new Exception("Server reply: Unsuccessful request");
             throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        //if (response.Data == null)
-        //{
-        //    throw new Exception("Server response did not contain an integer id.");
-        //}
-
         return response.Data;
-    }
-
-
-    public Influencer? GetOne(int userId)
-    {
-        throw new NotImplementedException();
     }
 }

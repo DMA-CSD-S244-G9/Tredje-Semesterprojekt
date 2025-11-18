@@ -1,6 +1,7 @@
 
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
+using Microsoft.Extensions.Configuration;
 
 
 namespace InfiniteInfluence.API;
@@ -9,9 +10,8 @@ namespace InfiniteInfluence.API;
 public class Program
 {
     // The database connection string used for dependency injection of any of the DAO classes (InfluencerDao, CompanyDao etc.)
-    //private const string _dataBaseConnectionString = "Data Source=host.docker.internal;Initial Catalog=InfiniteInfluence;Persist Security Info=True;User ID=sa;Password=@12tf56so;Encrypt=True;Trust Server Certificate=True";
-    private const string _dataBaseConnectionString = "Data Source=localhost;Initial Catalog=InfiniteInfluence;User ID=sa;Password=@12tf56so;Trust Server Certificate=True";
-
+    //private const string _dataBaseConnectionString = "Data Source=localhost;Initial Catalog=InfiniteInfluence;User ID=sa;Password=@12tf56so;Trust Server Certificate=True";
+    private const string _dataBaseConnectionString = "Data Source=host.docker.internal;Initial Catalog=InfiniteInfluence;Persist Security Info=True;User ID=sa;Password=@12tf56so;Encrypt=True;Trust Server Certificate=True";
 
 
     public static void Main(string[] args)
@@ -32,7 +32,8 @@ public class Program
         // Register the CompanyDao for MSSqlServer for dependency injection
         builder.Services.AddScoped<ICompanyDao>((_) => new CompanyDao(_dataBaseConnectionString));
 
-
+        // Register the AnnouncementDao for MSSqlServer for dependency injection
+        builder.Services.AddScoped<IAnnouncementDao>((_) => new AnnouncementDao(_dataBaseConnectionString));
 
         var app = builder.Build();
 

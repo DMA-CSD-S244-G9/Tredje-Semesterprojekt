@@ -225,7 +225,7 @@ a:hover {
     line-height: 1px !important;
 }
 
-/*input fields inputted values fore-coloring */
+/*input fields inputted values text coloring */
 input.form-control, textarea.form-control, select.form-control {
     color: #ffffff !important;
 }
@@ -249,7 +249,7 @@ input.form-control, textarea.form-control, select.form-control {
 }
 
 
-/*Glow around the input field box upon selection*/
+/* Makes the input field's box / border glow around the borders when interacted with */
 input.form-control:focus, textarea.form-control:focus, select.form-control:focus {
     border-color: #c29bff !important;
     box-shadow: 0 0 0 0.1rem rgba(194, 155, 255, 0.35) !important;
@@ -288,11 +288,60 @@ input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-au
 }
 
 
+/*----------------------------------*/
+/* - Input Field Dropdown Styling - */
+/*----------------------------------*/
+
+
+/* The custom dropdown input field */
+.custom-dropdown {
+    background-color: #3C364C;
+    color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #9690AA;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Changes the text color and background color for the dropdown options */
+.custom-dropdown option {
+    background-color: #363042;
+    color: #ffffff;
+}
+
+/* The container where we will place our arrow icon within */
+.custom-dropdown-container {
+    position: relative;
+}
+
+/* The light purple arrow that should be vertically centered to the right in our box */
+.custom-dropdown-container::after {
+    /* The content represents an arrow that point downward */
+    content: "\f0d7";
+    font-family: "Font Awesome 6 Free";
+    font-size: 20px;
+    font-weight: 900;
+    color: #C7A4FF;
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    /* Adjusts the vertical position to make the arrow's position in the input field look less akwardly placed */
+    transform: translateY(5%);
+}
+
+
+/* Makes the input field's box / border glow around the borders when interacted with */
+.custom-dropdown:focus {
+    background-color: #3C364C !important;
+    -webkit-text-fill-color: #ffffff !important;
+    border: 1px solid #c29bff !important;
+    box-shadow: 0 0 0 0.1rem rgba(194, 155, 255, 0.35) !important;
+}
+
 
 /*------------*/
 /* - Button - */
 /*------------*/
-
 /*Button - Color*/
 .btn-primary {
     background-color: #6D54B5 !important;
@@ -536,6 +585,44 @@ body:not(.home-footer) .site-footer {
         transform: translateX(100px);
     }
 }
+
+
+
+/*---------------------------------------*/
+/* - Input Field Calender Icon Styling - */
+/*---------------------------------------*/
+
+
+/* A wrapper class to be able to place an icon in the input field */
+.datetime-wrapper {
+    position: relative;
+}
+
+/* Hides the browser's blue icon from the input field */
+.datetime-wrapper input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Adds our own arrow down icon to the input field at the right side */
+.datetime-wrapper::after {
+    /* This uses Font Awesome's calendar icon */
+    content: "\f073";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #C8B5FF;
+    pointer-events: none;
+    font-size: 18px;
+}
+
 
 
 
