@@ -700,20 +700,22 @@ body:not(.home-footer) .site-footer {
 
 /* The header that contains the filtering of languages and the search filter */
 .announcement-board-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
     color: #ffffff;
+    margin-top: 18px;
+    margin-bottom: 16px;
     font-size: 14px;
 }
 
+.filters-container-right{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
 
 .announcement-filter-left {
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
 
@@ -727,7 +729,6 @@ body:not(.home-footer) .site-footer {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 25px;
     justify-content: flex-end;
 
 }
@@ -762,11 +763,10 @@ body:not(.home-footer) .site-footer {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-/*    gap: 20px;*/
     background-color: #322A40;
     border-radius: 12px;
     padding: 18px 20px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 
