@@ -73,6 +73,7 @@ public class CompanyDaoTests
         Cleanup(newCompanyId);
     }
 
+
     /// <summary>
     /// Cleanup method to remove test data from the database after each test.
     /// </summary>

@@ -6,6 +6,9 @@ using Microsoft.Data.SqlClient;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.Intrinsics.X86;
+using System.Text;
 using System.Transactions;
 
 
@@ -27,18 +30,20 @@ public class AnnouncementDaoTests
     }
 
     #region Test for ID: 015 - Create Announcement
-    
+
     /// <summary>
     /// Test for ID: 015 - Create Announcement
     /// Acceptance Criteria:
     /// - Jeg vil kunne oprette et samarbejdsopslag med titel, kort introduktionstekst og andre generelle oplysninger
     /// - Mit oprettede samarbejdsopslag skal gemmes i databasen.
+    /// </summary>
     /// 
+    /// <remarks>
     /// Test:
     /// Creates an announcement and store the announcements property values correctly
     /// in the database, and then validates if the announcement is added by checking if
     /// the announcement object count has been increased by 1.
-    /// </summary>
+    /// </remarks>
     [Test]
     public void Create_ValidAnnouncement_IncreasesCountAndPersistsData()
     {
@@ -104,11 +109,13 @@ public class AnnouncementDaoTests
 
     /// <summary>
     /// Test for ID: 015 - Create Announcement
+    /// </summary>
     /// 
+    /// <remarks>
     /// Test:
     /// Creates an announcement and also inserts subjects in to the AnnouncementSubjects table.
     /// Validating whether the subjects are inserted correctly.
-    /// </summary>
+    /// </remarks>
     [Test]
     public void Create_WithSubjects_InsertsIntoAnnouncementSubjects()
     {
@@ -172,11 +179,13 @@ public class AnnouncementDaoTests
 
     /// <summary>
     /// Test for ID: 015 - Create Announcement
+    /// </summary>
     /// 
+    /// <remarks>
     /// Test:
     /// If an error occurs during insertion of subjects, then the whole transaction should eb 
     /// rolled back so there wont be created an announcement at all.
-    /// </summary>
+    /// </remarks>
     [Test]
     public void Create_WhenSubjectInsertFails_RollsBackAnnouncement()
     {
@@ -244,19 +253,19 @@ public class AnnouncementDaoTests
     }
     #endregion
 
-
-
     #region Test for ID: 006 - GetAll Announcements
 
     /// <summary>
     /// Test for ID: 006 - GetAll Announcement
     /// Acceptance Criteria:
-    /// - Mit oprettede samarbejdsopslag skal gemmes i databasen.
+    /// Mit oprettede samarbejdsopslag skal gemmes i databasen.
+    /// </summary>
     /// 
+    /// <remarks>
     /// Test:
     /// Verifies that when a new announcement is created, it is retrievable via the GetAll method.
     /// We expect that the count before is less than the count after the creation of a new announcement
-    /// </summary>
+    /// </remarks>
     [Test]
     public void GetAll_CountNewCreatedAnnouncement()
     {
@@ -299,11 +308,13 @@ public class AnnouncementDaoTests
     /// <summary>
     /// Test for ID: 006 - GetAll Announcement
     /// Acceptance Criteria:
-    /// - Alle oprettede samarbejdsopslag skal kunne hentes fra databasen.  
+    /// Alle oprettede samarbejdsopslag skal kunne hentes fra databasen.  
+    /// </summary>
     /// 
+    /// <remarks>
     /// Test: The test should count the number of announcements retrieved from the database
     /// and verify that there is at least one announcement present.
-    /// </summary>
+    /// </remarks>
     [Test]
     public void GetAll_WhenCalled_ReturnsAnnouncements()
     {
@@ -323,10 +334,48 @@ public class AnnouncementDaoTests
         Assert.IsTrue(foundAnnouncements.Any(), "Expected at least one announcement in the database.");
     }
 
-    
 
 
 
+
+    #endregion
+
+    #region Test for ID: 008 - Sort GetAll Announcement
+
+    /// <summary>
+    /// Test for ID: 008 - Sort GetAll Announcement
+    /// Acceptance Criteria: 
+    /// Listen sorteres således at de nyeste opslag ligger øverst.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Test: Verifies that the announcements are sorted by StartDisplayDateTime in descending order.
+    /// </remarks>
+    [Test]
+    public void GetAll_SortedByStartDisplayDateTime_ReturnsAnnouncementsInDescendingOrder()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        // Gets all announcements from the database
+        List<Announcement> listOfAnnouncements = _announcementDao.GetAll().ToList();
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        // Sorts the announcements by StartDisplayDateTime in descending order
+        List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
+            (announcement => announcement.StartDisplayDateTime).ToList();
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        // Test whether the original list is equal to the sorted list
+        Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate),
+        "Announcements are not sorted by StartDisplayDateTime in descending order.");
+    }
     #endregion
 
     #region Helper methods
