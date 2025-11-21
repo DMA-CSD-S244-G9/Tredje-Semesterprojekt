@@ -90,9 +90,13 @@ public class AnnouncementController : Controller
     {
         try
         {
-            List<Announcement> announcements = _announcementApiClient.GetAll().ToList();
+            List<Announcement> listOfAnnouncements = _announcementApiClient.GetAll().ToList();
 
-            return View(announcements);
+            // LINQ query to sort announcements by StartDisplayDateTime in descending order
+            List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
+                (announcement => announcement.StartDisplayDateTime).ToList();
+            
+            return View(announcementSortedByDisplayDate);
         }
 
         catch (Exception exception)
