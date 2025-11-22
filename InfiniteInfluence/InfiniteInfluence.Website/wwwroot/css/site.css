@@ -874,3 +874,219 @@ body:not(.home-footer) .site-footer {
     margin-top: 8px;
     padding: 8px 26px;
 }
+
+
+
+/*-----------------------------------------------*/
+/* - Announcement Details (Read / Details )    - */
+/*-----------------------------------------------*/
+
+
+/* The container that we hold all of the announcements and search filters within */
+.announcement-details-wrapper {
+    max-width: 980px;
+    margin: 80px auto 120px auto;
+    padding: 0 16px 40px 16px;
+    color: #ffffff;
+}
+
+/* The container holding the main heading and name of company that created the announcement */
+.announcement-details-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+/* The name of the company that created the announcement */
+.announcement-details-company-name {
+    color: #c29bff;
+}
+
+/* The 'by' in front of the company's name */
+.announcement-details-subtitle {
+    font-size: 32px;
+}
+
+/* Top row layout */
+.announcement-details-top-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Styling of the 'logo' which is currently just the associated company's userid */
+.announcement-details-logo {
+    width: 200px;
+    height: 200px;
+    min-width: 200px;
+    min-height: 200px;
+    border-radius: 10px;
+    background-color: #2C2138;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+/* The general look of a card */
+.announcement-details-card {
+    background-color: #3C364C;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Applies flex to the card to make it take the remaining space */
+.announcement-details-card-general {
+    flex: 1;
+}
+
+/* Styling of the title / small heading of each card */
+.announcement-details-card-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* This splits the layout inside of cards up in to two columns */
+.announcement-details-two-column {
+    display: flex;
+    gap: 24px;
+}
+
+/* Applies*/
+.announcement-details-info-group, .announcement-details-info-group-with-margin-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.announcement-details-info-group-with-margin-left {
+    margin-left: 24px;
+}
+
+.announcement-details-info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    margin-bottom: 0px;
+}
+
+/* This is used to add spacing between lines for easier grouping */
+.announcement-details-spacer-row-two{
+    margin-bottom: 47px;
+}
+
+/* This is used to add spacing between lines for easier grouping */
+.announcement-details-spacer-row-one{
+    margin-bottom: 24px;
+}
+
+/* Changes the coloring of the general text's assigned labels */
+.announcement-details-info-row .label {
+    color: #B2B1C3;
+}
+
+/* The middle row containing the collaboration and meta card */
+.announcement-details-middle-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+/* Collaboration card grows */
+.announcement-details-card-collab {
+    flex: 2;
+}
+
+/* Small 'payment' card to the right side */
+.announcement-details-card-meta {
+    flex: 1;
+}
+
+/* The subjects card */
+.announcement-details-subjects-bar {
+    background-color: #3C364C;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    margin-bottom: 24px;
+}
+
+/* the label that are in the subjects card*/
+.announcement-details-subjects-bar .label {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* Changes the regular text after the label of the subject section to be dimmed */
+.announcement-details-subjects-bar .listofsubjects {
+    color: #B2B1C3;
+}
+
+/* The additional info card */
+.announcement-details-card-additional {
+    margin-bottom: 32px;
+}
+
+/* Modifies the line-height of all body text */
+.announcement-details-body-text {
+    line-height: 1.6;
+}
+
+/* Used to place the submit application button in the middle */
+.announcement-details-button-row {
+    text-align: center;
+}
+
+/* Adjusts the submit application buttons placement */
+.announcement-details-submit-application-btn {
+    margin-top: 16px;
+    padding: 10px 36px;
+}
+
+
+/* This part is not developed completely yet but contains some bonus css to help us */
+/* Notice section */
+/*.announcement-details-notice-section {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.announcement-details-notice-title {
+    font-size: 20px;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    margin-bottom: 12px;
+}*/
+
+/* Contact card */
+/*.announcement-details-card-contact {
+    margin-bottom: 24px;
+}
+
+.announcement-details-contact-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+}
+*/
+
+/* Simple responsiveness */
+/*@media (max-width: 900px) {
+    .announcement-details-top-row,
+    .announcement-details-middle-row {
+        flex-direction: column;
+    }
+
+    .announcement-details-logo {
+        margin: 0 auto;
+    }
+
+    .announcement-details-two-column {
+        flex-direction: column;
+    }
+}*/

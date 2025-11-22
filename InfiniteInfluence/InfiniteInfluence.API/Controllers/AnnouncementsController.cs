@@ -26,7 +26,8 @@ public class AnnouncementsController : ControllerBase
     }
 
 
-
+    // POST
+    // ENDPOINT: /announcements/create
     [HttpPost]
     public ActionResult<int> Create(Announcement announcement)
     {
@@ -47,7 +48,8 @@ public class AnnouncementsController : ControllerBase
 
 
 
-
+    // GET
+    // ENDPOINT: /announcements/
     [HttpGet]
     public ActionResult<IEnumerable<Announcement>> GetAll()
     {
@@ -62,6 +64,36 @@ public class AnnouncementsController : ControllerBase
 
             var innerMessage = exception.InnerException?.Message;
 
+            return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
+        }
+    }
+
+
+
+    // GET
+    // ENDPOINT: /announcements/{id}
+    [HttpGet("{id:int}")]
+    public ActionResult<Announcement> GetOne(int id)
+    {
+        try
+        {
+            Announcement? announcement = _announcementDao.GetOne(id);
+
+            // If no announcement was found then execute this section
+            if (announcement == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(announcement);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {Id}.", id);
+            
+            var innerMessage = exception.InnerException?.Message;
+            
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }

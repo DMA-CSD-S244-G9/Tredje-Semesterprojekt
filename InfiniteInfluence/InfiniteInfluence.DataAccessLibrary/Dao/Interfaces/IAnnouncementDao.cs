@@ -16,7 +16,13 @@ public interface IAnnouncementDao
 
 
     /// <summary>
-    /// Returns all of the announcements from the database.
+    /// Returns all of the announcements from the database or an empty list of announcements if none were available
     /// </summary>
     IEnumerable<Announcement> GetAll();
+
+
+    /// <summary>
+    /// Returns one single announcement based on its id or returns null if no announcement was found
+    /// </summary>
+    Announcement? GetOne(int announcementId);
 }

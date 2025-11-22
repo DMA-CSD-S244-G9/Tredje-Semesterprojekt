@@ -8,25 +8,33 @@ namespace InfiniteInfluence.Website.Models
     {
         // This is temporary until we have some sort of user validation or login system
         [Required]
-        [Display(Name = "Company UserId")]
+        [Display(Name = "Company User Id")]
+        [Range(1, int.MaxValue, ErrorMessage = "A valid company UserId is required.")]
+
         public int UserId { get; set; }
 
 
         [Required]
-        [StringLength(32)]
+        [StringLength(32, ErrorMessage = "Title cannot be longer than 32 characters.")]
+        [Display(Name = "Announcement Title")]
         public string Title { get; set; } = string.Empty;
 
 
         // When the announcement should become visible
-        [Display(Name = "Start display time")]
+        [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "Start display date and time")]
         public DateTime? StartDisplayDateTime { get; set; }
 
 
         // When the announcement should stop being visible
-        [Display(Name = "End display time")]
+        [Required]
+        [DataType(DataType.DateTime)]
+        [Display(Name = "End display date and time")]
         public DateTime? EndDisplayDateTime { get; set; }
 
 
+        // The maximum amount of applicants an announcement is looking for
         [Required]
         [Display(Name = "Maximum applicants")]
         [Range(1, 25, ErrorMessage = "Maximum applicants must be between 1 and 25.")]
@@ -43,41 +51,43 @@ namespace InfiniteInfluence.Website.Models
         // Communication type (e.g. Social Media Post, Video, Story)
         [Required]
         [Display(Name = "Communication type")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Communication type cannot be longer than 100 characters.")]
         public string CommunicationType { get; set; } = "E-mail Communication";
 
-
+            
         [Required]
         [Display(Name = "Language of communication")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Language cannot be longer than 100 characters.")]
         public string AnnouncementLanguage { get; set; } = string.Empty;
 
 
         // Payment Section
-        [Display(Name = "May influencer keep the products")]
+        [Display(Name = "May the influencer keep the products")]
         public bool IsKeepProducts { get; set; } = false;
 
 
         [Display(Name = "Is the payment negotiable")]
         public bool IsPayoutNegotiable { get; set; } = false;
 
-
+        
         [Required]
         [Display(Name = "Total payment in USD")]
-        [Range(0.00, 10000000.00, ErrorMessage = "Total payout amount must be between 0.00 and 10000000.00$")]
+        [Range(0.00, 1_000_000, ErrorMessage = "Total payout amount must be between 0.00 and 10000000.00$")]
+        // We use this regex to limit the user's input to maximum 2 decimal numbers
+        [RegularExpression(@"^\d+([.,]\d{1,2})?$", ErrorMessage = "Only numbers with up to two decimals are allowed.")]
         public decimal TotalPayoutAmount { get; set; }
 
 
         // Description information
         [Required]
         [Display(Name = "Short descriptive text")]
-        [StringLength(100)]
+        [StringLength(100, ErrorMessage = "Short description cannot be longer than 100 characters.")]
         public string ShortDescriptionText { get; set; } = string.Empty;
 
 
         [Required]
         [Display(Name = "Additional information")]
-        [StringLength(1500)]
+        [StringLength(1500, ErrorMessage = "Additional information text cannot be longer than 1500 characters.")]
         public string AdditionalInformationText { get; set; } = string.Empty;
 
 
