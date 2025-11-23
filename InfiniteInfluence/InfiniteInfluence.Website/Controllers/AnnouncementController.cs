@@ -23,7 +23,8 @@ public class AnnouncementController : Controller
     }
 
 
-    // GET: /Announcement/Create
+    // GET:
+    // ENDPOINT: /Announcement/Create
     [HttpGet]
     public IActionResult Create()
     {
@@ -41,7 +42,8 @@ public class AnnouncementController : Controller
     }
 
 
-    // POST: Announcement/Create
+    // POST:
+    // ENDPOINT: /Announcement/Create
     [HttpPost]
     public IActionResult Create(AnnouncementCreateViewModel anouncementCreateViewModel)
     {
@@ -85,7 +87,8 @@ public class AnnouncementController : Controller
     //}
 
 
-    // GET: /Announcement
+    // GET:
+    // ENDPOINT /Announcement/Index
     public IActionResult Index()
     {
         try
@@ -111,9 +114,6 @@ public class AnnouncementController : Controller
             return View(new List<Announcement>());
         }
     }
-
-
-
 
 
 
@@ -210,6 +210,36 @@ public class AnnouncementController : Controller
         if (!target.Contains(value, StringComparer.OrdinalIgnoreCase))
         {
             target.Add(value);
+        }
+    }
+
+
+
+    // GET
+    // ENDPOINT: /Announcement/Details/{id}
+    [HttpGet]
+    public IActionResult Details(int id)
+    {
+        try
+        {
+            Announcement? announcement = _announcementApiClient.GetOne(id);
+
+            if (announcement == null)
+            {
+                 return NotFound();
+            }
+
+            return View(announcement);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while retrieving announcement with id {Id} from MVC.", id);
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            return RedirectToAction("Index");
         }
     }
 }

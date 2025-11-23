@@ -1,0 +1,344 @@
+﻿@using InfiniteInfluence.DataAccessLibrary.Model
+@model Announcement
+
+@{
+    ViewData["Title"] = "Announcement Details";
+}
+
+
+<div class="announcement-details-wrapper main-heading-margins">
+
+    <!-- Heading title & company name -->
+    <div class="announcement-details-header">
+
+        <h1 class="announcement-details-title">
+            @Model.Title
+        </h1>
+
+        <div class="announcement-details-subtitle">
+            <span>By </span>
+
+            @{
+                string companyNameToShow;
+
+                if (Model.CompanyName == null)
+                {
+                    companyNameToShow = "Company Name Not Found";
+                }
+                else
+                {
+                    companyNameToShow = Model.CompanyName;
+                }
+            }
+            <span class="announcement-details-company-name">@companyNameToShow</span>
+            
+        </div>
+
+    </div>
+
+
+
+    <!-- Logo and General card -->
+    <div class="announcement-details-top-row">
+
+        <!-- Logo of the company but currently just a placeholder -->
+        <div class="announcement-details-logo">
+            @Model.UserId
+        </div>
+
+
+        <!-- General -->
+        <div class="announcement-details-card announcement-details-card-general">
+            
+            <!-- Title -->
+            <div class="announcement-details-card-title">General</div>
+
+            <div class="announcement-details-two-column">
+                <div class="announcement-details-info-group">
+                   
+                    <div class="announcement-details-info-row">
+                        <span class="label">Created:</span>
+                        <span>@Model.CreationDateTime?.ToString("dd/MM/yyyy - HH:mm")</span>
+                    </div>
+
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                        <span class="label">Last Edited:</span>
+                        <span>@Model.LastEditDateTime?.ToString("dd/MM/yyyy - HH:mm")</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Start Display Date:</span>
+                        <span>@Model.StartDisplayDateTime?.ToString("dd/MM/yyyy - HH:mm")</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">End Display Date:</span>
+                        <span>@Model.EndDisplayDateTime?.ToString("dd/MM/yyyy - HH:mm")</span>
+                    </div>
+
+                </div>
+
+
+
+                <div class="announcement-details-info-group-with-margin-left">
+
+                    <div class="announcement-details-info-row announcement-details-spacer-row-two">
+                        <span class="label">Announcement ID:</span>
+                        <span>@Model.AnnouncementId</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Status:</span>
+                        <span>@Model.StatusType</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Visible:</span>
+
+                        @{
+                            string visibleText;
+
+                            if (Model.IsVisible)
+                            {
+                                visibleText = "Yes";
+                            }
+                            else
+                            {
+                                visibleText = "No";
+                            }
+                        }
+                        <span>@visibleText</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Collaboration and Payment -->
+    <div class="announcement-details-middle-row">
+
+        <!-- Collaboration left card -->
+        <div class="announcement-details-card announcement-details-card-collab">
+            
+            <!-- Title colalboration -->
+            <div class="announcement-details-card-title">Collaboration</div>
+
+            <div class="announcement-details-two-column">
+
+                <div class="announcement-details-info-group">
+                    <div class="announcement-details-info-row">
+                        <span class="label">Current Applicants:</span>
+                        <span>@Model.CurrentApplicants</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Maximum Applicants:</span>
+                        <span>@Model.MaximumApplicants</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Required Followers:</span>
+                        <span>@Model.MinimumFollowersRequired</span>
+                    </div>
+                </div>
+
+
+                <div class="announcement-details-info-group-with-margin-left">
+                    
+                    <div class="announcement-details-info-row">
+                        <span class="label">Communication Type:</span>
+                        <span>@Model.CommunicationType</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Language:</span>
+                        <span>@Model.AnnouncementLanguage</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Right small "meta" card -->
+        <div class="announcement-details-card announcement-details-card-meta">
+            
+        <!-- Title Payment -->
+        <div class="announcement-details-card-title">Payment</div>
+
+            <div class="announcement-details-info-row">
+                <span class="label">Negotiable Payment:</span>
+                @{
+                    string payoutText;
+
+                    if (Model.IsPayoutNegotiable == true)
+                    {
+                        payoutText = "Yes";
+                    }
+
+                    else
+                    {
+                        payoutText = "No";
+                    }
+                }
+                <span>@payoutText</span>
+            </div>
+            
+            <div class="announcement-details-info-row">
+                <span class="label">Can Keep Products:</span>
+
+                @{
+                    string isKeepProductsText;
+
+                    if (Model.IsKeepProducts)
+                    {
+                        isKeepProductsText = "Yes";
+                    }
+                    else
+                    {
+                        isKeepProductsText = "No";
+                    }
+                }
+                <span>@isKeepProductsText</span>
+            </div>
+            
+            <div class="announcement-details-info-row">
+                <span class="label">Total Payout Amount:</span>
+                <span>@Model.TotalPayoutAmount.ToString("0.00")</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Section containing subjects -->
+    <div class="announcement-details-subjects-bar">
+        
+        <span class="label">Subjects </span>
+        
+        <span class="listofsubjects">
+
+
+        <!-- If the list of subjects is not null and is not empty then execute this esction -->
+        @if (Model.ListOfSubjects != null && Model.ListOfSubjects.Any())
+        {
+            // Creates a list to store the formatted subjects in
+            List<string> listOfFormattedSubjects = new List<string>();
+
+            // iteartes through the list to add a hashtag in front of every subject
+            foreach (string? subject in Model.ListOfSubjects)
+            {
+                listOfFormattedSubjects.Add("#" + subject);
+            }
+
+            // Concatenates the string to a comma seperated string
+            string? commaSeperatedString = string.Join(", ", listOfFormattedSubjects);
+
+            @commaSeperatedString
+        }
+
+        else
+        {
+            // If no subjects are specified this is shown instead
+            @("No subjects specified")
+        }
+        </span>
+
+    </div>
+
+
+
+    <!-- Additional information section -->
+    <div class="announcement-details-card announcement-details-card-additional">
+        <div class="announcement-details-card-title">Additional Information</div>
+
+        <p class="announcement-details-body-text">
+            @Model.AdditionalInformationText
+        </p>
+    </div>
+
+
+    
+    <!-- TODO: Submit button  (pseudo) button functionality (this is another user story) -->
+    <form asp-action="Apply" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- Influencer id input field -->
+        <div class="container mb-5">
+            <div class="row">
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="UserId" class="control-label">Influencer Userid</label>
+                    <input asp-for="UserId" type="number" class="form-control" placeholder="Which influencer wants to apply to the application?" />
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit application button -->
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-primary px-5 py-2">Submit Application</button>
+        </div>
+
+    </form>
+
+
+
+
+
+
+@* 
+    <div class="announcement-details-button-row">
+        <button type="button" class="btn btn-primary announcement-details-submit-application-btn">
+            Submit Application
+        </button>
+    </div>
+ *@
+
+
+@* 
+
+    <!-- NOTICE SECTION (statisk tekst som i mockup – kan tilpasses til senere application-flow) -->
+    <div class="announcement-details-notice-section">
+        <div class="announcement-details-notice-title">NOTICE</div>
+
+        <p class="announcement-details-body-text text-center">
+            Your submitted application has been accepted by the company.
+            <br />
+            Below you will be able to find the contact information for the representative of the company.
+        </p>
+
+        <p class="announcement-details-body-text text-center">
+            The company has also been given access to view your contact information, allowing them to
+            reach out to you. Should you for some reason wish to limit the information available to
+            companies, simply go to your profile and remove any undesired means of contact information.
+        </p>
+    </div>
+
+
+
+    <!-- COMPANY CONTACT INFORMATION + BUTTON -->
+    <div class="announcement-details-card announcement-details-card-contact">
+
+        <div class="announcement-details-card-title">Company Contact Information</div>
+
+        <div class="announcement-details-contact-grid">
+            <div class="announcement-details-info-row">
+                <span class="label">Contact Person:</span>
+                <span>Not available yet</span>
+            </div>
+            <div class="announcement-details-info-row">
+                <span class="label">E-mail:</span>
+                <span>Not available yet</span>
+            </div>
+            <div class="announcement-details-info-row">
+                <span class="label">Phone Number:</span>
+                <span>Not available yet</span>
+            </div>
+        </div>
+    </div> *@
+</div>

@@ -7,7 +7,7 @@
 <h1 class="text-center mb-1 main-heading-margins">Create Company Profile</h1>
 <p class="text-center mb-5 main-introduction-margins">
     Fill out the empty fields in order to create a company profile, and connect with influencers looking for partnerships all across the globe.
-    Note the image on your profile will help influencers get an idea if you are a fit.
+    <br />Note the image on your profile will help influencers get an idea if you are a fit.
 </p>
 
 <form asp-action="Create" method="post">
@@ -56,7 +56,9 @@
 
             <div class="col-md-6 mb-3">
                 <label asp-for="DateOfEstablishment" class="control-label"></label>
-                <input asp-for="DateOfEstablishment" type="date" class="form-control datepicker" placeholder="What is the date of establishment?" />
+                <div class="datetime-wrapper">
+                    <input asp-for="DateOfEstablishment" type="date" class="form-control datepicker" placeholder="What is the date of establishment?" />
+                </div>
                 <span asp-validation-for="DateOfEstablishment" class="text-danger"></span>
             </div>
 
@@ -196,7 +198,7 @@
 
     <!-- BUTTON SUBMIT -->
     <div class="text-center mb-5">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="submit" value="Create Profile" class="btn btn-primary" />
     </div>
 
 </form>

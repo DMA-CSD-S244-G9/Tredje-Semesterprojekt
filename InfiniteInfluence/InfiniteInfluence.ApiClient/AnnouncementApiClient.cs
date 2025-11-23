@@ -88,4 +88,31 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+
+
+
+
+    public Announcement? GetOne(int announcementId)
+    {
+        var request = new RestRequest($"announcements/{announcementId}", Method.Get);
+
+        var response = _restClient.Execute<Announcement>(request);
+
+        if (response == null)
+        {
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        if (!response.IsSuccessful)
+        {
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        return response.Data;
+    }
 }
