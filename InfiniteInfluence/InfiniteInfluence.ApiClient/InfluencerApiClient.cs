@@ -1,4 +1,5 @@
-﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using Azure;
+using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
 
@@ -59,6 +60,27 @@ public class InfluencerApiClient : IInfluencerDao
 
     public Influencer? GetOne(int userId)
     {
-        throw new NotImplementedException();
+        RestRequest? request = new RestRequest($"influencers/{userId}", Method.Get);
+
+        RestResponse<Influencer> response = _restClient.Execute<Influencer>(request);
+
+        if (response == null)
+        {
+            //No response received from server
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        if (!response.IsSuccessful)
+        {
+            // Network or connection error returns  - was there http technical error?
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            // API returned error - is the status code a 4xx or 5xx?
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+        return response.Data;
     }
 }
