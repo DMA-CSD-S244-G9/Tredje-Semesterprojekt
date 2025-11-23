@@ -25,6 +25,12 @@ public class InfluencerController : Controller
         _logger = logger;
     }
 
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    #region Create Influencer Profile
 
     // GET: /Influencer/Create
     [HttpGet]
@@ -81,12 +87,37 @@ public class InfluencerController : Controller
         }
     }
 
+    #endregion
 
-    public IActionResult Index()
+    #region Find and show Influencer Profile
+    public IActionResult FindProfile()
     {
         return View();
     }
 
+    public IActionResult ViewProfile(int userId)
+    {
+        // kald dit API med userId
+        try
+        {
+            Influencer? influencerProfile = _InfluencerApiClient.GetOne(userId);
+            return View(influencerProfile);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while getting an influencer from MVC.");
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            // We pass model so that the view gets all of the InfluencerCreateViewModel's properties and gender selection works and we dont lose all inputted values
+            return View();
+        }
+    }
+
+    #endregion
+
+    #region Helper method
 
     /// <summary>
     /// Converts the incoming MVC form ViewModel into the Influencer model 
@@ -200,4 +231,7 @@ public class InfluencerController : Controller
             target.Add(value);
         }
     }
+
+    #endregion
+
 }
