@@ -51,28 +51,28 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
     {
         string? queryFindInfluencer = @"
                 SELECT
-                    u.UserId, u.LoginEmail, u.PasswordHash,
+                    u.userId, u.loginEmail, u.passwordHash,
 
-                    i.IsInfluencerVerified, i.VerificationDate,
-                    i.DisplayName, i.FirstName, i.LastName,
-                    i.ProfileImageUrl, i.Age, i.Gender, i.Country,
-                    i.InfluencerState, i.City, i.InfluencerLanguage, i.Biography,
-                    i.InstagramProfileUrl, i.InstagramFollowers,
-                    i.YouTubeProfileUrl, i.YouTubeFollowers,
-                    i.TikTokProfileUrl, i.TikTokFollower,
-                    i.SnapchatProfileUrl, i.SnapchatFollowers,
-                    i.XProfileUrl, i.XFollowers,
-                    i.ContactPhoneNumber, i.ContactEmailAddress
+                    i.isInfluencerVerified, i.verificationDate,
+                    i.displayName, i.firstName, i.lastName,
+                    i.profileImageUrl, i.age, i.gender, i.country,
+                    i.influencerState, i.city, i.influencerLanguage, i.biography,
+                    i.instagramProfileUrl, i.instagramFollowers,
+                    i.youTubeProfileUrl, i.youTubeFollowers,
+                    i.tikTokProfileUrl, i.tikTokFollower,
+                    i.snapchatProfileUrl, i.snapchatFollowers,
+                    i.xProfileUrl, i.xFollowers,
+                    i.contactPhoneNumber, i.contactEmailAddress
 
                 FROM [Users] u
-                INNER JOIN Influencers i ON i.UserId = u.UserId
-                WHERE u.UserId = @UserId;";
+                INNER JOIN Influencers i ON i.userId = u.userId
+                WHERE u.userId = @UserId;";
 
 
         string? queryFindInfluencerDomains = @"
                 SELECT domain
                 FROM InfluencerDomains
-                WHERE UserId = @UserId;";
+                WHERE userId = @UserId;";
 
 
 
