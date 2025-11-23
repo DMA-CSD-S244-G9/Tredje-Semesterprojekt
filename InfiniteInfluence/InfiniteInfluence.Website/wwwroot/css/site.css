@@ -458,14 +458,14 @@ footer {
 }
 
 /* Sticky footer ONLY for frontpage */
-body.home-footer .site-footer {
+body.sticky-footer .site-footer {
     position: fixed !important;
     bottom: 0;
     width: 100%;
 }
 
 /* Standard footer for every page */
-body:not(.home-footer) .site-footer {
+body:not(.sticky-footer) .site-footer {
     position: static !important;
 }
 
