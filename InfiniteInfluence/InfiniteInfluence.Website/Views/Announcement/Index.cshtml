@@ -33,33 +33,33 @@
         <div class="announcement-board-header">
 
 
+            <div class="filters-container-right">
+                <div class="filters-container">
 
-            <div class="filters-container">
+                    <!-- Language filter -->
+                    <div class="language-filter">
+                        @* <label>Filter by my languages:</label> *@
+                        <select class="form-select announcement-language-filter custom-dropdown">
+                            <option value="">All languages</option>
+                            <option value="English">English</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="French">French</option>
+                            <option value="Danish">Danish</option>
+                        </select>
+                    </div>
 
-                <!-- Language filter -->
-                <div class="language-filter">
-                    @* <label>Filter by my languages:</label> *@
-                    <select class="form-select announcement-language-filter custom-dropdown">
-                        <option value="">All languages</option>
-                        <option value="English">English</option>
-                        <option value="Spanish">Spanish</option>
-                        <option value="French">French</option>
-                        <option value="Danish">Danish</option>
-                    </select>
+                    <!-- Search box -->
+                    <div class="search-box">
+                        <input type="text" class="form-control announcement-search" placeholder="Search..." />
+                    </div>
+
                 </div>
-
-                <!-- Search box -->
-                <div class="search-box">
-                    <input type="text" class="form-control announcement-search" placeholder="Search..." />
-                </div>
-
             </div>
 
 
 
 
-
-@*             <div class="announcement-filter-left">
+         @* <div class="announcement-filter-left">
                 <span>Filter by my languages:</span>
 
                 <select class="form-select custom-dropdown announcement-language-filter">

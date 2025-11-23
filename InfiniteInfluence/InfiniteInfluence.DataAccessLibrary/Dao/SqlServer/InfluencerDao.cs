@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -218,7 +219,6 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
-
 
 
 

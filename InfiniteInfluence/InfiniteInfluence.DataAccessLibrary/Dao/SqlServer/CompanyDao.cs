@@ -167,9 +167,9 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     //TODO: write comments
     public bool Delete(int userId)
     {
-        var sqlQuery = "DELETE FROM Companys WHERE userId = @UserId";
+        var sqlQueryDelete = "DELETE FROM Companys WHERE userId = @UserId";
         using var connection = CreateConnection();
-        var rows = connection.Execute(sqlQuery, new { UserId = userId });
+        var rows = connection.Execute(sqlQueryDelete, new { UserId = userId });
         return rows > 0;
     }
 
