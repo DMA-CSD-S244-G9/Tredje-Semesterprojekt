@@ -353,8 +353,34 @@ public class AnnouncementDaoTests
     /// </remarks>
     [Test]
     public void GetAll_SortedByStartDisplayDateTime_ReturnsAnnouncementsInDescendingOrder()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        // Gets all announcements from the database
+        List<Announcement> listOfAnnouncements = _announcementDao.GetAll().ToList();
 
 
+        /////////////
+        // - Act - //
+        /////////////
+        // Sorts the announcements by StartDisplayDateTime in descending order
+        List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
+            (announcement => announcement.StartDisplayDateTime).ToList();
+
+
+        /////////////
+        // - Act - //
+        /////////////
+        // Test whether the original list is equal to the sorted list
+        Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate),
+        "Announcements are not sorted by StartDisplayDateTime in descending order.");
+    }
+
+
+    #endregion
+
+    #region Test for ID: 007 - GetOne Announcement
 
     /// <summary>
     /// Test for ID: 007 - GetOne Announcement
@@ -379,25 +405,48 @@ public class AnnouncementDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
-        // Gets all announcements from the database
-        List<Announcement> listOfAnnouncements = _announcementDao.GetAll().ToList();
+
+        int announcementId = 1;
+
+        int expectedUserId = 6;
+        string expectedTitle = "Review Our New Smart Device";
+        string expectedCompanyName = "NordicTech";
+        List<string> expectedSubjects = new List<string>
+        {
+            "Technology", "Electronics", "Gadgets"
+        };
+
+        // Prepares for connecting to the database
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+
 
 
         /////////////
         // - Act - //
         /////////////
-        // Sorts the announcements by StartDisplayDateTime in descending order
-        List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
-            (announcement => announcement.StartDisplayDateTime).ToList();
+
+        // Finds the specified announcement that matches the specified announcementId from the database and returns the row as an announcement object
+        Announcement? announcement = _announcementDao.GetOne(announcementId);
+
+        // Establishes the connection to the database
+        connection.Open();
 
 
-        /////////////
-        // - Act - //
-        /////////////
-        // Test whether the original list is equal to the sorted list
-        Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate),
-        "Announcements are not sorted by StartDisplayDateTime in descending order.");
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+
+        Assert.That(announcement, Is.Not.Null, "GetOne should return an announcement for an existing ID.");
+        Assert.That(announcement.AnnouncementId, Is.EqualTo(announcementId), "AnnouncementId should match the requested ID.");
+        Assert.That(announcement.UserId, Is.EqualTo(expectedUserId), "UserId should match the value stored in the database.");
+
+        Assert.That(announcement.Title, Is.EqualTo(expectedTitle), "Title should match the insert.sql dataset.");
+        Assert.That(announcement.CompanyName, Is.EqualTo(expectedCompanyName), "CompanyName must come from the joined Companys table.");
+
+        CollectionAssert.AreEquivalent(expectedSubjects, announcement.ListOfSubjects, "Subjects should match those listed in AnnouncementSubjects for ID 1.");
     }
+
     #endregion
 
     #region Helper methods
