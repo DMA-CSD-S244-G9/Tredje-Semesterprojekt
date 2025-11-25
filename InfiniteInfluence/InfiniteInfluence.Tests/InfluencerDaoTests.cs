@@ -1,6 +1,8 @@
+using Dapper;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace InfiniteInfluence.Tests;
@@ -115,6 +117,15 @@ public class InfluencerDaoTests
         
         Assert.That(newUserId, Is.GreaterThan(0), "The Create method should return a UserId that is above 0");
         Assert.That(influencer.UserId, Is.EqualTo(newUserId), "The Influencer.UserId should be updated and be equals to that of the newly generated UserID.");
+        
+
+        //////////////////
+        // - Clean up - //
+        //////////////////
+
+        // Perform clean up in the database by removing the inserted data
+        Cleanup(newUserId);
+
     }
 
 
@@ -209,6 +220,7 @@ public class InfluencerDaoTests
         Assert.That(foundInfluencer.InfluencerDomains, Is.Not.Null);
         Assert.That(foundInfluencer.InfluencerDomains.Count, Is.EqualTo(3));
         CollectionAssert.AreEquivalent(influencerToCreate.InfluencerDomains, foundInfluencer.InfluencerDomains, "InfluencerDomains should match the domains inserted during Create.");
+
     }
 
 
@@ -238,4 +250,24 @@ public class InfluencerDaoTests
         
         Assert.That(foundInfluencer, Is.Null, "GetOne should return null for a non-existing UserId.");
     }
+
+
+    #region Helper methods
+
+    /// <summary>
+    /// Cleanup method to remove test data from the database after each test.
+    /// </summary>
+    public void Cleanup(int newInfluencerId)
+    {
+
+        // Prepares for connecting to the database
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+
+        // Establishes the connection to the database
+        connection.Open();
+
+        connection.Execute(@"DELETE FROM Influencers WHERE userId = @UserId;
+          DELETE FROM Users WHERE userId = @UserId;", new { UserId = newInfluencerId });
+    }
+    #endregion
 }
