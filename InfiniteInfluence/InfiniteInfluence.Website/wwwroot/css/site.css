@@ -89,16 +89,11 @@ a:hover {
     display: flex;
     justify-content: center !important;
 }
-
-
-
 /*---------------------*/
 /* - Menu navigation - */
 /*---------------------*/
-
 /*Nav - font color*/
-.nav-link 
-{
+.nav-link {
     color: #fff !important;
 }
 
@@ -906,6 +901,14 @@ body:not(.sticky-footer) .site-footer {
     font-size: 32px;
 }
 
+.meta-flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* This spreads them top/middle/bottom */
+    height: 100%;
+    gap: 1rem; /* Optional: space between rows */
+}
+
 /* Top row layout */
 .announcement-details-top-row {
     display: flex;
@@ -917,6 +920,22 @@ body:not(.sticky-footer) .site-footer {
 .announcement-details-logo {
     width: 200px;
     height: 200px;
+    min-width: 200px;
+    min-height: 200px;
+    border-radius: 10px;
+    background-color: #2C2138;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+/* Styling for the profil picture */
+.announcement-details-profil {
+    width: 210px;
+    height: 210px;
     min-width: 200px;
     min-height: 200px;
     border-radius: 10px;
@@ -953,6 +972,10 @@ body:not(.sticky-footer) .site-footer {
 .announcement-details-two-column {
     display: flex;
     gap: 24px;
+}
+
+.announcement-details-align-left {
+    align-items: end;
 }
 
 /* Applies*/
