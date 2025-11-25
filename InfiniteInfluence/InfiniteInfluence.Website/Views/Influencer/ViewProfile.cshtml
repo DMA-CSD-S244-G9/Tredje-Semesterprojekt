@@ -26,7 +26,7 @@
     <div class="announcement-details-top-row">
 
         <!-- Logo of the company but currently just a placeholder -->
-        <div class="announcement-details-logo">
+        <div class="announcement-details-profil">
             @Model.UserId
         </div>
 
@@ -49,14 +49,14 @@
                         <span>@Model.YouTubeFollowers</span>
                     </div>
 
-                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                    <div class="announcement-details-info-row">
                         <span class="label">Tiktok:</span>
                         <span>@Model.TikTokFollower</span>
                     </div>
 
                     <div class="announcement-details-info-row">
                         <span class="label">Instagram:</span>
-                        <span>@Model.InstagramFollowers.ToString("dd/MM/yyyy - HH:mm")</span>
+                        <span>@Model.InstagramFollowers</span>
                     </div>
 
                     <div class="announcement-details-info-row">
@@ -71,10 +71,79 @@
 
                 </div>
 
+                <div class="announcement-details-info-group announcement-details-align-left">
+
+                    <div class="announcement-details-info-row">
+                        <span>
+                            @if (string.IsNullOrEmpty(Model.YouTubeProfileUrl))
+                            {
+                                <span>Missing Link</span>
+                            }
+                            else
+                            {
+                                <a href="@Model.YouTubeProfileUrl">@Model.YouTubeProfileUrl</a>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span>
+                        @if (string.IsNullOrEmpty(Model.TikTokProfileUrl))
+                            {
+                                <span>Missing Link</span>
+                            }
+                            else
+                            {
+                            <a href="@Model.TikTokProfileUrl">@Model.TikTokProfileUrl</a>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span>
+                            @if (string.IsNullOrEmpty(Model.InstagramProfileUrl))
+                            {
+                                <span>Missing Link</span>
+                            }
+                            else
+                            {
+                                <a href="@Model.InstagramProfileUrl">@Model.InstagramProfileUrl</a>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span>
+                            @if (string.IsNullOrEmpty(Model.SnapchatProfileUrl))
+                            {
+                                <span>Missing Link</span>
+                            }
+                            else
+                            {
+                                <a href="@Model.SnapchatProfileUrl">@Model.SnapchatProfileUrl</a>
+                            }
+                        </span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span>
+                            @if (string.IsNullOrEmpty(Model.YouTubeProfileUrl))
+                            {
+                                <span>Missing Link</span>
+                            }
+                            else
+                            {
+                                <a href="@Model.YouTubeProfileUrl">@Model.YouTubeProfileUrl</a>
+                            }
+                        </span>
+                    </div>
+
+                </div>
+
                 </div>
             </div>
         </div>
-    </div>
+    
 
     
 
@@ -82,7 +151,7 @@
     <div class="announcement-details-subjects-bar">
         
         <span class="label">
-            <h2>Influencer Domains:</h2>
+            Influencer Domains:
         </span>
         
         <span class="listofsubjects">
@@ -115,19 +184,78 @@
 
     </div>
 
-           <!-- Right small "meta" card -->
-        <div class="announcement-details-card announcement-details-card-meta">
+        
+
+
+  <!-- About + Id and verification -->
+    <div class="announcement-details-middle-row">
+
+
+
+        <!-- Collaboration left card -->
+        <div class="announcement-details-card announcement-details-card-collab">
             
-        <!-- Title Payment -->
-        <div class="announcement-details-card-title">
-            <h2>User Info</h2>
+            <!-- Title About -->
+            <div class="announcement-details-card-title">
+                <h2>About</h2>
+            </div>
+
+            <div class="announcement-details-two-column">
+
+                <div class="announcement-details-info-group">
+                    <div class="announcement-details-info-row">
+                        <span class="label">Age:</span>
+                        <span>@Model.Age</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Gender:</span>
+                        <span>@Model.Gender</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Country:</span>
+                        <span>@Model.Country</span>
+                    </div>
+
+                     <div class="announcement-details-info-row">
+                        <span class="label">State:</span>
+                        <span>@Model.InfluencerState</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">City:</span>
+                        <span>@Model.City</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Languages:</span>
+                        <span>@Model.InfluencerLanguage</span>
+                    </div>
+                </div>
+
+            </div>
+
+            
         </div>
 
-            <div class="announcement-details-info-row">
+
+           <!-- Right small User info card -->
+        <div class="announcement-details-card announcement-details-card-meta">
+            
+        <!-- Title Id and verification -->
+        <div class="announcement-details-card-title">
+            <h2>Id and verification</h2>
+        </div>
+
+        <div>
+
+            <div class="announcement-details-info-row announcement-details-spacer-row-one">
                 <span class="label">User ID:</span>
                 <span>@Model.UserId</span>
             </div>
-            
+
+
             <div class="announcement-details-info-row">
                 <span class="label">Verified User:</span>
 
@@ -157,99 +285,30 @@
                     }
                     else
                     {
-                        influencerVerificationDate = Model.VerificationDate?.ToString("dd/MM/yyyy - HH:mm");
+                        influencerVerificationDate = Model.VerificationDate?.ToString("dd/MM/yyyy");
                     }
                 }
                 <span>@influencerVerificationDate</span>
             </div>
+
+        </div>
         </div>
 
-
-  @*   <!-- Collaboration and Payment -->
-    <div class="announcement-details-middle-row">
-
-        <!-- Collaboration left card -->
-        <div class="announcement-details-card announcement-details-card-collab">
-            
-            <!-- Title colalboration -->
-            <div class="announcement-details-card-title">Collaboration</div>
-
-            <div class="announcement-details-two-column">
-
-                <div class="announcement-details-info-group">
-                    <div class="announcement-details-info-row">
-                        <span class="label">Current Applicants:</span>
-                        <span>@Model.CurrentApplicants</span>
-                    </div>
-
-                    <div class="announcement-details-info-row">
-                        <span class="label">Maximum Applicants:</span>
-                        <span>@Model.MaximumApplicants</span>
-                    </div>
-
-                    <div class="announcement-details-info-row">
-                        <span class="label">Required Followers:</span>
-                        <span>@Model.MinimumFollowersRequired</span>
-                    </div>
-                </div>
-
-
-                <div class="announcement-details-info-group-with-margin-left">
-                    
-                    <div class="announcement-details-info-row">
-                        <span class="label">Communication Type:</span>
-                        <span>@Model.CommunicationType</span>
-                    </div>
-
-                    <div class="announcement-details-info-row">
-                        <span class="label">Language:</span>
-                        <span>@Model.AnnouncementLanguage</span>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
     </div>
 
+    <!-- Section containing influencer domain -->
+    <div class="announcement-details-subjects-bar">
+
+        <span class="label">
+            <h2>Biography:</h2>
+        </span>
+
+        <span class="listofsubjects">
+            @Model.Biography
+        </span>
+
+    </div>
  
-
-
-
-
-
-    <!-- Additional information section -->
-    <div class="announcement-details-card announcement-details-card-additional">
-        <div class="announcement-details-card-title">Additional Information</div>
-
-        <p class="announcement-details-body-text">
-            @Model.AdditionalInformationText
-        </p>
-    </div> *@
-
-
-    
-    <!-- TODO: Submit button  (pseudo) button functionality (this is another user story) -->
-    <form asp-action="Apply" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-        <!-- Influencer id input field -->
-        <div class="container mb-5">
-            <div class="row">
-
-                <div class="col-md-12 mb-3">
-                    <label asp-for="UserId" class="control-label">Influencer Userid</label>
-                    <input asp-for="UserId" type="number" class="form-control" placeholder="Which influencer wants to apply to the application?" />
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Submit application button -->
-        <div class="text-center mb-5">
-            <button type="submit" class="btn btn-primary px-5 py-2">Submit Application</button>
-        </div>
-
-    </form>
-
 </div>
+
+
