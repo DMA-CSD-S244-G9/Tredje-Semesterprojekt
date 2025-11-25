@@ -1,5 +1,9 @@
 ﻿@using InfiniteInfluence.DataAccessLibrary.Model
-@model Announcement
+@* @model Announcement
+ *@
+@model InfiniteInfluence.DataAccessLibrary.Model.Announcement
+
+
 
 @{
     ViewData["Title"] = "Announcement Details";
@@ -15,9 +19,9 @@
             @Model.Title
         </h1>
 
+        
         <div class="announcement-details-subtitle">
-            <span>By </span>
-
+            
             @{
                 string companyNameToShow;
 
@@ -25,15 +29,24 @@
                 {
                     companyNameToShow = "Company Name Not Found";
                 }
+
                 else
                 {
                     companyNameToShow = Model.CompanyName;
                 }
             }
-            <span class="announcement-details-company-name">@companyNameToShow</span>
-            
-        </div>
 
+            @if (!string.IsNullOrEmpty(Model.CompanyName))
+            {
+                <h2>By <a asp-controller="Company" asp-action="ViewProfile" asp-route-userId="@Model.UserId" class="announcement-details-company-name"> @companyNameToShow </a></h2>
+            }
+
+            else
+            {
+                <h2 class="announcement-details-company-name">By @companyNameToShow</h2>
+            }
+
+        </div>
     </div>
 
 
@@ -49,13 +62,13 @@
 
         <!-- General -->
         <div class="announcement-details-card announcement-details-card-general">
-            
+
             <!-- Title -->
-            <div class="announcement-details-card-title">General</div>
+            <div class="announcement-details-card-title"><h3>General</h3></div>
 
             <div class="announcement-details-two-column">
                 <div class="announcement-details-info-group">
-                   
+
                     <div class="announcement-details-info-row">
                         <span class="label">Created:</span>
                         <span>@Model.CreationDateTime?.ToString("dd/MM/yyyy - HH:mm")</span>
@@ -96,16 +109,16 @@
                         <span class="label">Visible:</span>
 
                         @{
-                            string visibleText;
+                        string visibleText;
 
-                            if (Model.IsVisible)
-                            {
-                                visibleText = "Yes";
-                            }
-                            else
-                            {
-                                visibleText = "No";
-                            }
+                        if (Model.IsVisible)
+                        {
+                        visibleText = "Yes";
+                        }
+                        else
+                        {
+                        visibleText = "No";
+                        }
                         }
                         <span>@visibleText</span>
 
@@ -122,9 +135,9 @@
 
         <!-- Collaboration left card -->
         <div class="announcement-details-card announcement-details-card-collab">
-            
+
             <!-- Title colalboration -->
-            <div class="announcement-details-card-title">Collaboration</div>
+            <div class="announcement-details-card-title"><h3>Collaboration</h3></div>
 
             <div class="announcement-details-two-column">
 
@@ -147,9 +160,9 @@
 
 
                 <div class="announcement-details-info-group-with-margin-left">
-                    
+
                     <div class="announcement-details-info-row">
-                        <span class="label">Communication Type:</span>
+                        <span class="label">Communication:</span>
                         <span>@Model.CommunicationType</span>
                     </div>
 
@@ -166,46 +179,46 @@
 
         <!-- Right small "meta" card -->
         <div class="announcement-details-card announcement-details-card-meta">
-            
-        <!-- Title Payment -->
-        <div class="announcement-details-card-title">Payment</div>
+
+            <!-- Title Payment -->
+            <div class="announcement-details-card-title"><h3>Payment</h3></div>
 
             <div class="announcement-details-info-row">
                 <span class="label">Negotiable Payment:</span>
                 @{
-                    string payoutText;
+                string payoutText;
 
-                    if (Model.IsPayoutNegotiable == true)
-                    {
-                        payoutText = "Yes";
-                    }
+                if (Model.IsPayoutNegotiable == true)
+                {
+                payoutText = "Yes";
+                }
 
-                    else
-                    {
-                        payoutText = "No";
-                    }
+                else
+                {
+                payoutText = "No";
+                }
                 }
                 <span>@payoutText</span>
             </div>
-            
+
             <div class="announcement-details-info-row">
                 <span class="label">Can Keep Products:</span>
 
                 @{
-                    string isKeepProductsText;
+                string isKeepProductsText;
 
-                    if (Model.IsKeepProducts)
-                    {
-                        isKeepProductsText = "Yes";
-                    }
-                    else
-                    {
-                        isKeepProductsText = "No";
-                    }
+                if (Model.IsKeepProducts)
+                {
+                isKeepProductsText = "Yes";
+                }
+                else
+                {
+                isKeepProductsText = "No";
+                }
                 }
                 <span>@isKeepProductsText</span>
             </div>
-            
+
             <div class="announcement-details-info-row">
                 <span class="label">Total Payout Amount:</span>
                 <span>@Model.TotalPayoutAmount.ToString("0.00")</span>
@@ -217,35 +230,34 @@
 
     <!-- Section containing subjects -->
     <div class="announcement-details-subjects-bar">
-        
-        <span class="label">Subjects </span>
-        
+        <div class="announcement-details-card-title"><h3>Subjects</h3></div>
+
+
         <span class="listofsubjects">
 
-
-        <!-- If the list of subjects is not null and is not empty then execute this esction -->
-        @if (Model.ListOfSubjects != null && Model.ListOfSubjects.Any())
-        {
-            // Creates a list to store the formatted subjects in
-            List<string> listOfFormattedSubjects = new List<string>();
-
-            // iteartes through the list to add a hashtag in front of every subject
-            foreach (string? subject in Model.ListOfSubjects)
+            <!-- If the list of subjects is not null and is not empty then execute this esction -->
+            @if (Model.ListOfSubjects != null && Model.ListOfSubjects.Any())
             {
-                listOfFormattedSubjects.Add("#" + subject);
+                // Creates a list to store the formatted subjects in
+                List<string>  listOfFormattedSubjects = new List<string>();
+
+                // iteartes through the list to add a hashtag in front of every subject
+                foreach (string? subject in Model.ListOfSubjects)
+                {
+                    listOfFormattedSubjects.Add(subject);
+                }
+
+                // Concatenates the string to a comma seperated string
+                string? commaSeperatedString = string.Join(", ", listOfFormattedSubjects);
+
+                @commaSeperatedString
             }
 
-            // Concatenates the string to a comma seperated string
-            string? commaSeperatedString = string.Join(", ", listOfFormattedSubjects);
-
-            @commaSeperatedString
-        }
-
-        else
-        {
-            // If no subjects are specified this is shown instead
-            @("No subjects specified")
-        }
+            else
+            {
+                // If no subjects are specified this is shown instead
+                @("No subjects specified")
+            }
         </span>
 
     </div>
@@ -254,7 +266,7 @@
 
     <!-- Additional information section -->
     <div class="announcement-details-card announcement-details-card-additional">
-        <div class="announcement-details-card-title">Additional Information</div>
+        <div class="announcement-details-card-title"><h3>Additional Information</h3></div>
 
         <p class="announcement-details-body-text">
             @Model.AdditionalInformationText
@@ -262,20 +274,23 @@
     </div>
 
 
-    
-    <!-- TODO: Submit button  (pseudo) button functionality (this is another user story) -->
-    <form asp-action="Apply" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <!-- Announcement application section -->
+    <form asp-action="Apply" asp-controller="Announcement" method="post">
+
+        <!-- Hidden field for announcement id -->
+        <input type="hidden" name="announcementId" value="@Model.AnnouncementId" />
 
         <!-- Influencer id input field -->
         <div class="container mb-5">
             <div class="row">
 
                 <div class="col-md-12 mb-3">
-                    <label asp-for="UserId" class="control-label">Influencer Userid</label>
-                    <input asp-for="UserId" type="number" class="form-control" placeholder="Which influencer wants to apply to the application?" />
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
+
+                    <label for="influencerUserId" class="form-label">Influencer User Id</label>
+                    <input type="number" class="form-control" id="influencerUserId" name="influencerUserId" placeholder="Enter influencer user id" />
+
+              </div>
             </div>
         </div>
 
@@ -288,57 +303,75 @@
 
 
 
+    <!-- Applicant list and actions section -->
+    <div class="announcement-details-card-bottom">
 
+        <!-- Title influencer contact information -->
+        <div class="announcement-details-card-title"><h3>Applicant List</h3></div>
 
+        @if (Model.Applicants != null && Model.Applicants.Any())
+        {
+            @foreach (AnnouncementApplicant announcementApplicant in Model.Applicants)
+            {
+                <div class="applicant-row">
+                    <span class="applicant-name">@announcementApplicant.DisplayName</span>
 
-@* 
-    <div class="announcement-details-button-row">
-        <button type="button" class="btn btn-primary announcement-details-submit-application-btn">
-            Submit Application
-        </button>
-    </div>
- *@
+                    <div class="applicant-actions">
+                        <a asp-controller="Influencer" asp-action="ViewProfile" asp-route-userId="@announcementApplicant.InfluencerUserId" class="btn btn-primary btn-sm">Inspect</a>
+                        <button type="button" class="btn btn-primary btn-sm">Accept</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-reject">Reject</button>
+                    </div>
+                </div>
+            }
+        }
 
+        else
+        {
+            <p class="text-muted">No applicants yet.</p>
+        }
 
-@* 
-
-    <!-- NOTICE SECTION (statisk tekst som i mockup – kan tilpasses til senere application-flow) -->
-    <div class="announcement-details-notice-section">
-        <div class="announcement-details-notice-title">NOTICE</div>
-
-        <p class="announcement-details-body-text text-center">
-            Your submitted application has been accepted by the company.
-            <br />
-            Below you will be able to find the contact information for the representative of the company.
-        </p>
-
-        <p class="announcement-details-body-text text-center">
-            The company has also been given access to view your contact information, allowing them to
-            reach out to you. Should you for some reason wish to limit the information available to
-            companies, simply go to your profile and remove any undesired means of contact information.
-        </p>
     </div>
 
 
 
-    <!-- COMPANY CONTACT INFORMATION + BUTTON -->
-    <div class="announcement-details-card announcement-details-card-contact">
+    <!-- Influencer contact information section -->
+    <div class="announcement-details-card-bottom">
 
-        <div class="announcement-details-card-title">Company Contact Information</div>
+        <!-- Title influencer contact information -->
+        <div class="announcement-details-card-title"><h3>Influencer Contact Information</h3></div>
 
-        <div class="announcement-details-contact-grid">
-            <div class="announcement-details-info-row">
-                <span class="label">Contact Person:</span>
-                <span>Not available yet</span>
-            </div>
-            <div class="announcement-details-info-row">
-                <span class="label">E-mail:</span>
-                <span>Not available yet</span>
-            </div>
-            <div class="announcement-details-info-row">
-                <span class="label">Phone Number:</span>
-                <span>Not available yet</span>
-            </div>
-        </div>
-    </div> *@
+        @if (Model.Applicants != null && Model.Applicants.Any())
+        {
+            <table class="table table-sm announcement-contact-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone number</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                @foreach (AnnouncementApplicant announcementApplicant in Model.Applicants)
+                    {
+                        <tr>
+                            <td>@announcementApplicant.DisplayName</td>
+                            <td>@announcementApplicant.ContactPhoneNumber</td>
+                            <td>@announcementApplicant.ContactEmailAddress</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+
+        else
+        {
+            <p class="text-muted">No contact information available yet.</p>
+        }
+
+    </div>
+
 </div>
+

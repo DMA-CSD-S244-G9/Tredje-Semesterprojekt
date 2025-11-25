@@ -238,4 +238,55 @@ public class AnnouncementController : Controller
             return RedirectToAction("Index");
         }
     }
+
+
+    // POST
+    // ENDPOINT: /announcements/{announcementId}/apply
+    [HttpPost]
+    public IActionResult Apply(int announcementId, int influencerUserId)
+    {
+        try
+        {
+            bool success = _announcementApiClient.AddInfluencerApplication(announcementId, influencerUserId);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Your application has been submitted.";
+            }
+
+            else
+            {
+                TempData["ErrorMessage"] = "The application could not be submitted. Please try again.";
+            }
+
+            return RedirectToAction("Details", new { id = announcementId });
+        }
+
+        catch (InvalidOperationException exception)
+        {
+            // We use the exception from our business logic in the dao as the error message in our notification
+            TempData["ErrorMessage"] = exception.Message;
+
+            return RedirectToAction("Details", new { id = announcementId });
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while submitting influencer application from MVC.");
+
+            TempData["ErrorMessage"] = "An unexpected error occurred while submitting the application. Please try again later.";
+
+            // In case the API returned a 409 status code (Conflict) then the ApiClient will throw an exception with the message from the Rest WebAPI as part of the content
+            ModelState.AddModelError(string.Empty, $"Could not submit application: {exception.Message}");
+
+            // Retrieves teh announcement object again in order to show the details view with errors
+            Announcement? announcement = _announcementApiClient.GetOne(announcementId);
+
+            // return RedirectToAction("Details", new { id = announcementId });
+
+
+            return View("Details", announcement);
+        }
+    }
+
 }

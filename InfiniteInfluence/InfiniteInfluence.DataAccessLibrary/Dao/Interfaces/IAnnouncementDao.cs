@@ -25,4 +25,10 @@ public interface IAnnouncementDao
     /// Returns one single announcement based on its id or returns null if no announcement was found
     /// </summary>
     Announcement? GetOne(int announcementId);
+
+
+    /// <summary>
+    /// Returns true if an influencer application was added to the announcement by inserting a row into the InfluencerAnnouncements table
+    /// </summary>
+    bool AddInfluencerApplication(int announcementId, int influencerUserId);
 }
