@@ -447,15 +447,30 @@ public class AnnouncementDaoTests
         CollectionAssert.AreEquivalent(expectedSubjects, announcement.ListOfSubjects, "Subjects should match those listed in AnnouncementSubjects for ID 1.");
     }
 
-    #endregion
 
-    #region Helper methods
 
     /// <summary>
-    /// Cleanup method to remove test data from the database after each test.
+    /// Test for ID: 005 - AddInfluencerApplication Announcement
+    /// Acceptance Criteria:
+    /// - Når Submit Applikation klikkes på, tjekkes der om maksantallet af ansøgere allerede er nået, og hvis ikke så associeres influenceren med opslaget.
+    /// 
+    /// 
+    /// Tests that an influencer can apply to an announcement and will be associated with the announcement
+    /// 
+    /// We use the announcement with the AnnouncementId 1 and InfluencerUserId 3 since the userid has not submitted an application yet
+    /// - announcementId: 1
+    /// - InfluencerUserId: 3
+    /// 
     /// </summary>
-    public void Cleanup(int newAnnouncementId)
+    [Test]
+    public void AddInfluencerApplication_Valid_AddRowAndIncrementCurrentApplicants()
     {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+
+        const int announcementId = 1;
+        const int influencerUserId = 3;
 
         // Prepares for connecting to the database
         using var connection = new SqlConnection(_dataBaseConnectionString);
@@ -463,38 +478,186 @@ public class AnnouncementDaoTests
         // Establishes the connection to the database
         connection.Open();
 
-        connection.Execute("DELETE FROM Announcements WHERE announcementId = @Id", new { Id = newAnnouncementId });
-    }
+        // Retrieves the number of applicants of the announcement
+        int currentApplicantsBefore = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+        int linkCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
+
+        // Asset to confirm that an association does not already exist in the test data
+        Assert.That(linkCountBefore, Is.EqualTo(0), "Seed data is expected not to contain an application for userId 3 on announcement 1.");
+
+        bool result = false;
 
 
-    // Creates a minimum required announcement object that uses the company 6 userid which represents NordicTech from the insert script.
-    public Announcement CreateTestAnnouncement(int userId = 6)
-    {
-        Announcement announcement = new Announcement()
+
+        /////////////
+        // - Act - //
+        /////////////
+
+        try
         {
-            UserId = userId,
-            Title = "Unit test announcement",
-            CreationDateTime = DateTime.Now,
-            LastEditDateTime = DateTime.Now,
-            StartDisplayDateTime = DateTime.Now,
-            EndDisplayDateTime = DateTime.Now.AddDays(14),
-            CurrentApplicants = 0,
-            MaximumApplicants = 5,
-            MinimumFollowersRequired = 1000,
-            CommunicationType = "Email",
-            AnnouncementLanguage = "English",
-            IsKeepProducts = false,
-            IsPayoutNegotiable = true,
-            TotalPayoutAmount = 123.45m,
-            ShortDescriptionText = "Short description from test",
-            AdditionalInformationText = "Additional info from test",
-            StatusType = "Active",
-            IsVisible = true,
-            ListOfSubjects = new List<string>()
-        };
+            result = _announcementDao.AddInfluencerApplication(announcementId, influencerUserId);
 
-        return announcement;
+            int currentApplicantsAfter = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+            int linkCountAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
+
+
+
+            ////////////////
+            // - Assert - //
+            ////////////////
+
+            Assert.That(result, Is.True, "Should return true wwhen successful application.");
+            Assert.That(linkCountAfter, Is.EqualTo(linkCountBefore + 1), "Only one association should be inserted into InfluencerAnnouncements.");
+            Assert.That(currentApplicantsAfter, Is.EqualTo(currentApplicantsBefore + 1), "currentApplicants should increase by +1 for the announcement.");
+        }
+
+
+
+        //////////////////
+        // - Clean up - //
+        //////////////////
+
+        finally
+        {
+            connection.Execute("DELETE FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
+
+            connection.Execute("UPDATE Announcements SET currentApplicants = @Count WHERE announcementId = @Id", new { Count = currentApplicantsBefore, Id = announcementId });
+        }
     }
 
-    #endregion
+
+
+    /// <summary>
+    /// Test for ID: 005 - AddInfluencerApplication Announcement
+    /// Acceptance Criteria:
+    /// - Når Submit Applikation klikkes på, tjekkes der om maksantallet af ansøgere allerede er nået, og hvis ikke så associeres influenceren med opslaget.
+    /// 
+    /// Tests that when an influencer applies to an application that already has reached a maximum of applicants
+    /// then the influnecer wont be added as an applicant to the announcement.
+    /// 
+    /// 
+    /// We use the announcement with the AnnouncementId 2 and InfluencerUserId 2 since the userid has not submitted an application yet
+    /// - announcementId: 2
+    /// - InfluencerUserId: 2
+    /// - maximumApplicants = currentApplications (To simulate a full announcement)
+    /// 
+    /// </summary>
+    [Test]
+    public void AddInfluencerApplication_WhenMaxApplicantsReached_ThrowAndDoNotInsertData()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+
+        const int announcementId = 2;
+        const int influencerUserId = 2;
+
+        // Prepares for connecting to the database
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+
+        // Establishes the connection to the database
+        connection.Open();
+
+        // Retrieves the number of applicants of the announcement
+        int applicationsBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Returns the currentApplicants and maximumApplicants for the announcement
+        int currentApplicantsBefore = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+        int maxApplicantsOriginal = connection.ExecuteScalar<int>("SELECT maximumApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Changes the value of maximumApplicants to be the current number of applications making the next application result in an exception
+        connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = applicationsBefore, Id = announcementId });
+
+
+
+        //////////////////////
+        // - Act & Assert - //
+        //////////////////////
+
+        try
+        {
+            // TODO: This is bad practice, but unsure how to do split this up right now
+            // Asserts that an exception is thrown due to exceeding the maximum number of applications
+            Assert.Throws<InvalidOperationException>(() => _announcementDao.AddInfluencerApplication(announcementId, influencerUserId), "Should throw InvalidOperationException when current applicants exceed the maximum applicant for the announcement");
+
+            // Retrieves the number of applications to ensure none were added
+            int applicationsAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+            int currentApplicantsAfter = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+            Assert.That(applicationsAfter, Is.EqualTo(applicationsBefore), "No applications should have been inserted when maximumApplicants has been reached");
+            Assert.That(currentApplicantsAfter, Is.EqualTo(currentApplicantsBefore), "currentApplicants should not change when the transaction is rolled back");
+        }
+
+
+
+        //////////////////
+        // - Clean up - //
+        //////////////////
+        
+        finally
+        {
+            connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = maxApplicantsOriginal, Id = announcementId });
+        }
+    }
+
+
+
+    /// <summary>
+    /// Test for ID: 005 - AddInfluencerApplication Announcement
+    /// Acceptance Criteria:
+    /// - Når Submit Applikation klikkes på, tjekkes der om maksantallet af ansøgere allerede er nået, og hvis ikke så associeres influenceren med opslaget.
+    /// 
+    /// Tests that when an influencer applies to an application that the influencer has not already applied to this announcement
+    /// 
+    /// 
+    /// We use the announcement with the AnnouncementId 1 and InfluencerUserId 2 since the userid has already submitted an application to this announcement
+    /// - announcementId: 1
+    /// - InfluencerUserId: 2
+    /// 
+    /// </summary>
+    [Test]
+    public void AddInfluencerApplication_WhenInfluencerAlreadyApplied_ThrowAndDoNotInsertData()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+
+        const int announcementId = 1;
+        const int influencerUserId = 2; // already applied to announcement 1 in seed data
+
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+        connection.Open();
+
+        // Verify that seed data actually contains an application for (userId=2, announcementId=1)
+        int existingLinkCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
+
+        Assert.That(existingLinkCountBefore, Is.GreaterThanOrEqualTo(1), "Seed data is expected to contain at least one application for userId 2 on announcement 1.");
+
+        // Total number of applications for this announcement
+        int totalApplicationsBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+        int currentApplicantsBefore = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+
+
+        //////////////////////
+        // - Act & Assert - //
+        //////////////////////
+
+        // TODO: This is bad practice, but unsure how to do split this up right now
+        // Asserts that an exception is thrown due to the influencer already having applied to the applications
+        Assert.Throws<InvalidOperationException>(() => _announcementDao.AddInfluencerApplication(announcementId, influencerUserId), "If an influencer already applied a method should throw an exception");
+
+        // Retrieves the data after the attempted insertion
+        int existingLinkCountAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
+        int totalApplicationsAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+        int currentApplicantsAfter = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Assert that noething changed
+        Assert.That(existingLinkCountAfter, Is.EqualTo(existingLinkCountBefore), "No application was associated with the announcement");
+        Assert.That(totalApplicationsAfter, Is.EqualTo(totalApplicationsBefore), "The number of applications did no change");
+        Assert.That(currentApplicantsAfter, Is.EqualTo(currentApplicantsBefore), "currentApplicants should not change when an application attempt fails");
+    }
 }

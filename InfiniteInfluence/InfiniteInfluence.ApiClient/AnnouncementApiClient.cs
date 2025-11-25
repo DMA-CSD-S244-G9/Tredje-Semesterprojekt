@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace InfiniteInfluence.ApiClient;
@@ -94,7 +94,7 @@ public class AnnouncementApiClient : IAnnouncementDao
 
     public Announcement? GetOne(int announcementId)
     {
-        var request = new RestRequest($"announcements/{announcementId}", Method.Get);
+        RestRequest? request = new RestRequest($"announcements/{announcementId}", Method.Get);
 
         var response = _restClient.Execute<Announcement>(request);
 
@@ -102,6 +102,61 @@ public class AnnouncementApiClient : IAnnouncementDao
         {
             throw new Exception("Connection Failure: There were no response from the server.");
         }
+
+        if (!response.IsSuccessful)
+        {
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        return response.Data;
+    }
+
+
+
+    // POST
+    // ENDPOINT: /announcements/{announcementId}/apply
+    // 
+    public bool AddInfluencerApplication(int announcementId, int influencerUserId)
+    {
+        RestRequest? request = new RestRequest($"announcements/{announcementId}/apply", Method.Post);
+
+        request.AddJsonBody(new
+        {
+            InfluencerUserId = influencerUserId
+        });
+
+
+        RestResponse<bool> response = _restClient.Execute<bool>(request);
+
+        if (response == null)
+        {
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        // If the REST Web API returns a Bad Request this would typically be from our InvalidOperationException business logic exception
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+        {
+            // Creates a string variable to hold the message that should be displayed in the MVC view as a notification
+            string exceptionResponseMessage;
+
+            if (string.IsNullOrWhiteSpace(response.Content))
+            {
+                exceptionResponseMessage = "Unable to receive the request from the server.";
+            }
+            else
+            {
+                // Assigns the text from our InvalidOperationException from the REST Web Api 
+                exceptionResponseMessage = response.Content;
+            }
+
+            throw new InvalidOperationException(exceptionResponseMessage);
+        }
+
 
         if (!response.IsSuccessful)
         {
