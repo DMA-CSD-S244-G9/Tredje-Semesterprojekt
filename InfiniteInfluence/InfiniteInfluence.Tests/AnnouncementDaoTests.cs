@@ -447,7 +447,9 @@ public class AnnouncementDaoTests
         CollectionAssert.AreEquivalent(expectedSubjects, announcement.ListOfSubjects, "Subjects should match those listed in AnnouncementSubjects for ID 1.");
     }
 
+    #endregion
 
+    #region Test for ID: 005 - AddInfluencerApplication Announcement
 
     /// <summary>
     /// Test for ID: 005 - AddInfluencerApplication Announcement
@@ -660,4 +662,54 @@ public class AnnouncementDaoTests
         Assert.That(totalApplicationsAfter, Is.EqualTo(totalApplicationsBefore), "The number of applications did no change");
         Assert.That(currentApplicantsAfter, Is.EqualTo(currentApplicantsBefore), "currentApplicants should not change when an application attempt fails");
     }
+    #endregion
+
+    #region Helper methods
+
+    /// <summary>
+    /// Cleanup method to remove test data from the database after each test.
+    /// </summary>
+    public void Cleanup(int newAnnouncementId)
+    {
+
+        // Prepares for connecting to the database
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+
+        // Establishes the connection to the database
+        connection.Open();
+
+        connection.Execute("DELETE FROM Announcements WHERE announcementId = @Id", new { Id = newAnnouncementId });
+    }
+
+
+    // Creates a minimum required announcement object that uses the company 6 userid which represents NordicTech from the insert script.
+    public Announcement CreateTestAnnouncement(int userId = 6)
+    {
+        Announcement announcement = new Announcement()
+        {
+            UserId = userId,
+            Title = "Unit test announcement",
+            CreationDateTime = DateTime.Now,
+            LastEditDateTime = DateTime.Now,
+            StartDisplayDateTime = DateTime.Now,
+            EndDisplayDateTime = DateTime.Now.AddDays(14),
+            CurrentApplicants = 0,
+            MaximumApplicants = 5,
+            MinimumFollowersRequired = 1000,
+            CommunicationType = "Email",
+            AnnouncementLanguage = "English",
+            IsKeepProducts = false,
+            IsPayoutNegotiable = true,
+            TotalPayoutAmount = 123.45m,
+            ShortDescriptionText = "Short description from test",
+            AdditionalInformationText = "Additional info from test",
+            StatusType = "Active",
+            IsVisible = true,
+            ListOfSubjects = new List<string>()
+        };
+
+        return announcement;
+    }
+
+    #endregion
 }
