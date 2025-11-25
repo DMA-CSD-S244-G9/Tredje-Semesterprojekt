@@ -13,10 +13,14 @@
         Enter your user Id below to find your profile.
     </p>
 
+@*The form input 'userId' is automaticly sat into the url as a query parameter*@
+@*Because the form uses method="get", the data is sent as a query string to Influencer/ViewProfile.*@
 <form asp-controller="Influencer" asp-action="ViewProfile" method="get">
-    <div class="col-md-6 mb-3">
-        <label asp-for="UserId" class="form-label"></label>
-        <input asp-for="UserId" class="form-control" placeholder="Enter user ID" /> 
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-3">
+            <label asp-for="UserId" class="form-label"></label>
+            <input asp-for="UserId" class="form-control" placeholder="Enter user ID" /> 
+        </div>
     </div>
 
     <!-- Button for Find profile -->
