@@ -148,7 +148,7 @@ public class InfluencerDaoTests
     #region Test for ID: 011  - GetOne Influencer
 
     /// <summary>
-    /// Test for ID: 011 - Create Influencer
+    /// Test for ID: 011 - GetOne Influencer
     /// Acceptance Criteria:
     /// - Den specifikke influencers profils data kan hentes fra databasen. 
     /// </summary>
@@ -248,7 +248,7 @@ public class InfluencerDaoTests
 
 
     /// <summary>
-    /// Test for ID: 011 - Create Influencer
+    /// Test for ID: 011 - GetOne Influencer
     /// </summary>
     /// 
     /// <remarks>
