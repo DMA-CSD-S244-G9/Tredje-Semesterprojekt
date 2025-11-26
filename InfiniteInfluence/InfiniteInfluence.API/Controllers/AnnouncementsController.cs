@@ -1,8 +1,10 @@
-﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using InfiniteInfluence.API.Dtos;
+using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 
 namespace InfiniteInfluence.API.Controllers;
@@ -49,7 +51,7 @@ public class AnnouncementsController : ControllerBase
 
 
     // GET
-    // ENDPOINT: /announcements/
+    // ENDPOINT: /announcements/index
     [HttpGet]
     public ActionResult<IEnumerable<Announcement>> GetAll()
     {
@@ -71,7 +73,7 @@ public class AnnouncementsController : ControllerBase
 
 
     // GET
-    // ENDPOINT: /announcements/{id}
+    // ENDPOINT: /announcements/{announcementId}
     [HttpGet("{id:int}")]
     public ActionResult<Announcement> GetOne(int id)
     {
@@ -97,4 +99,42 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+
+
+
+    // POST
+    // ENDPOINT: /announcements/{announcementId}/apply
+    [HttpPost("{announcementId}/apply")]
+    public IActionResult Apply(int announcementId, [FromBody] ApplyRequest request)
+    {
+        try
+        {
+            bool isApplicationSubmitted = _announcementDao.AddInfluencerApplication(announcementId, request.InfluencerUserId);
+
+            if (isApplicationSubmitted == false)
+            {
+                return StatusCode(500, "The application could not be saved.");
+            }
+
+            return Ok(true);
+        }
+
+        // TODO: Make a proper exception like max applicants already reached, or you already applied to this
+        catch (InvalidOperationException exception)
+        {
+            // Returns a bad request containing the exception message and sends it as part of the body
+            return BadRequest(exception.Message);
+        }
+
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "An error has occurred when attempting to add an influencer {influencerId} to an announcement with id {announcementId}.", request.InfluencerUserId, announcementId);
+
+            var innerMessage = exception.InnerException?.Message;
+
+            return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
+        }
+    }
+
 }

@@ -62,4 +62,8 @@ public class Announcement
     // And population of the list will occur when influencers can begin to apply to announcements.
     public List<int> ListOfAssociatedInfluencers { get; set; } = new List<int>();
 
+
+    // Llist of applicants for this announcement
+    public List<AnnouncementApplicant> Applicants { get; set; } = new List<AnnouncementApplicant>();
+
 }
