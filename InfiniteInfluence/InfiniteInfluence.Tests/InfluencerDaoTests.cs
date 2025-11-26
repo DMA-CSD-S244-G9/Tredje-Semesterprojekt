@@ -22,7 +22,7 @@ public class InfluencerDaoTests
         _influencerDao = new InfluencerDao(_dataBaseConnectionString);
     }
 
-
+    #region Test for CreateConnection method
 
     [Test]
     public void CreateConnection_WithValidConnectionString_ShouldOpenConnection()
@@ -51,8 +51,23 @@ public class InfluencerDaoTests
         Assert.That(connection.State, Is.EqualTo(ConnectionState.Open));
     }
 
+    #endregion
 
+    #region Test for ID: 001 - Create Influencer
 
+    /// <summary>
+    /// Test for ID: 001 - Create Influencer
+    /// Acceptance Criteria:
+    /// - Jeg vil kunne oprette en profil med navn, og andre generelle oplysninger. 
+    /// - Profilen skal også indeholde links til diverse sociale medier.  
+    /// - Profilen skal også indeholde et biografi felt til yderligere oplysninger om mig. 
+    /// - Mit følgerantal skal kunne angives for hver af de sociale medier.  
+    /// - Min oprettede profil skal gemmes i databasen.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This test creates a new Influencer with valid data and verifies that a new UserId is returned.
+    /// </remarks>
     [Test]
     public void Create_WithValidInfluencer_ShouldReturnNewUserId()
     {
@@ -128,12 +143,20 @@ public class InfluencerDaoTests
 
     }
 
+    #endregion
 
+    #region Test for ID: 011  - GetOne Influencer
 
-
-
-
-
+    /// <summary>
+    /// Test for ID: 011 - GetOne Influencer
+    /// Acceptance Criteria:
+    /// - Den specifikke influencers profils data kan hentes fra databasen. 
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Verifies that GetOne returns the correct Influencer when provided with an existing UserId,
+    /// checking that all relevant fields are populated correctly.
+    /// </remarks>
     [Test]
     public void GetOne_WithExistingUserId_ShouldReturnMatchingInfluencer()
     {
@@ -152,7 +175,7 @@ public class InfluencerDaoTests
         {
             // User properties
             LoginEmail = $"g_{uniqueSuffix}@x.com",
-//            LoginEmail = $"U_{uniqueSuffix}@example.com",
+            // LoginEmail = $"U_{uniqueSuffix}@example.com",
             PasswordHash = "SomeHashedPassword",
 
 
@@ -224,7 +247,13 @@ public class InfluencerDaoTests
     }
 
 
-
+    /// <summary>
+    /// Test for ID: 011 - GetOne Influencer
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Verifies that GetOne returns null when provided with a non-existing UserId.
+    /// </remarks>
     [Test]
     public void GetOne_WithNonExistingUserId_ShouldReturnNull()
     {
@@ -251,6 +280,7 @@ public class InfluencerDaoTests
         Assert.That(foundInfluencer, Is.Null, "GetOne should return null for a non-existing UserId.");
     }
 
+    #endregion
 
     #region Helper methods
 
