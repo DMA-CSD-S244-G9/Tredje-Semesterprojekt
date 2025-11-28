@@ -1,0 +1,35 @@
+﻿@model InfiniteInfluence.DataAccessLibrary.Model.Company;
+@{
+    @* Makes the footer stay at the bottom - sticky footer *@
+    ViewData["BodyClass"] = "sticky-footer";
+
+    ViewData["Title"] = "Find Your Profile";
+}
+
+
+<div class="container">
+    <h1 class="text-center mb-1 main-heading-margins">Find Your Profile</h1>
+    <p class="text-center mb-5">
+        Enter your user Id below to find your profile.
+    </p>
+
+@*The form input 'userId' is automaticly sat into the url as a query parameter*@
+@*Because the form uses method="get", the data is sent as a query string to Company/ViewProfile.*@
+<form asp-controller="Company" asp-action="ViewProfile" method="get">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-3">
+            <label asp-for="UserId" class="form-label"></label>
+            <input asp-for="UserId" class="form-control" placeholder="Enter user ID" /> 
+        </div>
+    </div>
+
+    <!-- Button for Find profile -->
+    <div class="text-center mb-5">
+        <button type="submit" class="btn btn-primary px-5 py-2">
+            Find profile
+        </button>
+    </div>
+</form>
+
+</div>
+
