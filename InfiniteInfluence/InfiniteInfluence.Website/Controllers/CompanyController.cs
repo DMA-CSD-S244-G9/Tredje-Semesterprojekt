@@ -49,6 +49,8 @@ public class CompanyController : Controller
         return View(model);
     }
 
+    #region Create Influencer Profile
+
     /// <summary>
     /// Handles the creation of a new company profile based on the provided view model.
     /// </summary>
@@ -104,6 +106,37 @@ public class CompanyController : Controller
             return View(companyModel);
         }
     }
+    #endregion
+
+    #region Find and show Influencer Profile
+
+    public IActionResult FindProfile()
+    {
+        return View();
+    }
+
+    public IActionResult ViewProfile(int userId)
+    {
+        // kald dit API med userId
+        try
+        {
+            Company? companyProfile = _CompanyApiClient.GetOne(userId);
+            return View(companyProfile);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while getting an company from MVC.");
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            // We pass model so that the view gets all of the InfluencerCreateViewModel's properties and gender selection works and we dont lose all inputted values
+            return View();
+        }
+    }
+    #endregion
+
+    #region Helper methods
 
     /// <summary>
     /// Converts the incoming MVC form ViewModel into the Company model 
@@ -175,7 +208,6 @@ public class CompanyController : Controller
         return company;
     }
 
-    #region Helpter methods
 
     /// <summary>
     /// Takes a raw domain string from the ViewModel, trims it, ensures
