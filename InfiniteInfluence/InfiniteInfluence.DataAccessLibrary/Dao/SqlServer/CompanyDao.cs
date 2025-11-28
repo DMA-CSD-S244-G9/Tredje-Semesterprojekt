@@ -17,7 +17,8 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 /// Provides data access operations for managing company in the database.
 /// </summary>
 /// 
-/// <remarks>This class is responsible for creating, retrieving, and deleting company records, 
+/// <remarks>
+/// This class is responsible for creating, retrieving, and deleting company records, 
 /// It ensures atomicity of operations by utilizing transactions for multi-step database interactions.
 /// </remarks>
 public class CompanyDao : BaseConnectionDao, ICompanyDao
@@ -79,10 +80,34 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     // SQL for inserting domains into the companyDomains table
     private readonly string queryInsertCompanyDomain = @" INSERT INTO CompanyDomains (userId, domain) VALUES (@UserId, @Domain);";
 
+    private readonly string? queryFindCompany = @"
+                SELECT
+                    u.userId, u.loginEmail, u.passwordHash,
+
+                    c.isCompanyVerified, c.verificationDate,
+                    c.companyName, c.companyLogoUrl, c.ceoName,
+                    c.dateOfEstablishment, c.organisationNumber, c.standardIndustryClassification, 
+                    c.websiteUrl, c.companyEmail, c.companyPhoneNumber, c.country,
+                    c.companyState, c.city, c.companyAddress,
+                    c.companyLanguage, c.biography, c.contactPerson,
+                    c.contactEmailAddress, c.contactPhoneNumber
+
+
+                FROM [Users] u
+                INNER JOIN Companys c ON c.userId = u.userId
+                WHERE u.userId = @UserId;";
+
+
+    private readonly string? queryFindCompanyDomains = @"
+                SELECT domain
+                FROM CompanyDomains
+                WHERE userId = @UserId;";
+
+
     #endregion
 
     #region DAO methods
-    
+
     /// <summary>
     /// This method creates a company in the database.
     /// It performs multiple insert operations within a transaction to ensure atomicity.
@@ -163,6 +188,46 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         }
     }
 
+    /// <summary>
+    /// Retrieves a company associated with the specified user ID.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This method queries the database to retrieve the company details and its associated domains
+    /// for the given user ID. If no company is found for the specified user ID, the method returns <see
+    /// langword="null"/>.
+    /// </remarks>
+    /// 
+    /// <param name="userId">
+    /// The unique identifier of the user whose company information is to be retrieved.
+    /// </param>
+    /// 
+    /// <returns>
+    /// A <see cref="Company"/> object containing the company's details and associated domains if the user ID is found;
+    /// otherwise, <see langword="null"/>.
+    /// </returns>
+    public Company? GetOne(int userId)
+    {
+        using IDbConnection connection = CreateConnection();
+        {
+            // Dapper will be mapping both the BaseUser and the Company classes' properties
+            Company? foundCompany = connection.QuerySingleOrDefault<Company>(queryFindCompany, new { UserId = userId });
+
+            // Returns null if the Company is not found using the guard clause
+            if (foundCompany == null)
+            {
+                return null;
+            }
+
+            // If the company is found then attempt to find the 'Companys' influencing domains from the CompanyDomains table
+            IEnumerable<string> domains = connection.Query<string>(queryFindCompanyDomains, new { UserId = userId });
+
+            // Adds the found domains to the list of company domains
+            foundCompany.CompanyDomains = domains.ToList();
+
+            return foundCompany;
+        }
+    }
 
     //TODO: write comments
     public bool Delete(int userId)
@@ -173,13 +238,5 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         return rows > 0;
     }
 
-
-    //TODO: write comments
-    public Company? GetOne(int userId)
-    {
-        var query = "SELECT * FROM Companys WHERE userId = @UserId";
-        using var connection = CreateConnection();
-        return connection.QuerySingleOrDefault<Company>(query, new { UserId = userId });
-    }
     #endregion
 }
