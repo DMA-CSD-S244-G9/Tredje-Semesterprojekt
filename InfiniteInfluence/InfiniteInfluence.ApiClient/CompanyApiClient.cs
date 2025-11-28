@@ -40,6 +40,8 @@ public class CompanyApiClient : ICompanyDao
     }
     #endregion
 
+    #region Create Method
+    
     /// <summary>
     /// Creates a new company by sending a POST request to the server.
     /// </summary>
@@ -64,7 +66,7 @@ public class CompanyApiClient : ICompanyDao
     /// </exception>
     public int Create(Company company)
     {
-        //prepare the request
+        //prepare the request and set the method to POST
         var request = new RestRequest("companys", Method.Post);
 
         //add the company object as json body
@@ -91,6 +93,8 @@ public class CompanyApiClient : ICompanyDao
         return response.Data;
     }
 
+    #endregion
+
 
     //TODO: Implement the Delete method to remove a company by userId
     public bool Delete(int userId)
@@ -98,9 +102,51 @@ public class CompanyApiClient : ICompanyDao
         throw new NotImplementedException();
     }
 
-    //TODO: Implement the GetOne method to retrieve a company by userId
+    /// <summary>
+    /// Retrieves a single <see cref="Company"/> object associated with the specified user ID.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This method sends a GET request to the server to retrieve the company data for the specified
+    /// user ID. Ensure that the server is reachable and the user ID is valid before calling this method.
+    /// </remarks>
+    /// 
+    /// <param name="userId">
+    /// The unique identifier of the user whose associated company is to be retrieved.
+    /// </param>
+    /// 
+    /// <returns>
+    /// The <see cref="Company"/> object associated with the specified user ID, or <see langword="null"/> if no data is
+    /// returned.
+    /// </returns>
+    /// 
+    /// <exception cref="Exception">
+    /// Thrown when the server does not respond, or when the server responds with an error status code.
+    /// </exception>
     public Company? GetOne(int userId)
     {
-        throw new NotImplementedException();
+        // Prepare the request and set the method to GET
+        RestRequest? request = new RestRequest($"companys/{userId}", Method.Get);
+
+        RestResponse<Company> response = _restClient.Execute<Company>(request);
+
+        if (response == null)
+        {
+            //No response received from server
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        if (!response.IsSuccessful)
+        {
+            // Network or connection error returns  - was there http technical error?
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            // API returned error - is the status code a 4xx or 5xx?
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+        return response.Data;
     }
 }
