@@ -30,7 +30,17 @@ public interface ICompanyDao
     /// </returns>
     int Create(Company company);
 
-    /// TODO: Write comments
+    /// <summery>
+    /// This method gets a company by userId.
+    /// </summery>>
+    /// 
+    ///<param name="userId">
+    /// It takes an int userId as a parameter.
+    ///</param>
+    ///
+    ///<returns name="Company?">
+    /// It returns a Company object if found, otherwise null.
+    ///</returns>>
     Company? GetOne(int userId);
 
     /// TODO: Write comments
