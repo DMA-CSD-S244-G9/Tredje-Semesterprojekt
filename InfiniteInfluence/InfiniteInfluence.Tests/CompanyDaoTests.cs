@@ -142,6 +142,7 @@ public class CompanyDaoTests
     }
 
     /// <summary> 
+    /// TODO: Didnt work
     /// Intergration test to verify that the ApiClient for getting a company profile works as expected.
     /// </summary>>
     [Test]
