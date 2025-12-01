@@ -26,7 +26,7 @@
     <div class="announcement-details-top-row">
 
         <!-- Logo of the company but currently just a placeholder -->
-        <div class="announcement-details-profil">
+        <div class="announcement-details-influencer-profil">
             @Model.UserId
         </div>
 
@@ -34,7 +34,7 @@
         <!-- General -->
         <div class="announcement-details-card announcement-details-card-general">
             
-            <!-- Title -->
+            <!-- Social Media & Followers -->
             <div class="announcement-details-card-title">
                 <h2>    
                     Social Media & Followers
@@ -71,13 +71,14 @@
 
                 </div>
 
+                <!-- Links to Social Media -->
                 <div class="announcement-details-info-group announcement-details-align-left">
 
                     <div class="announcement-details-info-row">
                         <span>
                             @if (string.IsNullOrEmpty(Model.YouTubeProfileUrl))
                             {
-                                <span>Missing Link</span>
+                                <span>N/A</span>
                             }
                             else
                             {
@@ -90,7 +91,7 @@
                         <span>
                         @if (string.IsNullOrEmpty(Model.TikTokProfileUrl))
                             {
-                                <span>Missing Link</span>
+                                <span>N/A</span>
                             }
                             else
                             {
@@ -103,7 +104,7 @@
                         <span>
                             @if (string.IsNullOrEmpty(Model.InstagramProfileUrl))
                             {
-                                <span>Missing Link</span>
+                                <span>N/A</span>
                             }
                             else
                             {
@@ -116,7 +117,7 @@
                         <span>
                             @if (string.IsNullOrEmpty(Model.SnapchatProfileUrl))
                             {
-                                <span>Missing Link</span>
+                                <span>N/A</span>
                             }
                             else
                             {
@@ -129,7 +130,7 @@
                         <span>
                             @if (string.IsNullOrEmpty(Model.YouTubeProfileUrl))
                             {
-                                <span>Missing Link</span>
+                                <span>N/A</span>
                             }
                             else
                             {
@@ -150,9 +151,9 @@
     <!-- Section containing influencer domain -->
     <div class="announcement-details-subjects-bar">
         
-        <span class="label">
-            Influencer Domains:
-        </span>
+        <div class="announcement-details-card-title">
+            <h2>Influencer Domains:</h2>
+        </div>
         
         <span class="listofsubjects">
 
@@ -208,7 +209,7 @@
                         <span>@Model.Age</span>
                     </div>
 
-                    <div class="announcement-details-info-row">
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
                         <span class="label">Gender:</span>
                         <span>@Model.Gender</span>
                     </div>
@@ -223,7 +224,7 @@
                         <span>@Model.InfluencerState</span>
                     </div>
 
-                    <div class="announcement-details-info-row">
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
                         <span class="label">City:</span>
                         <span>@Model.City</span>
                     </div>
@@ -299,9 +300,9 @@
     <!-- Section containing influencer domain -->
     <div class="announcement-details-subjects-bar">
 
-        <span class="label">
+        <div class="announcement-details-card-title">
             <h2>Biography:</h2>
-        </span>
+        </div>
 
         <span class="listofsubjects">
             @Model.Biography
