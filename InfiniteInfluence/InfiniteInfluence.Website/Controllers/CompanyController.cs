@@ -152,7 +152,7 @@ public class CompanyController : Controller
         }
         catch
         {
-            ModelState.AddModelError(nameof(findProfile.UserId), "User ID not found.");
+            ModelState.AddModelError(nameof(findProfile.UserId), "No company profile was found with this User Id.");
             return View(findProfile);
         }
 
