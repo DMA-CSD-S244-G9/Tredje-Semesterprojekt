@@ -148,7 +148,7 @@ public class CompanyController : Controller
         // Check if userId exists
         try
         {
-            var company = _CompanyApiClient.GetOne(findProfile.UserId);
+            Company company = _CompanyApiClient.GetOne(findProfile.UserId);
         }
         catch
         {
@@ -160,7 +160,7 @@ public class CompanyController : Controller
         return RedirectToAction("ViewProfile", new { userId = findProfile.UserId });
     }
 
-    
+
     /// <summary>
     /// Retrieves and displays the profile of a company based on the specified user ID.
     /// </summary>
@@ -179,6 +179,7 @@ public class CompanyController : Controller
     /// An <see cref="IActionResult"/> that renders the company profile view if the profile is successfully retrieved;
     /// otherwise, renders the view with an error message if an exception occurs.
     /// </returns>
+    [HttpGet]
     public IActionResult ViewProfile(int userId)
     {
         // kald dit API med userId
