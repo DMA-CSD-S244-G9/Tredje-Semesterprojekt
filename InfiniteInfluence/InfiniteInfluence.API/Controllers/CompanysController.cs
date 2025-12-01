@@ -106,7 +106,7 @@ public class CompanysController : Controller
             Company? company = _companyDao.GetOne(userId);
             if (company == null)
             {
-                return NoContent();
+                return StatusCode(400, "The company could not be found.");
             }
 
             return Ok(company);

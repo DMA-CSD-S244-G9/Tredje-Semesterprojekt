@@ -1,0 +1,246 @@
+﻿@model InfiniteInfluence.DataAccessLibrary.Model.Company;
+
+@{
+    ViewData["Title"] = "View Profile";
+}
+
+
+<div class="announcement-details-wrapper main-heading-margins">
+
+    <!-- Heading title & company name -->
+    <div class="announcement-details-header">
+
+        <h1 class="announcement-details-title">
+            @Model.CompanyName
+        </h1>
+
+    </div>
+
+
+
+    <!-- Logo and General card -->
+    <div class="announcement-details-top-row">
+
+        <!-- Logo of the company but currently just a placeholder -->
+        <div class="announcement-details-company-profil">
+            @Model.UserId
+        </div>
+
+
+        <!-- General -->
+        <div class="announcement-details-card announcement-details-card-general">
+            
+            <!-- Title -->
+            <div class="announcement-details-card-title">
+                <h2>    
+                    Company Details
+                </h2>
+            </div>
+
+            <div class="announcement-details-two-column">
+                <div class="announcement-details-info-group">
+                   
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                        <span class="label">CEO:</span>
+                        <span>@Model.CeoName</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Established:</span>
+                        <span>@Model.DateOfEstablishment</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Org. Number:</span>
+                        <span>@Model.OrganisationNumber</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">SIC:</span>
+                        <span>@Model.StandardIndustryClassification</span>
+                    </div>
+
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                        <span class="label">Website: </span>
+                        <span><a>@Model.WebsiteUrl</a></span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Company E-Mail: </span>
+                        <span>@Model.CompanyEmail</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Company Phone: </span>
+                        <span>@Model.CompanyPhoneNumber</span>
+                    </div>
+
+                </div>
+
+                </div>
+            </div>
+        </div>
+    
+
+    
+
+    <!-- Section containing influencer domain -->
+    <div class="announcement-details-subjects-bar">
+        
+        <span class="label">
+            <h2>Influencer Domains:</h2>
+        </span>
+        
+        <span class="listofsubjects">
+
+
+        <!-- If the list of subjects is not null and is not empty then execute this esction -->
+        @if (Model.CompanyDomains != null && Model.CompanyDomains.Any())
+        {
+            // Creates a list to store the formatted subjects in
+            List<string> listOfFormattedSubjects = new List<string>();
+
+            // iteartes through the list to add a hashtag in front of every subject
+            foreach (string? subject in Model.CompanyDomains)
+            {
+                listOfFormattedSubjects.Add("#" + subject);
+            }
+
+            // Concatenates the string to a comma seperated string
+            string? commaSeperatedString = string.Join(", ", listOfFormattedSubjects);
+
+            @commaSeperatedString
+        }
+
+        else
+        {
+            // If no subjects are specified this is shown instead
+            @("No subjects specified")
+        }
+        </span>
+
+    </div>
+
+        
+
+
+  <!-- About + Id and verification -->
+    <div class="announcement-details-middle-row">
+
+
+
+        <!-- Collaboration left card -->
+        <div class="announcement-details-card announcement-details-card-collab">
+            
+            <!-- Title About -->
+            <div class="announcement-details-card-title">
+                <h2>About</h2>
+            </div>
+
+            <div class="announcement-details-two-column">
+
+                <div class="announcement-details-info-group">
+                    <div class="announcement-details-info-row">
+                        <span class="label">Country:</span>
+                        <span>@Model.Country</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">State:</span>
+                        <span>@Model.CompanyState</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">City:</span>
+                        <span>@Model.City</span>
+                    </div>
+
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                        <span class="label">Address:</span>
+                        <span>@Model.CompanyAddress</span>
+                    </div>
+
+                    <div class="announcement-details-info-row">
+                        <span class="label">Languages:</span>
+                        <span>@Model.CompanyLanguage</span>
+                    </div>
+                </div>
+
+            </div>
+
+            
+        </div>
+
+
+           <!-- Right small User info card -->
+        <div class="announcement-details-card announcement-details-card-meta">
+            
+        <!-- Title Id and verification -->
+        <div class="announcement-details-card-title">
+            <h2>Id and verification</h2>
+        </div>
+
+        <div>
+
+            <div class="announcement-details-info-row announcement-details-spacer-row-one">
+                <span class="label">User ID:</span>
+                <span>@Model.UserId</span>
+            </div>
+
+
+            <div class="announcement-details-info-row">
+                <span class="label">Verified User:</span>
+
+                @{
+                    string isKeepProductsText;
+
+                    if (@Model.IsCompanyVerified)
+                    {
+                        isKeepProductsText = "Yes";
+                    }
+                    else
+                    {
+                        isKeepProductsText = "No";
+                    }
+                }
+                <span>@isKeepProductsText</span>
+            </div>
+            
+            <div class="announcement-details-info-row">
+                <span class="label">Verification Date:</span>
+                @{
+                    string companyVerificationDate;
+
+                    if(Model.VerificationDate == null)
+                    {
+                        companyVerificationDate = "Company Name Not Found";
+                    }
+                    else
+                    {
+                        companyVerificationDate = Model.VerificationDate?.ToString("dd/MM/yyyy");
+                    }
+                }
+                <span>@companyVerificationDate</span>
+            </div>
+
+        </div>
+        </div>
+
+    </div>
+
+    <!-- Section containing influencer domain -->
+    <div class="announcement-details-subjects-bar">
+
+        <span class="label">
+            <h2>Biography:</h2>
+        </span>
+
+        <span class="listofsubjects">
+            @Model.Biography
+        </span>
+
+    </div>
+ 
+</div>
+
+

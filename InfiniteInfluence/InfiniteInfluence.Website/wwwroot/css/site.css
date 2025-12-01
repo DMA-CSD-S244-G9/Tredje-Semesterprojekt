@@ -956,6 +956,22 @@ body:not(.sticky-footer) .site-footer {
     text-transform: uppercase;
 }
 
+/* Styling for the profil picture */
+.announcement-details-company-profil {
+    width: 280px;
+    height: 280px;
+    min-width: 200px;
+    min-height: 200px;
+    border-radius: 10px;
+    background-color: #2C2138;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
 /* The general look of a card */
 .announcement-details-card {
     background-color: #3C364C;

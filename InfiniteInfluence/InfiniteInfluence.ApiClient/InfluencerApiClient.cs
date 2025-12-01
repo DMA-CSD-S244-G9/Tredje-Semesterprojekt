@@ -62,6 +62,7 @@ public class InfluencerApiClient : IInfluencerDao
     {
         RestRequest? request = new RestRequest($"influencers/{userId}", Method.Get);
 
+        // Calls upon the API and expects an Influencer object back
         RestResponse<Influencer> response = _restClient.Execute<Influencer>(request);
 
         if (response == null)

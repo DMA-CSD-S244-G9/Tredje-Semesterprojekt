@@ -13,13 +13,21 @@
         Enter your user Id below to find your profile.
     </p>
 
-@*The form input 'userId' is automaticly sat into the url as a query parameter*@
-@*Because the form uses method="get", the data is sent as a query string to Influencer/ViewProfile.*@
-<form asp-controller="Influencer" asp-action="ViewProfile" method="get">
+ @* The form uses POST for validation. If the UserId is valid,
+   the controller redirects to ViewProfile with the id in the URL. 
+   After validation, the controller performs a RedirectToAction to:
+   /Company/ViewProfile?userId=...  so the profile is displayed through a GET request.*@
+    <form asp-controller="Company" asp-action="FindProfile" method="post">
+
+  
+
     <div class="row justify-content-center">
         <div class="col-md-6 mb-3">
             <label asp-for="UserId" class="form-label"></label>
             <input asp-for="UserId" class="form-control" placeholder="Enter user ID" /> 
+
+            @* error message *@
+            <span asp-validation-for="UserId" class="text-danger"></span>
         </div>
     </div>
 
