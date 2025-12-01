@@ -22,7 +22,7 @@
     <div class="announcement-details-top-row">
 
         <!-- Logo of the company but currently just a placeholder -->
-        <div class="announcement-details-profil">
+        <div class="announcement-details-company-profil">
             @Model.UserId
         </div>
 
@@ -40,7 +40,7 @@
             <div class="announcement-details-two-column">
                 <div class="announcement-details-info-group">
                    
-                    <div class="announcement-details-info-row">
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
                         <span class="label">CEO:</span>
                         <span>@Model.CeoName</span>
                     </div>
@@ -60,7 +60,7 @@
                         <span>@Model.StandardIndustryClassification</span>
                     </div>
 
-                    <div class="announcement-details-info-row">
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
                         <span class="label">Website: </span>
                         <span><a>@Model.WebsiteUrl</a></span>
                     </div>
@@ -88,7 +88,7 @@
     <div class="announcement-details-subjects-bar">
         
         <span class="label">
-            Influencer Domains:
+            <h2>Influencer Domains:</h2>
         </span>
         
         <span class="listofsubjects">
@@ -155,14 +155,9 @@
                         <span>@Model.City</span>
                     </div>
 
-                     <div class="announcement-details-info-row">
+                    <div class="announcement-details-info-row announcement-details-spacer-row-one">
                         <span class="label">Address:</span>
                         <span>@Model.CompanyAddress</span>
-                    </div>
-
-                    <div class="announcement-details-info-row">
-                        <span class="label">City:</span>
-                        <span>@Model.City</span>
                     </div>
 
                     <div class="announcement-details-info-row">
