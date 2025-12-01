@@ -66,7 +66,7 @@ public class InfluencersController : ControllerBase
             // If the influencer with the specified userId does not exist, a 400 Bad Request response is returned.
             if (influencer == null)
             {
-                return NoContent();
+                return StatusCode(400, $"No influencer profile was found with User Id {userId}.");
             }
 
             // If the influencer is found, it is returned with a 200 OK response.
