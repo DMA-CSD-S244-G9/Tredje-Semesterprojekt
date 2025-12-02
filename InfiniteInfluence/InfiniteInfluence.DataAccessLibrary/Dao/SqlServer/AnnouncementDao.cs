@@ -94,6 +94,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             announcement.additionalInformationText,
             announcement.statusType,
             announcement.isVisible,
+            announcement.RowVersion,
 
             -- Also select the companyName from the Companys table which we will map into the Announcement.CompanyName property in C#
             company.companyName AS CompanyName
@@ -148,6 +149,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             announcement.additionalInformationText,
             announcement.statusType,
             announcement.isVisible,
+            announcement.RowVersion,
 
             company.companyName  
 
@@ -192,6 +194,23 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     // - AddInfluencerApplication Method Queries - //
     /////////////////////////////////////////////////
 
+
+
+
+    // Henter currentApplicants, maximumApplicants og
+    // RowVersion for en given announcement.
+    private const string _sqlQueryGetAnnouncementStateForConcurrency = @"
+    SELECT 
+        currentApplicants AS CurrentApplicants,
+        maximumApplicants AS MaximumApplicants,
+        RowVersion        AS RowVersion
+    FROM Announcements
+    WHERE announcementId = @AnnouncementId;";
+
+
+
+
+
     // SQL query that counts how many influencers have already applied
     // for a specific announcement.
     //
@@ -227,7 +246,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             SELECT COUNT(*)
             FROM InfluencerAnnouncements
             WHERE announcementId = @AnnouncementId
-              AND userId = @UserId;";
+                AND userId = @UserId;";
 
 
     // SQL query that inserts a new application from an influencer
@@ -256,7 +275,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     private const string _sqlQueryUpdateCurrentNumberOfApplicants = @"
             UPDATE Announcements
             SET currentApplicants = currentApplicants + 1
-            WHERE announcementId = @AnnouncementId;";
+            WHERE announcementId = @AnnouncementId
+                AND RowVersion = @RowVersion;";
     #endregion
 
 
@@ -506,11 +526,13 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
         try
         {
-            // Retrieves the current number of applicants for the specific announcement 
-            int currentNumberOfApplicants = connection.ExecuteScalar<int>(_sqlQueryCountCurrentApplicationsForAnnouncement, new { AnnouncementId = announcementId }, transaction);
+            // Retrieves teh current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
+            var state = connection.QuerySingle<(int CurrentApplicants, int MaximumApplicants, byte[] RowVersion)>(_sqlQueryGetAnnouncementStateForConcurrency, new { AnnouncementId = announcementId }, transaction);
 
-            // Retrieves the maximum number of applicants there can be for the specific announcement
-            int maximumNumberOfApplicants = connection.ExecuteScalar<int>(_sqlQueryGetMaximumApplicantsForAnnouncement, new { AnnouncementId = announcementId }, transaction);
+            // Assigns the retrieved values to the variables
+            int currentNumberOfApplicants = state.CurrentApplicants;
+            int maximumNumberOfApplicants = state.MaximumApplicants;
+            byte[] rowVersion = state.RowVersion;
 
             // If there already are the same or more appicants than the specified maximum of applicants then execute this section
             // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
@@ -529,16 +551,23 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             }
 
             // Inserts the influencer's application for a collaboration with a status of Pending into the database's InfluencerAnnouncements table
-            int rows = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
+            int rowsAffected = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
 
-            // Adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
-            connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId }, transaction);
+            // Only if the rowVersion is the correct value then adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
+            connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
+
+            // If 0 rows were updated it means the rowVersion no longer was a match, meaning some other user updated it first already
+            if (rowsAffected == 0)
+            {
+                // NOTE: We probably could throw another exception informing the user that somebody else took the last spot, but this exception should suffice I believe?
+                throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+            }
 
             // Commits the transactions if everything went as expected
             transaction.Commit();
 
             // Returns true if one or more row was affected
-            return rows > 0;
+            return rowsAffected > 0;
         }
 
         // If the influencer has already applied to the announcement or there are no more spots open then this exception occurs

@@ -16,21 +16,15 @@
     <link rel="stylesheet" href="~/InfiniteInfluence.Website.styles.css" asp-append-version="true" />
 </head>
 
+
 @* viewdata["BodyClass"]- Makes the footer only be sticky on the front pages *@
 <body class="@(ViewData["BodyClass"] ?? "")">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark-purple box-shadow">
             <div class="container-fluid">
                 
-                @* 
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="img/logo_liggene_white_v01.png" alt="Infinite Influence logo" width="150"></a>
-                 *@
-
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/img/logo_liggene_white_v01.png"
-                         asp-append-version="true"
-                         alt="Infinite Influence logo"
-                         width="150" />
+                <a class="navbar-brand" asp-area="" asp-controller="Announcement" asp-action="Index">
+                    <img src="~/img/logo_liggene_white_v01.png" asp-append-version="true" alt="Infinite Influence logo" width="150" />
                 </a>
 
                 
@@ -39,6 +33,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <!-- left side containing normal textlinks -->
                     <ul class="navbar-nav">
@@ -74,9 +69,8 @@
                             </a>
                         </li>
                     </ul>
+
                 </div>
-
-
 
             </div>
         </nav>

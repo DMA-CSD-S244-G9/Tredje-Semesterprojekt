@@ -26,8 +26,10 @@ html {
 
 /*Main colors*/
 :root {
-    --bs-body-color: #FFFFFF !important;    /*Font color*/
-    --bs-body-bg: #363042 !important;       /*Background color*/
+    --bs-body-color: #FFFFFF !important;        /* Font color */
+    --bs-body-bg: #363042 !important;           /* Background color */
+    --button-red: #82283A !important;           /* */
+    --button-red-hover: #611717 !important;     
 }
 
 /*Link - color changes*/
@@ -367,6 +369,7 @@ input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-au
 
 .btn-secondary:hover {
     background-color: #402864 !important;
+    color: var(--bs-body-color) !important;
     border: 1px solid #402864 !important;
 }
 
@@ -523,7 +526,7 @@ body:not(.sticky-footer) .site-footer {
 
 /* Changes the notification background to red */
 .notification-error {
-    background-color: #ff6b6b;
+    background-color: var(--button-red);
 }
 
 
@@ -1018,7 +1021,7 @@ body:not(.sticky-footer) .site-footer {
 .announcement-details-info-row {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 0px;
 }
 
@@ -1114,12 +1117,12 @@ body:not(.sticky-footer) .site-footer {
 
 /* Rejet button's red coloring */
 .btn-reject {
-    background-color: #a23636 !important;
+    background-color: var(--button-red) !important;
 }
 
-/* Rejet button's red coloring */
+/* Reject button's red coloring */
 .btn-reject:hover {
-    background-color: #611717 !important;
+    background-color: var(--button-red-hover) !important;
 }
 
 

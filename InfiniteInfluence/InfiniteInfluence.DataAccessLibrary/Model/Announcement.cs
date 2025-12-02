@@ -56,6 +56,9 @@ public class Announcement
     public string StatusType { get; set; } = string.Empty;
     public bool IsVisible { get; set; }
 
+    // RowVersion which we use for our optimistic concurrency
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+
 
     // The list of associated influencers are instantiated as an empty list as we
     // do only want an empty list upon creation of an announcement.
@@ -63,7 +66,6 @@ public class Announcement
     public List<int> ListOfAssociatedInfluencers { get; set; } = new List<int>();
 
 
-    // Llist of applicants for this announcement
+    // List of applicants for this announcement
     public List<AnnouncementApplicant> Applicants { get; set; } = new List<AnnouncementApplicant>();
-
 }

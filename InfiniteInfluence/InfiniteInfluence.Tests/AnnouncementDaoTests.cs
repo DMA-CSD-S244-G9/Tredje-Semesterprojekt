@@ -10,6 +10,8 @@ using System.Globalization;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Transactions;
+using System.Threading.Tasks;
+
 
 
 namespace InfiniteInfluence.Tests;
@@ -663,6 +665,143 @@ public class AnnouncementDaoTests
         Assert.That(currentApplicantsAfter, Is.EqualTo(currentApplicantsBefore), "currentApplicants should not change when an application attempt fails");
     }
     #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [Test]
+    public void AddInfluencerApplication_TwoConcurrentApplicantsWithOneSlotLeft_OnlyOneIsSaved()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+
+
+        // Prepares for connecting to the database
+        using var connection = new SqlConnection(_dataBaseConnectionString);
+
+        // Establishes the connection to the database
+        connection.Open();
+
+        // FitGear announcement from inserted test data
+        const int announcementId = 4;
+
+        // Retrieves the maximumApplicants so that we can set the same value after having done our tests
+        int originalMaximumApplicants = connection.ExecuteScalar<int>("SELECT maximumApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+
+        try
+        {
+            /////////////
+            // - Act - //
+            /////////////
+
+            // Retrieves the number of applications that already exists for the announcement
+            int existingApplicationCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+            // Changes the maximum applicants to +1 so that there is only one spot left
+            int adjustedMaximumApplicants = existingApplicationCount + 1;
+
+            // Makes the change in the database
+            connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = adjustedMaximumApplicants, Id = announcementId });
+
+            // Prepares two DAO to help simulate two different users interactions
+            var daoForFirstInfluencer = new AnnouncementDao(_dataBaseConnectionString);
+            var daoForSecondInfluencer = new AnnouncementDao(_dataBaseConnectionString);
+
+            // Specifies two influencers that have not yet applied to the announcement AnnaStyle and BeautySara respectively
+            int firstInfluencerUserId = 1;
+            int secondInfluencerUserId = 5;
+
+            // Sets the initial application success states to false
+            bool firstApplicationSucceeded = false;
+            bool secondApplicationSucceeded = false;
+
+            // Creates the exeption objects we will utilise and compare later
+            Exception? exceptionFromFirstApplication = null;
+            Exception? exceptionFromSecondApplication = null;
+
+            // Starts too different tasks to simulate concurrent users applying to the announcement
+            Task? firstApplicationTask = Task.Run(() =>
+            {
+                try
+                {
+                    // Attempts to have AnnaStyle submit her application to the announcement
+                    firstApplicationSucceeded = daoForFirstInfluencer.AddInfluencerApplication(announcementId, firstInfluencerUserId);
+                }
+
+                catch (Exception exception)
+                {
+                    // 
+                    exceptionFromFirstApplication = exception;
+                }
+            });
+
+
+            Task? secondApplicationTask = Task.Run(() =>
+            {
+                try
+                {
+                    // Attempts to have BeatyySara submit her application to the announcement
+                    secondApplicationSucceeded = daoForSecondInfluencer.AddInfluencerApplication(announcementId, secondInfluencerUserId);
+                }
+
+                catch (Exception exception)
+                {
+                    // Stores the exception so that we can compare 
+                    exceptionFromSecondApplication = exception;
+                }
+            });
+
+            // Waits for both of the tasks to complete their execution
+            Task.WaitAll(firstApplicationTask, secondApplicationTask);
+
+            // Retrieves the number of rows that exists per influencer for Annastyle and Sarabeauty ideally this should total to only 1
+            int rowsForFirstInfluencer = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = firstInfluencerUserId });
+            int rowsForSecondInfluencer = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = secondInfluencerUserId });
+
+
+
+            ////////////////
+            // - Assert - //
+            ////////////////
+            
+            // Confirms that only one of the influencers have an application submitted, by ensuring there are only 1 when looking for both in the InfluencerAnnouncements table
+            Assert.That(rowsForFirstInfluencer + rowsForSecondInfluencer, Is.EqualTo(1), "Only one of the two influencers should have 1 row in the InfluencerAnnouncements table.");
+
+            // One of the two applications would have a successfully been inserted in to the databse
+            Assert.That(firstApplicationSucceeded || secondApplicationSucceeded, Is.True, "Only one of the submitted applications succeeded and the other did failed.");
+
+            // At least one of the application submissions should have resulted in an exception due to a maximum of existing applicants
+            Assert.That(exceptionFromFirstApplication != null || exceptionFromSecondApplication != null, Is.True, "One of the two applications should have thrown an exception due to the announcement's maximum of applicants being reached.");
+        }
+
+
+        finally
+        {
+            //////////////////
+            // - Clean up - //
+            //////////////////
+
+            // Changes the maximum amount of applicants back to what it was previosuly
+            connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = originalMaximumApplicants, Id = announcementId });
+
+            // Deletes the two potentially inserted applications
+            connection.Execute(@"DELETE FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId IN (1, 5)", new { Id = announcementId });
+        }
+    }
+
+
 
     #region Helper methods
 
