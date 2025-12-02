@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
-using System.Transactions;
 using System.Threading.Tasks;
+using System.Transactions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 
@@ -675,10 +676,24 @@ public class AnnouncementDaoTests
 
 
 
-
-
-
-
+    #region Test for ID: 021 - AddInfluencerApplication With Concurrency Announcement
+    /// <summary>
+    /// Test for ID: 021 - AddInfluencerApplication With Concurrency Announcement
+    /// 
+    /// Acceptance Criteria:
+    /// - Samtidighedsproblemer ved multiple ansøgninger til den sidste plads i et opslag håndteres
+    /// - Hvis tilføjelsen lykkedes gemmes tilføjelsen af influenceren til opslaget i databasen., ellers modtager influenceren en fejlbesked
+    /// 
+    /// </summary>
+    /// 
+    /// 
+    /// <remarks>
+    /// Test:
+    /// Simulates that two users are trying to submit an application to the same announcement at once, and one of the influencers application
+    /// will not have the correct RowVersion binary timestamp at the end, causing the exception InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+    /// to occur and the test therefore confirms that one of the tasks fails and throws an exception, and the two influencers will together
+    /// have only one row in the InfluencerAnnouncements table, and only one of the inserts resulted in a success and returned true.
+    /// </remarks>
     [Test]
     public void AddInfluencerApplication_TwoConcurrentApplicantsWithOneSlotLeft_OnlyOneIsSaved()
     {
@@ -742,7 +757,7 @@ public class AnnouncementDaoTests
 
                 catch (Exception exception)
                 {
-                    // 
+                    // Stores the exception so that we can compare 
                     exceptionFromFirstApplication = exception;
                 }
             });
@@ -800,6 +815,7 @@ public class AnnouncementDaoTests
             connection.Execute(@"DELETE FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId IN (1, 5)", new { Id = announcementId });
         }
     }
+    #endregion
 
 
 
