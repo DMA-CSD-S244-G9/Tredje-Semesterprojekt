@@ -1,5 +1,6 @@
 using InfiniteInfluence.ApiClient;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+using InfiniteInfluence.DataAccessLibrary.Model;
 
 namespace InfiniteInfluence.Website
 {
@@ -7,7 +8,7 @@ namespace InfiniteInfluence.Website
     {
         // The URL address for the REST API
         // private static readonly string _apiUrl = "https://localhost:7777";
-        private static readonly string _apiUrl = "https://localhost:32775";
+        private static readonly string _apiUrl = "https://localhost:32769";
 
 
         public static void Main(string[] args)
@@ -47,11 +48,11 @@ namespace InfiniteInfluence.Website
 
             // Sends 404 and other status codes to the Error/404 page
             app.UseStatusCodePagesWithReExecute("/Error/404");
-
+            
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Announcement}/{action=Index}");
 
             app.Run();
         }

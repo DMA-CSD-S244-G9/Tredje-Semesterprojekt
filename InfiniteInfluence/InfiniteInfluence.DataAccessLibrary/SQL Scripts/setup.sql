@@ -153,6 +153,8 @@ CREATE TABLE Announcements (
     statusType NVARCHAR(50) NULL,
     isVisible BIT DEFAULT 0,
 
+--  The column to track the version of the row that is used for our optimistic concurrency
+    RowVersion rowversion NOT NULL,
 
 --  CONSTRAINT
 --  Foreign key constraint from Announcements to Companys
