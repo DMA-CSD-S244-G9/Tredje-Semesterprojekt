@@ -100,31 +100,31 @@ INSERT INTO Announcements (
 VALUES
 -- Announcement 1 (NordicTech - Technology)
 (6, 'Review Our New Smart Device', GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 30, GETDATE()), 0, 10, 20000, 'Email', 'English',
+ GETDATE(), DATEADD(DAY, 30, GETDATE()), 3, 10, 20000, 'Email', 'English',
  0, 1, 5000.00, 'We are seeking tech influencers to review a new smart device.',
  'You will receive the product for testing.', 'Active', 1),
 
 -- Announcement 2 (FreshSnacks - Food)
 (7, 'Healthy Snack Promotion', GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 20, GETDATE()), 0, 8, 0, 'Email', 'Swedish',
+ GETDATE(), DATEADD(DAY, 20, GETDATE()), 3, 8, 0, 'Email', 'Swedish',
  1, 0, 0.00, 'Promote our new healthy snack box.',
  'Influencer keeps products after collaboration.', 'Active', 1),
 
 -- Announcement 3 (EcoWear - Fashion)
 (8, 'Eco-Friendly Clothing Campaign', GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 25, GETDATE()), 0, 12, 15000, 'Phone', 'Danish',
+ GETDATE(), DATEADD(DAY, 25, GETDATE()), 3, 12, 15000, 'Phone', 'Danish',
  1, 0, 0.00, 'Showcase our sustainable clothing line.',
  'Free clothing included.', 'Active', 1),
 
 -- Announcement 4 (FitGear - Sports)
 (9, 'Fitness Gear Review', GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 28, GETDATE()), 0, 6, 10000, 'Email', 'Norwegian',
+ GETDATE(), DATEADD(DAY, 28, GETDATE()), 3, 6, 10000, 'Email', 'Norwegian',
  0, 1, 2500.00, 'Review our newest training equipment.',
  'Equipment must be returned unless otherwise agreed.', 'Active', 1),
 
 -- Announcement 5 (BeautyBox - Beauty)
 (10, 'Beauty Product Showcase', GETDATE(), GETDATE(),
- GETDATE(), DATEADD(DAY, 35, GETDATE()), 0, 5, 12000, 'Email', 'Danish',
+ GETDATE(), DATEADD(DAY, 35, GETDATE()), 2, 5, 12000, 'Email', 'Danish',
  1, 1, 3500.00, 'Showcase our new beauty product line.',
  'Products included for free.', 'Active', 1);
 
