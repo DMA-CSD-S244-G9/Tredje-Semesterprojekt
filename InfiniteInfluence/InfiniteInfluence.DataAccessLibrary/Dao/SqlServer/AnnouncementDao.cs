@@ -566,6 +566,14 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             return true;
         }
 
+        catch (InvalidOperationException)
+        {
+            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+            transaction.Rollback();
+
+            throw;
+        }
+
         catch (Exception exception)
         {
             // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database

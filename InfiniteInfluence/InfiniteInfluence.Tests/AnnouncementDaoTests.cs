@@ -631,18 +631,19 @@ public class AnnouncementDaoTests
         // - Arrange - //
         /////////////////
 
+        // InfluencerId 2 has already submitted to the announcement in the test data
         const int announcementId = 1;
-        const int influencerUserId = 2; // already applied to announcement 1 in seed data
+        const int influencerUserId = 2;
 
         using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
         connection.Open();
 
-        // Verify that seed data actually contains an application for (userId=2, announcementId=1)
+        // Verify that test data actually contains an application for (userId=2, announcementId=1)
         int existingLinkCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
 
         Assert.That(existingLinkCountBefore, Is.GreaterThanOrEqualTo(1), "Seed data is expected to contain at least one application for userId 2 on announcement 1.");
 
-        // Total number of applications for this announcement
+        // Retrieves the total number of application submissions for this announcement
         int totalApplicationsBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
 
         int currentApplicantsBefore = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
