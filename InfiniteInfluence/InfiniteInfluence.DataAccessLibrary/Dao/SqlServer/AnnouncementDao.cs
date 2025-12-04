@@ -4,6 +4,7 @@ using InfiniteInfluence.DataAccessLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
@@ -279,8 +280,40 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
                 AND RowVersion = @RowVersion;";
     #endregion
 
+    #region SQL Queries - Update
+    // This SQL query updates an existing announcement in the Announcements table.
+    private const string SqlQueryUpdateAnnouncementByAnnouncementId = @"
+        UPDATE Announcements
+        SET 
+            title = @Title,
+            lastEditDateTime = @LastEditDateTime,
+            startDisplayDateTime = @StartDisplayDateTime,
+            endDisplayDateTime = @EndDisplayDateTime,
+            maximumApplicants = @MaximumApplicants,
+            minimumFollowersRequired = @MinimumFollowersRequired,
+            communicationType = @CommunicationType,
+            announcementLanguage = @AnnouncementLanguage,
+            isKeepProducts = @IsKeepProducts,
+            isPayoutNegotiable = @IsPayoutNegotiable,
+            totalPayoutAmount = @TotalPayoutAmount,
+            shortDescriptionText = @ShortDescriptionText,
+            additionalInformationText = @AdditionalInformationText,
+            statusType = @StatusType,
+            isVisible = @IsVisible
+        WHERE announcementId = @AnnouncementId;";
 
+    #endregion
 
+    #region SQL Queries - Delete
+
+    // This SQL query delete all of the subjects from the AnnouncementSubjects table, with the matching announcementId
+    private const string _sqlQueryDelteSubjectsByAnnouncementId = @"
+        DELETE FROM AnnouncementSubjects
+        WHERE announcementId = @AnnouncementId;";
+
+    #endregion
+
+    #region Create Method
     // Please note that the list ListOfAssociatedInfluencers is not included in the
     // AnnouncementDao's Create method as the list is initially instantiated as an
     // empty list so that influencers can eventually apply to it.
@@ -354,9 +387,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
 
 
-
+    #region GetAll Method
     /// <summary>
     /// Returns all of the announcements from the database with their respective subjects from the AnnouncementSubjects table,
     /// and includes the related company name from the Companys table.
@@ -440,9 +474,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // Return all announcements, each enriched with its subjects and company name
         return announcements;
     }
+    #endregion
 
 
-
+    #region helper classes
     /// <summary>
     /// An helper class used to map rows from the AnnouncementSubjects query and represents a single subject entry for a specific announcement.
     /// </summary>
@@ -451,9 +486,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         public int AnnouncementId { get; set; }
         public string AnnouncementSubject { get; set; } = string.Empty;
     }
+    #endregion
 
 
-
+    #region GetOne Method
     /// <summary>
     /// Returns one single announcements from the database with the matching AnnouncementId that was supplied in the parameter,
     /// also retrurns the respective subjects associated with the announcement from the AnnouncementSubjects table.
@@ -494,8 +530,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // ListOfAssociatedInfluencers bliver ikke loadet i denne version
         return announcement;
     }
+    #endregion
 
 
+    #region AddInfluencerApplication Method
     /// <summary>
     /// This method will attempt to add an influencers application to hte announcement with the specificed id.
     ///
@@ -504,15 +542,17 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     ///     The announcement must not already have a maximum number of applicants
     ///     The influencer must not already have applied to the announcement
     ///     The application is inserted with a default state of pending and +1 is added to the current application counter 
-    ///
+    ///</summary>
     /// 
-    /// Returns:
-    ///   true if the influencer's application was successfully submitted and inserted in to the database else false
+    /// <returns>
+    /// True if the influencer's application was successfully submitted and inserted in to the database else false
+    /// </returns>
     ///
+    /// <remarks>
     /// Exceptions:
     ///   InvalidOperationException is thrown if the maximum number of applicants is reached or if the influencer has already applied to this announcement
     ///   TransactionAbortedException is thrown if any of the steps fail and the transaction is rolled back as a result thereof
-    /// </summary>
+    /// </remarks>
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
     {
         // Creates and opens the database connection
@@ -587,4 +627,71 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
+
+
+    #region Update method
+    public bool Update(Announcement announcement)
+    {
+
+        // Creates and opens the database connection
+        using IDbConnection connection = CreateConnection();
+        connection.Open();
+
+
+        // Begins a transaction Since we have to make changes by performing multiple queries we have to
+        // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
+        using IDbTransaction transaction = connection.BeginTransaction();
+
+        int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
+        {
+            AnnouncementId = announcement.AnnouncementId,
+            Title = announcement.Title,
+            LastEditDateTime = announcement.LastEditDateTime,
+            StartDisplayDateTime = announcement.StartDisplayDateTime,
+            EndDisplayDateTime = announcement.EndDisplayDateTime,
+            MaximumApplicants = announcement.MaximumApplicants,
+            MinimumFollowersRequired = announcement.MinimumFollowersRequired,
+            CommunicationType = announcement.CommunicationType,
+            AnnouncementLanguage = announcement.AnnouncementLanguage,
+            IsKeepProducts = announcement.IsKeepProducts,
+            IsPayoutNegotiable = announcement.IsPayoutNegotiable,
+            TotalPayoutAmount = announcement.TotalPayoutAmount,
+            ShortDescriptionText = announcement.ShortDescriptionText,
+            AdditionalInformationText = announcement.AdditionalInformationText,
+            StatusType = announcement.StatusType,
+            IsVisible = announcement.IsVisible
+        });
+
+        // If no rows were affected then we rollback and return false
+        if (rowsAffected == 0)
+        {
+            transaction.Rollback();
+            return false;
+        }
+
+        // Deletes all existing subjects for the announcement
+        // This is done to simplify the update process by removing all old subjects and re-inserting the current list
+        connection.Execute(
+            _sqlQueryDelteSubjectsByAnnouncementId,
+            new { AnnouncementId = announcement.AnnouncementId },
+            transaction);
+
+        // Inserts zero or more subject domains in to the AnnouncementSubjects table
+        if (announcement.ListOfSubjects != null)
+        {
+            foreach (string subject in announcement.ListOfSubjects)
+            {
+                connection.Execute(
+                    _sqlQueryInsertAnnouncementSubject,
+                    new { AnnouncementId = announcement.AnnouncementId, AnnouncementSubject = subject },
+                    transaction);
+            }
+        }
+
+        // Commits the transactions if everything went as expected
+        transaction.Commit();
+        return true;
+    }
+    #endregion  
 }
