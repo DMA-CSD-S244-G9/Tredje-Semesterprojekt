@@ -195,45 +195,15 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     /////////////////////////////////////////////////
 
 
-
-
-    // Henter currentApplicants, maximumApplicants og
-    // RowVersion for en given announcement.
-    private const string _sqlQueryGetAnnouncementStateForConcurrency = @"
+    // SQL query that retrieves the currentApplicants, maximumApplicants and the
+    // RowVersion for the announcement with a matching announcementId.
+    private const string _sqlQueryGetAnnouncementWithConcurrency = @"
     SELECT 
-        currentApplicants AS CurrentApplicants,
-        maximumApplicants AS MaximumApplicants,
-        RowVersion        AS RowVersion
+        currentApplicants      AS CurrentApplicants,
+        maximumApplicants      AS MaximumApplicants,
+        RowVersion             AS RowVersion
     FROM Announcements
     WHERE announcementId = @AnnouncementId;";
-
-
-
-
-
-    // SQL query that counts how many influencers have already applied
-    // for a specific announcement.
-    //
-    // This is used to check whether the announcement has reached its
-    // maximum allowed number of applicants.
-    //
-    // The result is a single integer: 0, 1, 2, 3, ...
-    private const string _sqlQueryCountCurrentApplicationsForAnnouncement = @"
-            SELECT COUNT(*) 
-            FROM InfluencerAnnouncements
-            WHERE announcementId = @AnnouncementId;";
-
-
-    // SQL query that retrieves the maximum number of applicants allowed for an announcement.
-    //
-    // This value comes from the Announcements table and defines the upper
-    // limit of how many influencers can apply.
-    //
-    // Example: If maximumApplicants = 10, the 11th applicant should be rejected.
-    private const string _sqlQueryGetMaximumApplicantsForAnnouncement = @"
-            SELECT maximumApplicants
-            FROM Announcements
-            WHERE announcementId = @AnnouncementId;";
 
 
     // SQL query that checks whether a specific influencer (userId)
@@ -243,10 +213,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     // If the COUNT(*) result is > 0, the influencer has already applied,
     // so the system should block the new application attempt.
     private const string _sqlQueryCheckIfInfluencerAlreadyApplied = @"
-            SELECT COUNT(*)
-            FROM InfluencerAnnouncements
-            WHERE announcementId = @AnnouncementId
-                AND userId = @UserId;";
+        SELECT COUNT(*)
+        FROM InfluencerAnnouncements
+        WHERE announcementId = @AnnouncementId
+            AND userId = @UserId;";
 
 
     // SQL query that inserts a new application from an influencer
@@ -259,8 +229,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     // applicationState is set to 'Pending' to indicate that the influencer
     // has applied but has not yet been accepted or declined.
     private const string _sqlQueryInsertInfluencerApplication = @"
-            INSERT INTO InfluencerAnnouncements (userId, announcementId, applicationState)
-            VALUES (@UserId, @AnnouncementId, 'Pending');";
+        INSERT INTO InfluencerAnnouncements (userId, announcementId, applicationState)
+        VALUES (@UserId, @AnnouncementId, 'Pending');";
 
 
     // SQL query that increments (adds +1 to) the currentApplicants field
@@ -273,12 +243,28 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     //   Before insert: currentApplicants = 4
     //   After insert:  currentApplicants = 5
     private const string _sqlQueryUpdateCurrentNumberOfApplicants = @"
-            UPDATE Announcements
-            SET currentApplicants = currentApplicants + 1
-            WHERE announcementId = @AnnouncementId
-                AND RowVersion = @RowVersion;";
+    UPDATE Announcements
+    SET currentApplicants = currentApplicants + 1
+    WHERE announcementId = @AnnouncementId
+      AND RowVersion = @RowVersion;";
+
+
+
     #endregion
 
+    #region SQL Queries - DeleteAnnouncement
+    // SQL Query that deletes the announcement with the specified announcementId
+    // from the Announcements table.
+    // 
+    // Because of the database structure using 'on delte cascade' the announements
+    // associated AnnouncementSubjects and InfluencerAnnouncements tables will also
+    // be deleted when the announcement is deleted, making this query very short and
+    // yet very functional.
+    const string _sqlQueryDeleteAnnouncementById = @"
+        DELETE FROM Announcements
+        WHERE announcementId = @AnnouncementId;";
+
+    #endregion
 
 
     // Please note that the list ListOfAssociatedInfluencers is not included in the
@@ -519,20 +505,25 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         using IDbConnection connection = CreateConnection();
         connection.Open();
 
-
         // Begins a transaction since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
         using IDbTransaction transaction = connection.BeginTransaction();
 
         try
         {
-            // Retrieves teh current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
-            var state = connection.QuerySingle<(int CurrentApplicants, int MaximumApplicants, byte[] RowVersion)>(_sqlQueryGetAnnouncementStateForConcurrency, new { AnnouncementId = announcementId }, transaction);
+            // Retrieves the current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
+            AnnouncementConcurrencyInfo? announcementWithConcurrencyInfo = connection.QuerySingleOrDefault<AnnouncementConcurrencyInfo>(_sqlQueryGetAnnouncementWithConcurrency, new { AnnouncementId = announcementId }, transaction);
+
+            // If the announcement with the specified id was not retrieved from the database then execute this section
+            if (announcementWithConcurrencyInfo == null)
+            {
+                throw new InvalidOperationException("The announcement was unable to be found");
+            }
 
             // Assigns the retrieved values to the variables
-            int currentNumberOfApplicants = state.CurrentApplicants;
-            int maximumNumberOfApplicants = state.MaximumApplicants;
-            byte[] rowVersion = state.RowVersion;
+            int currentNumberOfApplicants = announcementWithConcurrencyInfo.CurrentApplicants;
+            int maximumNumberOfApplicants = announcementWithConcurrencyInfo.MaximumApplicants;
+            byte[] rowVersion = announcementWithConcurrencyInfo.RowVersion;
 
             // If there already are the same or more appicants than the specified maximum of applicants then execute this section
             // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
@@ -547,17 +538,23 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             // If the influencer has applied to this announcement once or more already then execute this esction
             if (alreadyApplied > 0)
             {
-                throw new InvalidOperationException("The influencer has already applied to this announcement.");
+                throw new InvalidOperationException("You have already applied to this announcement.");
             }
 
             // Inserts the influencer's application for a collaboration with a status of Pending into the database's InfluencerAnnouncements table
-            int rowsAffected = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
+            int rowsInserted = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
+
+            // If something went wrong during the insertion then execute this esction
+            if (rowsInserted == 0)
+            {
+                throw new InvalidOperationException("Your submitted application could not be saved");
+            }
 
             // Only if the rowVersion is the correct value then adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
-            connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
+            int rowsUpdated = connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
 
             // If 0 rows were updated it means the rowVersion no longer was a match, meaning some other user updated it first already
-            if (rowsAffected == 0)
+            if (rowsUpdated == 0)
             {
                 // NOTE: We probably could throw another exception informing the user that somebody else took the last spot, but this exception should suffice I believe?
                 throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
@@ -566,17 +563,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             // Commits the transactions if everything went as expected
             transaction.Commit();
 
-            // Returns true if one or more row was affected
-            return rowsAffected > 0;
-        }
-
-        // If the influencer has already applied to the announcement or there are no more spots open then this exception occurs
-        catch (InvalidOperationException)
-        {
-            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
-            transaction.Rollback();
-
-            throw;
+            return true;
         }
 
         catch (Exception exception)
@@ -586,5 +573,43 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
+    }
+
+
+    /// <summary>
+    /// A Helper class used to map rows from the query for retrieving Announcement
+    /// </summary>
+    private class AnnouncementConcurrencyInfo
+    {
+        public int CurrentApplicants { get; set; }
+        public int MaximumApplicants { get; set; }
+        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+    }
+
+
+
+    /// <summary>
+    /// This method will attempt to remove an announcement that matches the specified id.
+    /// 
+    /// Upon the announcement being deleted within the Announcement table, a cascade deletion will ensure
+    /// causing the announcement's associated rows within the AnnouncementSubjects and InfluencerAnnouncements tables
+    /// to also be removed.
+    /// 
+    /// 
+    /// Returns:
+    ///   true if one or multiple rows were affected by the deletion, else returns false
+    ///
+    /// </summary>
+    public bool Delete(int announcementId)
+    {
+        // Creates and opens the database connection
+        using IDbConnection connection = CreateConnection();
+        connection.Open();
+
+        // Returns the number of rows that had the matching AnnouncementId within the Announcement table and that was deleted
+        int rowsAffected = connection.Execute(_sqlQueryDeleteAnnouncementById, new { AnnouncementId = announcementId });
+
+        // If the number of affected rows are more than 0 then returns true else false
+        return rowsAffected > 0;
     }
 }
