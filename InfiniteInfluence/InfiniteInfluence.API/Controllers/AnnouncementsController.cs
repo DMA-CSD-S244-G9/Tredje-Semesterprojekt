@@ -42,7 +42,7 @@ public class AnnouncementsController : ControllerBase
         {
             _logger.LogError(exception, "An error has occured when attempting to create an Announcement.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -64,7 +64,7 @@ public class AnnouncementsController : ControllerBase
         {
             _logger.LogError(exception, "An error has occured when attempting to get all Announcements.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -93,8 +93,8 @@ public class AnnouncementsController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {Id}.", id);
-            
-            var innerMessage = exception.InnerException?.Message;
+
+            string? innerMessage = exception.InnerException?.Message;
             
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -131,7 +131,39 @@ public class AnnouncementsController : ControllerBase
         {
             _logger.LogError(exception, "An error has occurred when attempting to add an influencer {influencerId} to an announcement with id {announcementId}.", request.InfluencerUserId, announcementId);
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
+
+            return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
+        }
+    }
+
+
+
+    // DELETE:
+    // ENDPOINT: /announcements/{announcementId}
+    [HttpDelete("{announcementId}")]
+    public ActionResult<bool> Delete(int announcementId)
+    {
+        try
+        {
+            bool deleted = _announcementDao.Delete(announcementId);
+
+            // If the deletion failed then execute this section
+            if (!deleted)
+            {
+                // Produces a 404 status code signaling that the announcement with the specifeid id was not found
+                return NotFound($"The announcement with id {announcementId} was not found.");
+            }
+
+            // Successfully deleted
+            return Ok(true);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "An error has occurred when attempting to delete an announcement with id {announcementId}.", announcementId);
+
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
