@@ -300,7 +300,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             additionalInformationText = @AdditionalInformationText,
             statusType = @StatusType,
             isVisible = @IsVisible
-        WHERE announcementId = @AnnouncementId;";
+        WHERE AnnouncementId = @AnnouncementId AND RowVersion = @RowVersion;";
 
     #endregion
 
@@ -630,7 +630,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
-    #region Update method
+    #region Update Method
     public bool Update(Announcement announcement)
     {
 
@@ -643,9 +643,11 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
         using IDbTransaction transaction = connection.BeginTransaction();
 
+        //If rowsAffected is 0 then the update failed due to concurrency issues 
         int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
         {
             AnnouncementId = announcement.AnnouncementId,
+            RowVersion = announcement.RowVersion, 
             Title = announcement.Title,
             LastEditDateTime = announcement.LastEditDateTime,
             StartDisplayDateTime = announcement.StartDisplayDateTime,
@@ -661,7 +663,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             AdditionalInformationText = announcement.AdditionalInformationText,
             StatusType = announcement.StatusType,
             IsVisible = announcement.IsVisible
-        });
+        }, transaction);
 
         // If no rows were affected then we rollback and return false
         if (rowsAffected == 0)

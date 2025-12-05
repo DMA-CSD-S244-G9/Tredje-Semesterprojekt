@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InfiniteInfluence.API\InfiniteInfluence.API.csproj" />
     <ProjectReference Include="..\InfiniteInfluence.DataAccessLibrary\InfiniteInfluence.DataAccessLibrary.csproj" />
   </ItemGroup>
 

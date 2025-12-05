@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-
+/// <summary>
+/// This controller handles HTTP requests related to Announcements.
+/// </summary>>
 namespace InfiniteInfluence.API.Controllers;
-
-
 
 
 [ApiController]
@@ -27,7 +27,7 @@ public class AnnouncementsController : ControllerBase
         _announcementDao = announcementDao;
     }
 
-
+    #region Create Announcement
     // POST
     // ENDPOINT: /announcements/create
     [HttpPost]
@@ -47,9 +47,10 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
 
-
+    #region Get All Announcements
     // GET
     // ENDPOINT: /announcements/index
     [HttpGet]
@@ -69,9 +70,10 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
 
-
+    #region Get one Announcement by ID
     // GET
     // ENDPOINT: /announcements/{announcementId}
     [HttpGet("{id:int}")]
@@ -99,9 +101,37 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
 
-
+    #region Submit Application to Announcement
+    /// <summary>
+    /// Submits an application for an influencer to an announcement. </summary>
+    /// 
+    /// <remarks>
+    /// This method logs any unexpected errors that occur during the operation. </remarks>
+    /// 
+    /// <param name="announcementId">
+    /// The unique identifier of the announcement to which the application is being submitted.</param>
+    /// 
+    /// <param name="request">
+    /// The application details, including the influencer's user ID.</param>
+    /// 
+    /// 
+    /// <returns>
+    /// A status code indicating the result of the operation: 
+    /// OkObjectResult - with a value of "true" if the application is successfully
+    /// submitted.
+    /// 
+    /// StatusCodeResult - with a status code of 500 if
+    /// the application could not be saved.
+    /// 
+    /// BadRequestObjectResult - if the operation fails due to an invalid state, such as the influencer already applying or the maximum number of
+    /// applicants being reached.
+    /// 
+    /// StatusCodeResult - with a status code of 500 if an unexpected error occurs, including the error details in the response
+    /// body.
+    /// </returns>
     // POST
     // ENDPOINT: /announcements/{announcementId}/apply
     [HttpPost("{announcementId}/apply")]
@@ -136,5 +166,109 @@ public class AnnouncementsController : ControllerBase
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
+
+    #region Update Announcement
+    /// <summary>
+    /// Updates an existing announcement with the specified ID using the provided data.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This method validates that the provided ID matches the ID in the announcementDto. 
+    /// If the IDs do not match, a BadRequestResult is returned. 
+    /// 
+    /// If an error occurs during the update process, a 500 Internal Server Error is returned with details about the
+    /// exception.
+    /// 
+    /// The unique identifier of the announcement to be updated. Must match the ID in announcementDto
+    /// 
+    /// announcementDtoThe data transfer object containing the updated announcement details. 
+    /// The AnnouncementUpdateDto.AnnouncementId must match the id.</remarks>
+    /// 
+    /// <returns>True if the announcement was successfully updated; NoContentResult if the update
+    /// operation did not modify any data; or an appropriate HTTP status code indicating the result of the operation.</returns>
+    // POST
+    // ENDPOINT: /announcements/{announcementId}/update
+    [HttpPut("{id}")]
+    public ActionResult<bool> Update(int id, [FromBody] AnnouncementUpdateDto announcementDto)
+    {
+        try
+        {
+            // Validate that the inserted ID matches the announcement ID
+            if (announcementDto == null || id != announcementDto.AnnouncementId)
+            {
+                return BadRequest("the inserted Announcement ID didnt match the announcement ID");
+            }
+
+            // Retrieve the existing announcement
+            Announcement existingAnnouncement = _announcementDao.GetOne(id);
+
+            // If no announcement was found then return NotFound
+            if (existingAnnouncement == null)
+            {
+                return NotFound();
+            }
+
+            // Attempt to update the announcement
+            Announcement announcement = Map(announcementDto);
+
+            // Preserve the original RowVersion for concurrency control
+            announcement.RowVersion = existingAnnouncement.RowVersion;
+            
+            // Perform the update operation
+            bool updated = _announcementDao.Update(announcement);
+
+            if (!updated)
+            {
+                return NoContent();
+            }
+
+            return Ok(true);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {id}.", id);
+
+            var innerMessage = exception.InnerException?.Message;
+
+            return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
+        }
+    }
+    #endregion
+
+
+    #region helper method
+    /// <summary>
+    /// Maps an AnnouncementUpdateDto object to a new Announcement object.
+    /// The parameter, data transfer object(DTO), containing the updated announcement details.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// A new Announcement object populated with the values from the specified <paramref name="dto"/>.</returns>
+    private Announcement Map(AnnouncementUpdateDto dto)
+    {
+        return new Announcement
+        {
+            AnnouncementId = dto.AnnouncementId,
+            Title = dto.Title,
+            LastEditDateTime = dto.LastEditDateTime,
+            StartDisplayDateTime = dto.StartDisplayDateTime,
+            EndDisplayDateTime = dto.EndDisplayDateTime,
+            MaximumApplicants = dto.MaximumApplicants,
+            MinimumFollowersRequired = dto.MinimumFollowersRequired,
+            CommunicationType = dto.CommunicationType,
+            AnnouncementLanguage = dto.AnnouncementLanguage,
+            IsKeepProducts = dto.IsKeepProducts,
+            IsPayoutNegotiable = dto.IsPayoutNegotiable,
+            TotalPayoutAmount = dto.TotalPayoutAmount,
+            ShortDescriptionText = dto.ShortDescriptionText,
+            AdditionalInformationText = dto.AdditionalInformationText,
+            StatusType = dto.StatusType,
+            IsVisible = dto.IsVisible,
+            ListOfSubjects = dto.ListOfSubjects,
+        };
+    }
+    #endregion
 }
