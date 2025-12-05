@@ -214,7 +214,7 @@ public class AnnouncementsController : ControllerBase
             Announcement announcement = Map(announcementDto);
 
             // Preserve the original RowVersion for concurrency control
-            //announcement.RowVersion = existingAnnouncement.RowVersion;
+            announcement.RowVersion = existingAnnouncement.RowVersion;
             
             // Perform the update operation
             bool updated = _announcementDao.Update(announcement);
