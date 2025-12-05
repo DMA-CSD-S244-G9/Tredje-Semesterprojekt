@@ -280,6 +280,17 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
                 AND RowVersion = @RowVersion;";
     #endregion
 
+
+    #region SQL Queries - Delete
+
+    // This SQL query delete all of the subjects from the AnnouncementSubjects table, with the matching announcementId
+    private const string _sqlQueryDelteSubjectsByAnnouncementId = @"
+        DELETE FROM AnnouncementSubjects
+        WHERE announcementId = @AnnouncementId;";
+
+    #endregion
+
+
     #region SQL Queries - Update
     // This SQL query updates an existing announcement in the Announcements table.
     private const string SqlQueryUpdateAnnouncementByAnnouncementId = @"
@@ -301,17 +312,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             statusType = @StatusType,
             isVisible = @IsVisible
         WHERE AnnouncementId = @AnnouncementId AND RowVersion = @RowVersion;";
-
     #endregion
 
-    #region SQL Queries - Delete
-
-    // This SQL query delete all of the subjects from the AnnouncementSubjects table, with the matching announcementId
-    private const string _sqlQueryDelteSubjectsByAnnouncementId = @"
-        DELETE FROM AnnouncementSubjects
-        WHERE announcementId = @AnnouncementId;";
-
-    #endregion
 
     #region Create Method
     // Please note that the list ListOfAssociatedInfluencers is not included in the
@@ -630,70 +632,81 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
-    #region Update Method
+
     public bool Update(Announcement announcement)
     {
-
         // Creates and opens the database connection
         using IDbConnection connection = CreateConnection();
         connection.Open();
 
-
-        // Begins a transaction Since we have to make changes by performing multiple queries we have to
+        // Begins a transaction since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
         using IDbTransaction transaction = connection.BeginTransaction();
 
-        //If rowsAffected is 0 then the update failed due to concurrency issues 
-        int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
+        try
         {
-            AnnouncementId = announcement.AnnouncementId,
-            RowVersion = announcement.RowVersion, 
-            Title = announcement.Title,
-            LastEditDateTime = announcement.LastEditDateTime,
-            StartDisplayDateTime = announcement.StartDisplayDateTime,
-            EndDisplayDateTime = announcement.EndDisplayDateTime,
-            MaximumApplicants = announcement.MaximumApplicants,
-            MinimumFollowersRequired = announcement.MinimumFollowersRequired,
-            CommunicationType = announcement.CommunicationType,
-            AnnouncementLanguage = announcement.AnnouncementLanguage,
-            IsKeepProducts = announcement.IsKeepProducts,
-            IsPayoutNegotiable = announcement.IsPayoutNegotiable,
-            TotalPayoutAmount = announcement.TotalPayoutAmount,
-            ShortDescriptionText = announcement.ShortDescriptionText,
-            AdditionalInformationText = announcement.AdditionalInformationText,
-            StatusType = announcement.StatusType,
-            IsVisible = announcement.IsVisible
-        }, transaction);
-
-        // If no rows were affected then we rollback and return false
-        if (rowsAffected == 0)
-        {
-            transaction.Rollback();
-            return false;
-        }
-
-        // Deletes all existing subjects for the announcement
-        // This is done to simplify the update process by removing all old subjects and re-inserting the current list
-        connection.Execute(
-            _sqlQueryDelteSubjectsByAnnouncementId,
-            new { AnnouncementId = announcement.AnnouncementId },
-            transaction);
-
-        // Inserts zero or more subject domains in to the AnnouncementSubjects table
-        if (announcement.ListOfSubjects != null)
-        {
-            foreach (string subject in announcement.ListOfSubjects)
+            // Updates the information of the announcement with the matching announcementId and returns the amount of rows that was affected ideally this is 1
+            int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
             {
-                connection.Execute(
-                    _sqlQueryInsertAnnouncementSubject,
-                    new { AnnouncementId = announcement.AnnouncementId, AnnouncementSubject = subject },
-                    transaction);
+                AnnouncementId = announcement.AnnouncementId,
+                RowVersion = announcement.RowVersion,
+                Title = announcement.Title,
+                LastEditDateTime = announcement.LastEditDateTime,
+                StartDisplayDateTime = announcement.StartDisplayDateTime,
+                EndDisplayDateTime = announcement.EndDisplayDateTime,
+                MaximumApplicants = announcement.MaximumApplicants,
+                MinimumFollowersRequired = announcement.MinimumFollowersRequired,
+                CommunicationType = announcement.CommunicationType,
+                AnnouncementLanguage = announcement.AnnouncementLanguage,
+                IsKeepProducts = announcement.IsKeepProducts,
+                IsPayoutNegotiable = announcement.IsPayoutNegotiable,
+                TotalPayoutAmount = announcement.TotalPayoutAmount,
+                ShortDescriptionText = announcement.ShortDescriptionText,
+                AdditionalInformationText = announcement.AdditionalInformationText,
+                StatusType = announcement.StatusType,
+                IsVisible = announcement.IsVisible
+            }, transaction);
+
+            // If rowsAffected is 0 then the update failed most likely due to concurrency issues and an umatching RowVersion and we throw an exception to indicate another transaction happened first
+            if (rowsAffected == 0)
+            {
+                throw new InvalidOperationException("The announcement was edited by another user. Please reload and try again.");
             }
+
+            // Deletes all existing subjects for the announcement
+            // This is done to simplify the update process by removing all old subjects and re-inserting the current list
+            connection.Execute(_sqlQueryDelteSubjectsByAnnouncementId, new { AnnouncementId = announcement.AnnouncementId }, transaction);
+
+
+            // Inserts zero or more subject domains in to the AnnouncementSubjects table
+            if (announcement.ListOfSubjects != null)
+            {
+                foreach (string subject in announcement.ListOfSubjects)
+                {
+                    connection.Execute(_sqlQueryInsertAnnouncementSubject, new { AnnouncementId = announcement.AnnouncementId, AnnouncementSubject = subject }, transaction);
+                }
+            }
+
+            // Commits the transactions if everything went as expected
+            transaction.Commit();
+
+            return true;
         }
 
-        // Commits the transactions if everything went as expected
-        transaction.Commit();
-        return true;
+        catch (InvalidOperationException)
+        {
+            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+            transaction.Rollback();
+
+            throw;
+        }
+
+        catch (Exception exception)
+        {
+            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+            transaction.Rollback();
+
+            throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
+        }
     }
-    #endregion  
 }

@@ -12,8 +12,8 @@ namespace InfiniteInfluence.API.Dtos
         public int AnnouncementId { get; set; }
         public string Title { get; set; }
         public DateTime LastEditDateTime { get; set; }
-        public DateTime StartDisplayDateTime { get; set; }
-        public DateTime EndDisplayDateTime { get; set; }
+        public DateTime? StartDisplayDateTime { get; set; }
+        public DateTime? EndDisplayDateTime { get; set; }
         public int MaximumApplicants { get; set; }
         public int MinimumFollowersRequired { get; set; }
         public string CommunicationType { get; set; }
@@ -27,7 +27,8 @@ namespace InfiniteInfluence.API.Dtos
         public string StatusType { get; set; }
         public bool IsVisible { get; set; }
 
-        // RowVersion som Base64 string for Swagger og JSON
+
+        // RowVersion as a Base64 string which is used by Swagger and JSON
         public string RowVersion { get; set; }
     }
 }

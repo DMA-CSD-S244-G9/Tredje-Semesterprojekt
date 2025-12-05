@@ -212,69 +212,38 @@ public class AnnouncementController : Controller
         }
     }
 
-    /// <summary>
-    /// Make AnnouncementEditViewModel from Announcement
-    /// Is used in the Edit GET method
-    /// </summary>
-    private AnnouncementEditViewModel ConvertAnnouncemtToEditViewModel(Announcement announcement)
-    {
-        AnnouncementEditViewModel announcementEditViewModel = new AnnouncementEditViewModel
-        {
-            AnnouncementId = announcement.AnnouncementId,
-            UserId = announcement.UserId,
-            Title = announcement.Title,
-            ShortDescriptionText = announcement.ShortDescriptionText,
-            AdditionalInformationText = announcement.AdditionalInformationText,
-            StartDisplayDateTime = announcement.StartDisplayDateTime,
-            EndDisplayDateTime = announcement.EndDisplayDateTime,
-            MaximumApplicants = announcement.MaximumApplicants,
-            MinimumFollowersRequired = announcement.MinimumFollowersRequired,
-            CommunicationType = announcement.CommunicationType,
-            AnnouncementLanguage = announcement.AnnouncementLanguage,
-            IsKeepProducts = announcement.IsKeepProducts,
-            IsPayoutNegotiable = announcement.IsPayoutNegotiable,
-            TotalPayoutAmount = announcement.TotalPayoutAmount,
-            Subject1 = announcement.ListOfSubjects.ElementAtOrDefault(0),
-            Subject2 = announcement.ListOfSubjects.ElementAtOrDefault(1),
-            Subject3 = announcement.ListOfSubjects.ElementAtOrDefault(2),
-            RowVersion = Convert.ToBase64String(announcement.RowVersion)
-        };
-
-        return announcementEditViewModel;
-
-    }
 
     /// <summary>
-    /// Conver AnnouncementEditViewModel to Announcement
-    /// Is used in the Edit POST method
+    /// Converts the AnnouncementEditViewModel to an Announcement
+    /// This is used in the Edit POST method
     /// </summary>
-    private Announcement ConvertEditViewModelToAnnouncement(AnnouncementEditViewModel vm)
+    private Announcement ConvertEditViewModelToAnnouncement(AnnouncementEditViewModel announcementEditViewModel)
     {
         Announcement announcement = new Announcement
         {
-            AnnouncementId = vm.AnnouncementId,
-            UserId = vm.UserId,
-            Title = vm.Title,
-            ShortDescriptionText = vm.ShortDescriptionText,
-            AdditionalInformationText = vm.AdditionalInformationText,
-            StartDisplayDateTime = vm.StartDisplayDateTime,
-            EndDisplayDateTime = vm.EndDisplayDateTime,
-            MaximumApplicants = vm.MaximumApplicants,
-            MinimumFollowersRequired = vm.MinimumFollowersRequired,
-            CommunicationType = vm.CommunicationType,
-            AnnouncementLanguage = vm.AnnouncementLanguage,
-            IsKeepProducts = vm.IsKeepProducts,
-            IsPayoutNegotiable = vm.IsPayoutNegotiable,
-            TotalPayoutAmount = vm.TotalPayoutAmount,
-            StatusType = "Open", // or keep the old one if you want
+            AnnouncementId = announcementEditViewModel.AnnouncementId,
+            UserId = announcementEditViewModel.UserId,
+            Title = announcementEditViewModel.Title,
+            ShortDescriptionText = announcementEditViewModel.ShortDescriptionText,
+            AdditionalInformationText = announcementEditViewModel.AdditionalInformationText,
+            StartDisplayDateTime = announcementEditViewModel.StartDisplayDateTime,
+            EndDisplayDateTime = announcementEditViewModel.EndDisplayDateTime,
+            MaximumApplicants = announcementEditViewModel.MaximumApplicants,
+            MinimumFollowersRequired = announcementEditViewModel.MinimumFollowersRequired,
+            CommunicationType = announcementEditViewModel.CommunicationType,
+            AnnouncementLanguage = announcementEditViewModel.AnnouncementLanguage,
+            IsKeepProducts = announcementEditViewModel.IsKeepProducts,
+            IsPayoutNegotiable = announcementEditViewModel.IsPayoutNegotiable,
+            TotalPayoutAmount = announcementEditViewModel.TotalPayoutAmount,
+            StatusType = "Pending",
             IsVisible = true,
-            RowVersion = Convert.FromBase64String(vm.RowVersion)
+            RowVersion = Convert.FromBase64String(announcementEditViewModel.RowVersion)
         };
 
         List<string> subjects = new List<string>();
-        AddSubjectIfValid(subjects, vm.Subject1);
-        AddSubjectIfValid(subjects, vm.Subject2);
-        AddSubjectIfValid(subjects, vm.Subject3);
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject1);
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject2);
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject3);
 
         announcement.ListOfSubjects = subjects;
 
@@ -362,16 +331,23 @@ public class AnnouncementController : Controller
             return View("Details", announcement);
         }
     }
-
     #endregion
 
 
+
+
     #region Edit Announcement
+    /// <summary>
+    /// TODO:
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Edit(int id)
     {
         try
         {
+            // Retrieves the announcement with the specifeid ID through the API call
             Announcement? announcement = _announcementApiClient.GetOne(id);
 
             if (announcement == null)
@@ -379,11 +355,36 @@ public class AnnouncementController : Controller
                 return NotFound();
             }
 
-            // Converts the Announcement retrieved from the API to an AnnouncementEditViewModel that can be used by the MVC View
-            AnnouncementEditViewModel anouncementEditViewModel = ConvertAnnouncemtToEditViewModel(announcement);
+            // Maps the retrieved Announcement object to the AnnouncementEditViewModel
+            AnnouncementEditViewModel model = new AnnouncementEditViewModel
+            {
+                AnnouncementId = announcement.AnnouncementId,
+                UserId = announcement.UserId,
+                Title = announcement.Title,
+                StartDisplayDateTime = announcement.StartDisplayDateTime ?? DateTime.MinValue,
+                EndDisplayDateTime = announcement.EndDisplayDateTime ?? DateTime.MinValue,
+                MaximumApplicants = announcement.MaximumApplicants,
+                MinimumFollowersRequired = announcement.MinimumFollowersRequired,
+                CommunicationType = announcement.CommunicationType,
+                AnnouncementLanguage = announcement.AnnouncementLanguage,
+                IsKeepProducts = announcement.IsKeepProducts,
+                IsPayoutNegotiable = announcement.IsPayoutNegotiable,
+                TotalPayoutAmount = announcement.TotalPayoutAmount,
+                ShortDescriptionText = announcement.ShortDescriptionText,
+                AdditionalInformationText = announcement.AdditionalInformationText,
 
-            return View(anouncementEditViewModel);
+                // Subjects
+                Subject1 = announcement.ListOfSubjects?.ElementAtOrDefault(0),
+                Subject2 = announcement.ListOfSubjects?.ElementAtOrDefault(1),
+                Subject3 = announcement.ListOfSubjects?.ElementAtOrDefault(2),
+
+                // RowVersion as a Base64 string for the hidden field in the MVC view Edit.cshtml
+                RowVersion = Convert.ToBase64String(announcement.RowVersion ?? Array.Empty<byte>())
+            };
+
+            return View(model);
         }
+
 
         catch (Exception exception)
         {
@@ -394,8 +395,9 @@ public class AnnouncementController : Controller
 
             return RedirectToAction("Index");
         }
-
     }
+
+
 
     /// <summary>
     /// Updates an existing announcement based on the provided view model.
@@ -413,44 +415,58 @@ public class AnnouncementController : Controller
     // POST:
     // ENDPOINT: /Announcement/{announcementid}/Edit
     [HttpPost]
-    public IActionResult Edit(AnnouncementEditViewModel anouncementEditViewModel)
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(AnnouncementEditViewModel announcementEditViewModel)
     {
-
         // If the MVC validation is invalid then execute this section
         if (!ModelState.IsValid)
         {
-            // We pass model so that the view gets all of the AnnouncementCreateViewModel's properties and we dont lose all inputted values
-            return View(anouncementEditViewModel);
+            // We pass model so that the view gets all of the announcementEditViewModel's properties and we dont lose all inputted values
+            return View(announcementEditViewModel);
         }
 
         try
         {
             // Converts the input received from the MVC View Model to an Announcement that the API can work with
-            Announcement updatedAnnouncement = ConvertEditViewModelToAnnouncement(anouncementEditViewModel);
+            Announcement updatedAnnouncement = ConvertEditViewModelToAnnouncement(announcementEditViewModel);
 
-            // Ensures that the RowVersion is correctly set for concurrency control
-            // Converts the base64 string back to a byte array
-            updatedAnnouncement.RowVersion = Convert.FromBase64String(anouncementEditViewModel.RowVersion);
+            // Genskab RowVersion byte[] fra skjult Base64-felt
+
+            // Ensures that the RowVersion is correctly set for concurrency control to work and converts the base64 string back to a byte array
+            updatedAnnouncement.RowVersion = string.IsNullOrWhiteSpace(announcementEditViewModel.RowVersion) ? Array.Empty<byte>() : Convert.FromBase64String(announcementEditViewModel.RowVersion);
 
             _announcementApiClient.Update(updatedAnnouncement);
-
+            
             // Defines a success message that is stored in the users session or cookies and then shown
             TempData["SuccessMessage"] = "The announcement was updated successfully.";
 
-            // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
-            return RedirectToAction("Index", "Home");
+            // Giver typisk bedst mening at gå tilbage til Details(id)
+            return RedirectToAction("Details", new { id = updatedAnnouncement.AnnouncementId });
+        }
+
+        catch (InvalidOperationException exception)
+        {
+            // F.eks. concurrency conflict (409 fra API’et)
+            ModelState.AddModelError(string.Empty, exception.Message);
+
+            // We use the exception from our DAO as the error message in our notification
+            TempData["ErrorMessage"] = exception.Message;
+
+            return View(announcementEditViewModel);
         }
 
         catch (Exception exception)
         {
             _logger.LogError(exception, "Error while creating announcement from MVC.");
 
+            TempData["ErrorMessage"] = "An unexpected error occurred while submitting the application. Please try again later.";
+
             // Shows the correct failure text from the REST Api
             ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
 
             // We pass model so that the view gets all of the AnnouncementCreateViewModel's properties and we dont lose all inputted values
-            return View(anouncementEditViewModel);
+            return View(announcementEditViewModel);
         }
     }
-#endregion
+    #endregion
 }

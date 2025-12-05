@@ -4,6 +4,7 @@ using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System;
 
 /// <summary>
@@ -195,45 +196,51 @@ public class AnnouncementsController : ControllerBase
     {
         try
         {
-            // Validate that the inserted ID matches the announcement ID
+            // If the DTO is null or the DTO's id does not match the specified one then execute this section
             if (announcementDto == null || id != announcementDto.AnnouncementId)
             {
-                return BadRequest("the inserted Announcement ID didnt match the announcement ID");
+                return BadRequest("The inserted Announcement ID did not match the announcement ID.");
             }
 
-            // Retrieve the existing announcement
+            // Tjek at annoncen findes (primært for at kunne returnere 404 i stedet for 409)
+            
+            // Calls upon the Data access layer to retrieve an announcement with the specified id
             Announcement existingAnnouncement = _announcementDao.GetOne(id);
-
-            // If no announcement was found then return NotFound
+            
+            // If no announcement with a matching id could be found then execute this section
             if (existingAnnouncement == null)
             {
                 return NotFound();
             }
 
-            // Attempt to update the announcement
-            Announcement announcement = Map(announcementDto);
+            // Attempts to update the announcement to reflect the DTO including the RowVersion
+            Announcement announcementToUpdate = MapToUpdatedAnnouncement(announcementDto);
 
-            // Preserve the original RowVersion for concurrency control
-            announcement.RowVersion = existingAnnouncement.RowVersion;
-            
-            // Perform the update operation
-            bool updated = _announcementDao.Update(announcement);
+            // Attempts to update the information of the announcement with the specified id to have the newly changed properties
+            bool isAnnouncementUpdated = _announcementDao.Update(announcementToUpdate);
 
-            if (!updated)
+            // If the updating of the announcement failed then execute this section
+            if (!isAnnouncementUpdated)
             {
-                return NoContent();
+                return StatusCode(500, "The announcement could not be updated.");
             }
 
             return Ok(true);
         }
 
+
+        catch (InvalidOperationException exception)
+        {
+            // This exception will usually occur from a concurrency 409 status code conflict in the DAO
+            return Conflict(exception.Message); 
+        }
+
+
         catch (Exception exception)
         {
-            _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {id}.", id);
+            _logger.LogError(exception, "An error has occurred when attempting to update an announcement with id {id}.", id);
 
-            _logger.LogInformation("POST Edit was hit");
-
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -249,28 +256,42 @@ public class AnnouncementsController : ControllerBase
     /// 
     /// <returns>
     /// A new Announcement object populated with the values from the specified <paramref name="dto"/>.</returns>
-    private Announcement Map(AnnouncementUpdateDto dto)
+    private Announcement MapToUpdatedAnnouncement(AnnouncementUpdateDto dto)
     {
+        // Convert RowVersion from Base64 string into byte[] (or empty array if missing)
+        byte[] rowVersionInBytes;
+
+        if (string.IsNullOrWhiteSpace(dto.RowVersion))
+        {
+            rowVersionInBytes = Array.Empty<byte>();
+        }
+        else
+        {
+            rowVersionInBytes = Convert.FromBase64String(dto.RowVersion);
+        }
+
         return new Announcement
         {
-            AnnouncementId = dto.AnnouncementId,
-            Title = dto.Title,
-            LastEditDateTime = dto.LastEditDateTime,
-            StartDisplayDateTime = dto.StartDisplayDateTime,
-            EndDisplayDateTime = dto.EndDisplayDateTime,
-            MaximumApplicants = dto.MaximumApplicants,
-            MinimumFollowersRequired = dto.MinimumFollowersRequired,
-            CommunicationType = dto.CommunicationType,
-            AnnouncementLanguage = dto.AnnouncementLanguage,
-            IsKeepProducts = dto.IsKeepProducts,
-            IsPayoutNegotiable = dto.IsPayoutNegotiable,
-            TotalPayoutAmount = dto.TotalPayoutAmount,
-            ShortDescriptionText = dto.ShortDescriptionText,
-            AdditionalInformationText = dto.AdditionalInformationText,
-            StatusType = dto.StatusType,
-            IsVisible = dto.IsVisible,
-            ListOfSubjects = dto.ListOfSubjects,
+            AnnouncementId              = dto.AnnouncementId,
+            Title                       = dto.Title,
+            LastEditDateTime            = dto.LastEditDateTime,
+            StartDisplayDateTime        = dto.StartDisplayDateTime,
+            EndDisplayDateTime          = dto.EndDisplayDateTime,
+            MaximumApplicants           = dto.MaximumApplicants,
+            MinimumFollowersRequired    = dto.MinimumFollowersRequired,
+            CommunicationType           = dto.CommunicationType,
+            AnnouncementLanguage        = dto.AnnouncementLanguage,
+            IsKeepProducts              = dto.IsKeepProducts,
+            IsPayoutNegotiable          = dto.IsPayoutNegotiable,
+            TotalPayoutAmount           = dto.TotalPayoutAmount,
+            ShortDescriptionText        = dto.ShortDescriptionText,
+            AdditionalInformationText   = dto.AdditionalInformationText,
+            StatusType                  = dto.StatusType,
+            IsVisible                   = dto.IsVisible,
+            ListOfSubjects              = dto.ListOfSubjects,
+            RowVersion                  = rowVersionInBytes
         };
     }
+
     #endregion
 }

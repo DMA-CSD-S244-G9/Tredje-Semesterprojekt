@@ -122,7 +122,6 @@ public class AnnouncementApiClient : IAnnouncementDao
 
     // POST
     // ENDPOINT: /announcements/{announcementId}/apply
-    // 
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
     {
         RestRequest? request = new RestRequest($"announcements/{announcementId}/apply", Method.Post);
@@ -173,46 +172,62 @@ public class AnnouncementApiClient : IAnnouncementDao
         return response.Data;
     }
 
+
+
     public bool Update(Announcement announcement)
     {
-        // Validates the input parameters
+        // Validates that the announcement object is not null
         if (announcement == null)
         {
-            // Throws an exception if the announcement object is null
+            // Throws a null pointer exception if the announcement object is null
             throw new ArgumentNullException(nameof(announcement));
         }
 
         // Maps the Announcement object to an AnnouncementUpdateDto object
-        AnnouncementUpdateDto announcementdto = Map(announcement);
+        AnnouncementUpdateDto announcementUpdateDto = Map(announcement);
 
         // Creates the REST request to send to the API
-        RestRequest? request = new RestRequest($"Api/Announcements/{announcement.AnnouncementId}", Method.Put);
+        RestRequest request = new RestRequest($"announcements/{announcement.AnnouncementId}", Method.Put);
 
         // Sends the mapped Announcement object as JSON format in the request body
-        request.AddJsonBody(announcementdto);
+        request.AddJsonBody(announcementUpdateDto);
 
-
-        // Calls upon the API and expects an bool back in the form of an announcementId
-        var response = _restClient.Execute<bool>(request);
-
+        // Calls upon the API and expects a bool indicating true if the announcement with the announcementId was updated elsewise false
+        RestResponse<bool> response = _restClient.Execute<bool>(request);
 
         if (response == null)
         {
             throw new Exception("Connection Failure: There were no response from the server.");
         }
 
-        if (!response.IsSuccessful)
+        // In case of an expected concurrency conflict
+        if (response.StatusCode == HttpStatusCode.Conflict)
         {
-            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+            string message;
+
+            if (string.IsNullOrWhiteSpace(response.Content))
+            {
+                // Changes the messages's content to a user friendly error that can be shown in the MVC
+                message = "The announcement was modified by another user. Please reload and try again.";
+            }
+
+            else
+            {
+                message = response.Content;
+            }
+
+            throw new InvalidOperationException(message);
         }
 
-        if (!response.IsSuccessStatusCode)
+        if (!response.IsSuccessful || !response.IsSuccessStatusCode)
         {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+            throw new Exception($"Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
         return response.Data;
     }
+
+
 
     #region helper method
     /// <summary>
@@ -228,9 +243,9 @@ public class AnnouncementApiClient : IAnnouncementDao
         {
             AnnouncementId = announcement.AnnouncementId,
             Title = announcement.Title,
-            LastEditDateTime = announcement.LastEditDateTime ?? DateTime.MinValue,
-            StartDisplayDateTime = announcement.StartDisplayDateTime ?? DateTime.MinValue,
-            EndDisplayDateTime = announcement.EndDisplayDateTime ?? DateTime.MinValue,
+            LastEditDateTime = DateTime.UtcNow,
+            StartDisplayDateTime = announcement.StartDisplayDateTime,
+            EndDisplayDateTime = announcement.EndDisplayDateTime,
             MaximumApplicants = announcement.MaximumApplicants,
             MinimumFollowersRequired = announcement.MinimumFollowersRequired,
             CommunicationType = announcement.CommunicationType,
@@ -244,8 +259,8 @@ public class AnnouncementApiClient : IAnnouncementDao
             IsVisible = announcement.IsVisible,
             ListOfSubjects = announcement.ListOfSubjects,
 
-            // Convert byte[] til Base64 string, cause AnnouncementUpdateDto.RowVersion is string type and Announcement.RowVersion is byte[] type
-            // Json serialization does not support byte[] directly and needs to be converted to a string format like Base64
+            // Converts byte[] to a Base64 string because the AnnouncementUpdateDto.RowVersion is of the string type and Announcement.RowVersion is byte[] type
+            // The JSON serialization does not support byte[] directly and therefore needs to be converted to a string format like a Base64 string
             RowVersion = Convert.ToBase64String(announcement.RowVersion)
         };
     }

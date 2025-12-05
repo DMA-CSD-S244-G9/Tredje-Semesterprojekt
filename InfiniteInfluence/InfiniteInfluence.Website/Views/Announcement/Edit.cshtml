@@ -5,9 +5,9 @@
 }
 
 
-<h1 class="text-center mb-1 main-heading-margins">Create Announcement</h1>
+<h1 class="text-center mb-1 main-heading-margins">Edit Announcement</h1>
 <p class="text-center mb-5 main-introduction-margins">
-    Edit the fields to update announcement and press submit to complete the changes.
+    Edit the fields to update the announcement and press Save Changes to complete the changes.
     <br />Note that the image used on the listing site is your company profile image.
 </p>
 
@@ -42,7 +42,7 @@
             <div class="col-md-6 mb-3">
                 <label asp-for="StartDisplayDateTime" class="control-label"></label>
                 <div class="datetime-wrapper">
-                    <input asp-for="StartDisplayDateTime" class="form-control" type="datetime-local" placeholder="What date and time can this be seen?" />
+                    <input asp-for="StartDisplayDateTime" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" placeholder="What date and time can this be seen?" />
                 </div>
                 <span asp-validation-for="StartDisplayDateTime" class="text-danger"></span>
             </div>
@@ -50,11 +50,11 @@
             <div class="col-md-6 mb-3">
                 <label asp-for="EndDisplayDateTime" class="control-label"></label>
                 <div class="datetime-wrapper">
-                    <input asp-for="EndDisplayDateTime" class="form-control" type="datetime-local" placeholder="What date and time can this not be seen from?" />
+                    <input asp-for="EndDisplayDateTime" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" placeholder="What date and time can this not be seen from?" />
                 </div>
                 <span asp-validation-for="EndDisplayDateTime" class="text-danger"></span>
             </div>
-            
+
         </div>
     </div>
 
@@ -204,12 +204,13 @@
         </div>
     </div>
 
-    @* Hidden field for RowVersion to handle concurrency *@
+    @* Hidden fields we use for handling concurrency and also to specify the announcement that is worked on *@
+    <input type="hidden" asp-for="AnnouncementId" />
     <input type="hidden" asp-for="RowVersion" />
 
     <!-- BUTTON SUBMIT -->
     <div class="text-center mb-5">
-        <button type="submit" class="btn btn-primary px-5 py-2">Submit Changes</button>
+        <button type="submit" class="btn btn-primary px-5 py-2">Save Changes</button>
     </div>
 </form>
 
