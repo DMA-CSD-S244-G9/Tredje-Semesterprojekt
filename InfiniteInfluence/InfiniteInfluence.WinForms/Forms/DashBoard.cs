@@ -73,19 +73,19 @@ public partial class DashBoard : Form
 
 
     /// <summary>
-    /// Navigates to the Influencers management view, and highlights the influencer in the navigation panel.
-    /// Opens the <see cref="InfluencersForm"/> inside the dashboard's content area.
+    /// Navigates to the announcement management view, and highlights the announcement in the navigation panel.
+    /// Opens the <see cref="AnnouncementsForm"/> inside the dashboard's content area.
     /// </summary>
-    private void IconButtonInfluencer_Click(object sender, EventArgs e)
+    private void IconButtonAnnouncement_Click(object sender, EventArgs e)
     {
         // Visually highlight the clicked sidebar button and unhighlight the previously selected button one
         HighlightCurrentlySelectedButton(sender);
 
-        // Creates a new instance of the influencers management form
-        InfluencersForm influencersForm = new InfluencersForm();
+        // Creates a new instance of the announcement management form
+        AnnouncementsForm announcementForm = new AnnouncementsForm();
 
-        // Display the influencers form inside the dashboard's main content panel
-        OpenChildForm(influencersForm);
+        // Display the announcements form inside the dashboard's main content panel
+        OpenChildForm(announcementForm);
     }
 
 
@@ -198,7 +198,7 @@ public partial class DashBoard : Form
         // If the currentFormWindow is not null
         if (currentFormWindow != null)
         {
-            // If the currentFormWindow is not disposed currently, and is of the same datatype e.g. InfluencerForm then execute this section
+            // If the currentFormWindow is not disposed currently, and is of the same datatype e.g. AnnouncementsForm then execute this section
             if (!currentFormWindow.IsDisposed && currentFormWindow.GetType() == childForm.GetType())
             {
                 return;

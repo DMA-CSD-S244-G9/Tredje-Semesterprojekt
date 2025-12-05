@@ -34,14 +34,14 @@
 		</EmbeddedResource>
 
 		<!-- InfluencersForm -->
-		<Compile Update="Forms\InfluencersForm.cs">
+		<Compile Update="Forms\AnnouncementsForm.cs">
 			<SubType>Form</SubType>
 		</Compile>
-		<Compile Update="Forms\InfluencersForm.Designer.cs">
-			<DependentUpon>InfluencersForm.cs</DependentUpon>
+		<Compile Update="Forms\AnnouncementsForm.Designer.cs">
+			<DependentUpon>AnnouncementsForm.cs</DependentUpon>
 		</Compile>
-		<EmbeddedResource Update="Forms\InfluencersForm.resx">
-			<DependentUpon>InfluencersForm.cs</DependentUpon>
+		<EmbeddedResource Update="Forms\AnnouncementsForm.resx">
+			<DependentUpon>AnnouncementsForm.cs</DependentUpon>
 		</EmbeddedResource>
 
 	</ItemGroup>
@@ -68,6 +68,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="FontAwesome.Sharp" Version="6.6.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\InfiniteInfluence.ApiClient\InfiniteInfluence.ApiClient.csproj" />
+	  <ProjectReference Include="..\InfiniteInfluence.DataAccessLibrary\InfiniteInfluence.DataAccessLibrary.csproj" />
 	</ItemGroup>
 
 </Project>
