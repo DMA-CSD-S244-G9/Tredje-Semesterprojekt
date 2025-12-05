@@ -1,11 +1,11 @@
 USE InfiniteInfluence;
 GO
 
-Select * From Users
---Select * From Influencers
---Select * From InfluencerDomains
+SELECT * FROM Users
+--SELECT * FROM Companys
+--SELECT * FROM Influencers
+--SELECT * FROM InfluencerDomains
 
---Select * FROM Companys
-Select * FROM Announcements
---Select * FROM AnnouncementSubjects
---Select * FROM InfluencerAnnouncements
+SELECT * FROM Announcements
+SELECT * FROM AnnouncementSubjects
+SELECT * FROM InfluencerAnnouncements
