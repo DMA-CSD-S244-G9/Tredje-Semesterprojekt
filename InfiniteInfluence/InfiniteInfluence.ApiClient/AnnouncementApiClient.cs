@@ -186,7 +186,7 @@ public class AnnouncementApiClient : IAnnouncementDao
         AnnouncementUpdateDto announcementdto = Map(announcement);
 
         // Creates the REST request to send to the API
-        RestRequest? request = new RestRequest($"announcements/{announcement.AnnouncementId}", Method.Put);
+        RestRequest? request = new RestRequest($"Api/Announcements/{announcement.AnnouncementId}", Method.Put);
 
         // Sends the mapped Announcement object as JSON format in the request body
         request.AddJsonBody(announcementdto);

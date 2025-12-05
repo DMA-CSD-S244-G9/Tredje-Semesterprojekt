@@ -41,7 +41,7 @@ public class AnnouncementController : Controller
         return View(anouncementCreateViewModel);
     }
 
-
+    #region Create Announcement
     // POST:
     // ENDPOINT: /Announcement/Create
     [HttpPost]
@@ -79,8 +79,9 @@ public class AnnouncementController : Controller
             return View(anouncementCreateViewModel);
         }
     }
+    #endregion
 
-
+    #region Index Announcement
     //public IActionResult Index()
     //{
     //    return View();
@@ -98,7 +99,7 @@ public class AnnouncementController : Controller
             // LINQ query to sort announcements by StartDisplayDateTime in descending order
             List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
                 (announcement => announcement.StartDisplayDateTime).ToList();
-            
+
             return View(announcementSortedByDisplayDate);
         }
 
@@ -114,9 +115,10 @@ public class AnnouncementController : Controller
             return View(new List<Announcement>());
         }
     }
+    #endregion
 
-
-
+        
+    #region Helper method
     private Announcement ConvertFromViewModelToApiAnnouncement(AnnouncementCreateViewModel anouncementCreateViewModel)
     {
         Announcement announcement = new Announcement
@@ -128,7 +130,7 @@ public class AnnouncementController : Controller
             // The creation and last edited date and time should be the time of creation
             CreationDateTime = DateTime.Now,
             LastEditDateTime = DateTime.Now,
-
+                
             // Upon creation we always want our announcement to have 0 current applicants
             CurrentApplicants = 0,
 
@@ -177,13 +179,10 @@ public class AnnouncementController : Controller
     }
 
 
-
-
-    
     //TODO: Since Announcement, Influencer and Company will all use this method
     // or one similar, maybe refactor it to be a universal method that can be used by all 3 classes.
 
-    
+
     /// <summary>
     /// Takes a raw subject string from the ViewModel, trims it, ensures
     /// it starts with '#', and adds it to the target list if not empty
@@ -213,8 +212,79 @@ public class AnnouncementController : Controller
         }
     }
 
+    /// <summary>
+    /// Make AnnouncementEditViewModel from Announcement
+    /// Is used in the Edit GET method
+    /// </summary>
+    private AnnouncementEditViewModel ConvertAnnouncemtToEditViewModel(Announcement announcement)
+    {
+        AnnouncementEditViewModel announcementEditViewModel = new AnnouncementEditViewModel
+        {
+            AnnouncementId = announcement.AnnouncementId,
+            UserId = announcement.UserId,
+            Title = announcement.Title,
+            ShortDescriptionText = announcement.ShortDescriptionText,
+            AdditionalInformationText = announcement.AdditionalInformationText,
+            StartDisplayDateTime = announcement.StartDisplayDateTime,
+            EndDisplayDateTime = announcement.EndDisplayDateTime,
+            MaximumApplicants = announcement.MaximumApplicants,
+            MinimumFollowersRequired = announcement.MinimumFollowersRequired,
+            CommunicationType = announcement.CommunicationType,
+            AnnouncementLanguage = announcement.AnnouncementLanguage,
+            IsKeepProducts = announcement.IsKeepProducts,
+            IsPayoutNegotiable = announcement.IsPayoutNegotiable,
+            TotalPayoutAmount = announcement.TotalPayoutAmount,
+            Subject1 = announcement.ListOfSubjects.ElementAtOrDefault(0),
+            Subject2 = announcement.ListOfSubjects.ElementAtOrDefault(1),
+            Subject3 = announcement.ListOfSubjects.ElementAtOrDefault(2),
+            RowVersion = Convert.ToBase64String(announcement.RowVersion)
+        };
+
+        return announcementEditViewModel;
+
+    }
+
+    /// <summary>
+    /// Conver AnnouncementEditViewModel to Announcement
+    /// Is used in the Edit POST method
+    /// </summary>
+    private Announcement ConvertEditViewModelToAnnouncement(AnnouncementEditViewModel vm)
+    {
+        Announcement announcement = new Announcement
+        {
+            AnnouncementId = vm.AnnouncementId,
+            UserId = vm.UserId,
+            Title = vm.Title,
+            ShortDescriptionText = vm.ShortDescriptionText,
+            AdditionalInformationText = vm.AdditionalInformationText,
+            StartDisplayDateTime = vm.StartDisplayDateTime,
+            EndDisplayDateTime = vm.EndDisplayDateTime,
+            MaximumApplicants = vm.MaximumApplicants,
+            MinimumFollowersRequired = vm.MinimumFollowersRequired,
+            CommunicationType = vm.CommunicationType,
+            AnnouncementLanguage = vm.AnnouncementLanguage,
+            IsKeepProducts = vm.IsKeepProducts,
+            IsPayoutNegotiable = vm.IsPayoutNegotiable,
+            TotalPayoutAmount = vm.TotalPayoutAmount,
+            StatusType = "Open", // or keep the old one if you want
+            IsVisible = true,
+            RowVersion = Convert.FromBase64String(vm.RowVersion)
+        };
+
+        List<string> subjects = new List<string>();
+        AddSubjectIfValid(subjects, vm.Subject1);
+        AddSubjectIfValid(subjects, vm.Subject2);
+        AddSubjectIfValid(subjects, vm.Subject3);
+
+        announcement.ListOfSubjects = subjects;
+
+        return announcement;
+    }
+
+    #endregion
 
 
+    #region Details Announcement and Apply to Announcement
     // GET
     // ENDPOINT: /Announcement/Details/{id}
     [HttpGet]
@@ -226,7 +296,7 @@ public class AnnouncementController : Controller
 
             if (announcement == null)
             {
-                 return NotFound();
+                return NotFound();
             }
 
             return View(announcement);
@@ -293,4 +363,94 @@ public class AnnouncementController : Controller
         }
     }
 
+    #endregion
+
+
+    #region Edit Announcement
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        try
+        {
+            Announcement? announcement = _announcementApiClient.GetOne(id);
+
+            if (announcement == null)
+            {
+                return NotFound();
+            }
+
+            // Converts the Announcement retrieved from the API to an AnnouncementEditViewModel that can be used by the MVC View
+            AnnouncementEditViewModel anouncementEditViewModel = ConvertAnnouncemtToEditViewModel(announcement);
+
+            return View(anouncementEditViewModel);
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while retrieving announcement with id {Id} from MVC.", id);
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            return RedirectToAction("Index");
+        }
+
+    }
+
+    /// <summary>
+    /// Updates an existing announcement based on the provided view model.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// In the AnnouncementsController HttpPut is used instead of HttpPost.
+    /// The Announcement can't send a PUT request directly from the MVC view, so we handle it with a POST request in the controller.
+    /// MVC (view) -> POST -> Controller -> PUT -> API
+    /// </remarks>
+    ///
+    /// <returns> IActionResult that renders the view with validation errors if the model state is invalid,
+    /// redirects to the home page upon successful update, or re-renders the view with an error message if an exception
+    /// occurs.</returns>
+    // POST:
+    // ENDPOINT: /Announcement/{announcementid}/Edit
+    [HttpPost]
+    public IActionResult Edit(AnnouncementEditViewModel anouncementEditViewModel)
+    {
+
+        // If the MVC validation is invalid then execute this section
+        if (!ModelState.IsValid)
+        {
+            // We pass model so that the view gets all of the AnnouncementCreateViewModel's properties and we dont lose all inputted values
+            return View(anouncementEditViewModel);
+        }
+
+        try
+        {
+            // Converts the input received from the MVC View Model to an Announcement that the API can work with
+            Announcement updatedAnnouncement = ConvertEditViewModelToAnnouncement(anouncementEditViewModel);
+
+            // Ensures that the RowVersion is correctly set for concurrency control
+            // Converts the base64 string back to a byte array
+            updatedAnnouncement.RowVersion = Convert.FromBase64String(anouncementEditViewModel.RowVersion);
+
+            _announcementApiClient.Update(updatedAnnouncement);
+
+            // Defines a success message that is stored in the users session or cookies and then shown
+            TempData["SuccessMessage"] = "The announcement was updated successfully.";
+
+            // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
+            return RedirectToAction("Index", "Home");
+        }
+
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while creating announcement from MVC.");
+
+            // Shows the correct failure text from the REST Api
+            ModelState.AddModelError(string.Empty, $"The following api error occured: {exception.Message}");
+
+            // We pass model so that the view gets all of the AnnouncementCreateViewModel's properties and we dont lose all inputted values
+            return View(anouncementEditViewModel);
+        }
+    }
+#endregion
 }

@@ -1,0 +1,219 @@
+﻿@model InfiniteInfluence.Website.Models.AnnouncementEditViewModel;
+
+@{
+    ViewData["Title"] = "Edit Announcement";
+}
+
+
+<h1 class="text-center mb-1 main-heading-margins">Create Announcement</h1>
+<p class="text-center mb-5 main-introduction-margins">
+    Edit the fields to update announcement and press submit to complete the changes.
+    <br />Note that the image used on the listing site is your company profile image.
+</p>
+
+
+
+
+<form asp-controller="Announcement" asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+
+
+    <!-- GENERAL SECTION -->
+    <h2 class="text-center mb-1">Edit</h2>
+    <p class="text-center mb-4">Provide the essential details for your announcement. This helps influencers quickly understand what the opportunity is about.
+        <br />Make sure the title and display period clearly reflect the campaign’s purpose.</p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" type="number" min="1" step="1" inputmode="numeric" placeholder="Which company's UserId does this announcement belong to?" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" maxlength="32" placeholder="What should your announcement title be?" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="StartDisplayDateTime" class="control-label"></label>
+                <div class="datetime-wrapper">
+                    <input asp-for="StartDisplayDateTime" class="form-control" type="datetime-local" placeholder="What date and time can this be seen?" />
+                </div>
+                <span asp-validation-for="StartDisplayDateTime" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="EndDisplayDateTime" class="control-label"></label>
+                <div class="datetime-wrapper">
+                    <input asp-for="EndDisplayDateTime" class="form-control" type="datetime-local" placeholder="What date and time can this not be seen from?" />
+                </div>
+                <span asp-validation-for="EndDisplayDateTime" class="text-danger"></span>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    <!-- REQUIREMENTS & COMMUNICATION SECTION -->
+    <h2 class="text-center mb-1">Requirements and Communication</h2>
+    <p class="text-center mb-4">Specify what you are looking for in an influencer and how you wish to communicate.
+        <br />These details ensure that only suitable influencers apply and understand your expectations from the beginning.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="MaximumApplicants" class="control-label"></label>
+                <input asp-for="MaximumApplicants" class="form-control" type="number" min="1" step="1" inputmode="numeric" placeholder="How many influencers do you need?" />
+                <span asp-validation-for="MaximumApplicants" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3 custom-dropdown-container">
+                <label asp-for="CommunicationType" class="form-label"></label>
+                <select asp-for="CommunicationType" class="form-select custom-dropdown">
+                    <option value="E-mail">E-mail</option>
+                    <option value="Chat">Chat</option>
+                    <option value="Phone">Phone</option>
+                    <option value="In Person">In Person</option>
+                </select>
+                <span asp-validation-for="CommunicationType" class="text-danger"></span>
+            </div>
+
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="MinimumFollowersRequired" class="control-label"></label>
+                <input asp-for="MinimumFollowersRequired" class="form-control" type="number" min="0" step="1" inputmode="numeric" placeholder="What follower count must the influencer have?" />
+                <span asp-validation-for="MinimumFollowersRequired" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="AnnouncementLanguage" class="control-label"></label>
+                <input asp-for="AnnouncementLanguage" class="form-control" placeholder="What language is used to communicate?" />
+                <span asp-validation-for="AnnouncementLanguage" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- PRODUCTS & PAYMENT SECTION -->
+    <h2 class="text-center mb-1">Products and Payment</h2>
+    <p class="text-center mb-4">Describe what the influencer receives—whether it’s products, payment, or both.
+        <br />Clear compensation details make your announcement more appealing and help set the right expectations.
+    </p>
+
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-6 mb-3 custom-dropdown-container">
+                <label asp-for="IsKeepProducts" class="form-label"></label>
+                <select asp-for="IsKeepProducts" class="form-select custom-dropdown">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+                <span asp-validation-for="IsKeepProducts" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3 custom-dropdown-container">
+                <label asp-for="IsPayoutNegotiable" class="form-label"></label>
+                <select asp-for="IsPayoutNegotiable" class="form-select custom-dropdown">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+                <span asp-validation-for="IsPayoutNegotiable" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="TotalPayoutAmount" class="form-label"></label>
+                <input asp-for="TotalPayoutAmount" class="form-control" type="number" min="0" step="0.01" inputmode="decimal" placeholder="In USD how much should the influencer get?" />
+                <span asp-validation-for="TotalPayoutAmount" class="text-danger"></span>
+            </div>
+
+            <!-- Add an empty field, that wont be displayed, in order to make the Total payout field half the size to make it fit with the other fields -->
+            <div class="col-md-6 mb-3"></div>
+
+        </div>
+    </div>
+
+
+
+    <!-- SUBJECTS FOR PROMOTION SECTION -->
+    <h2 class="text-center mb-1">Subjects For Promotion</h2>
+    <p class="text-center mb-4">
+        Fill out the subject fields to add the categories that you imagine your product would fall under e.g. Fashion, Clothing and Lifestyle.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="Subject1" class="form-label"></label>
+                <input asp-for="Subject1" class="form-control" maxlength="20" placeholder="What category does the product fall under?" />
+                <span asp-validation-for="Subject1" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="Subject2" class="form-label"></label>
+                <input asp-for="Subject2" class="form-control" maxlength="20" placeholder="What category does the product fall under?" />
+                <span asp-validation-for="Subject2" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="Subject3" class="form-label"></label>
+                <input asp-for="Subject3" class="form-control" maxlength="20" placeholder="What category does the product fall under?" />
+                <span asp-validation-for="Subject3" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- DESCRIPTION & INFORMATION SECTION -->
+    <h2 class="text-center mb-1">Description and Information</h2>
+    <p class="text-center mb-4">
+        Here you add a short introduction which will be shown on the listing and a very detailed text for people to read more about your campaign.
+    </p>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <label asp-for="ShortDescriptionText" class="form-label"></label>
+                <textarea asp-for="ShortDescriptionText" class="form-control" maxlength="100" rows="3" placeholder="How would you grab someones attention regarding your product? (Max 100 characters)"></textarea>
+                <span asp-validation-for="ShortDescriptionText" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <label asp-for="AdditionalInformationText" class="form-label"></label>
+                <textarea asp-for="AdditionalInformationText" class="form-control" maxlength="1500" rows="3" placeholder="What is the product that you want to have promoted and all of the arrangements regarding it? (Max 1500 characters)"></textarea>
+                <span asp-validation-for="AdditionalInformationText" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    @* Hidden field for RowVersion to handle concurrency *@
+    <input type="hidden" asp-for="RowVersion" />
+
+    <!-- BUTTON SUBMIT -->
+    <div class="text-center mb-5">
+        <button type="submit" class="btn btn-primary px-5 py-2">Submit Changes</button>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

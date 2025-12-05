@@ -214,7 +214,7 @@ public class AnnouncementsController : ControllerBase
             Announcement announcement = Map(announcementDto);
 
             // Preserve the original RowVersion for concurrency control
-            announcement.RowVersion = existingAnnouncement.RowVersion;
+            //announcement.RowVersion = existingAnnouncement.RowVersion;
             
             // Perform the update operation
             bool updated = _announcementDao.Update(announcement);
@@ -230,6 +230,8 @@ public class AnnouncementsController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {id}.", id);
+
+            _logger.LogInformation("POST Edit was hit");
 
             var innerMessage = exception.InnerException?.Message;
 
