@@ -65,6 +65,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     #endregion
 
+
     #region SQL Queries - GetAll
     
     // This SQL query retrieves all of the announcement records from the database's announcement table, the name of the company that created each announcement is also included.
@@ -119,6 +120,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         WHERE announcementId IN @Ids";
 
     #endregion
+
 
     #region SQL Queries - GetOne
     
@@ -189,6 +191,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     WHERE influencerAnnouncement.announcementId = @AnnouncementId;";
     #endregion
+
 
     #region SQL Queries - AddInfluencerApplication
     /////////////////////////////////////////////////
@@ -632,7 +635,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
-
+    #region Update method
     public bool Update(Announcement announcement)
     {
         // Creates and opens the database connection
@@ -649,7 +652,6 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
             {
                 AnnouncementId = announcement.AnnouncementId,
-                RowVersion = announcement.RowVersion,
                 Title = announcement.Title,
                 LastEditDateTime = announcement.LastEditDateTime,
                 StartDisplayDateTime = announcement.StartDisplayDateTime,
@@ -664,7 +666,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
                 ShortDescriptionText = announcement.ShortDescriptionText,
                 AdditionalInformationText = announcement.AdditionalInformationText,
                 StatusType = announcement.StatusType,
-                IsVisible = announcement.IsVisible
+                IsVisible = announcement.IsVisible,
+                RowVersion = announcement.RowVersion,
             }, transaction);
 
             // If rowsAffected is 0 then the update failed most likely due to concurrency issues and an umatching RowVersion and we throw an exception to indicate another transaction happened first
@@ -709,4 +712,5 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
 }

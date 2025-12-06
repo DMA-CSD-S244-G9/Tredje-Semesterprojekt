@@ -190,7 +190,7 @@ public class AnnouncementsController : ControllerBase
     /// <returns>True if the announcement was successfully updated; NoContentResult if the update
     /// operation did not modify any data; or an appropriate HTTP status code indicating the result of the operation.</returns>
     // POST
-    // ENDPOINT: /announcements/{announcementId}/update
+    // ENDPOINT: /announcements/{announcementId}
     [HttpPut("{id}")]
     public ActionResult<bool> Update(int id, [FromBody] AnnouncementUpdateDto announcementDto)
     {
@@ -201,8 +201,6 @@ public class AnnouncementsController : ControllerBase
             {
                 return BadRequest("The inserted Announcement ID did not match the announcement ID.");
             }
-
-            // Tjek at annoncen findes (primært for at kunne returnere 404 i stedet for 409)
             
             // Calls upon the Data access layer to retrieve an announcement with the specified id
             Announcement existingAnnouncement = _announcementDao.GetOne(id);

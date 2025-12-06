@@ -28,6 +28,13 @@ namespace InfiniteInfluence.API.Dtos
         public bool IsVisible { get; set; }
 
 
+
+        /// <summary>
+        /// RowVersion used for optimistic concurrency.
+        /// If you want to find the rowversion for an announcement 
+        /// go to https://localhost:{api port}/Announcements/{announcementid}/
+        /// </summary>
+        /// <example>AAAAAAAAB+U=</example>
         // RowVersion as a Base64 string which is used by Swagger and JSON
         public string RowVersion { get; set; }
     }

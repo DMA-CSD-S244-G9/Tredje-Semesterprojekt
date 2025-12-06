@@ -28,7 +28,7 @@ public class AnnouncementApiClient : IAnnouncementDao
         _restClient = new RestClient(apiUri);
     }
 
-
+    #region Create announcement
     public int Create(Announcement announcement)
     {
         RestRequest? request = new RestRequest("announcements", Method.Post);
@@ -57,8 +57,10 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+    #endregion
 
 
+    #region Get all announcements
     public IEnumerable<Announcement> GetAll()
     {
         RestRequest? request = new RestRequest("announcements", Method.Get);
@@ -90,10 +92,10 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+    #endregion
 
 
-
-
+    #region Get one announcement by announcementid
     public Announcement? GetOne(int announcementId)
     {
         RestRequest? request = new RestRequest($"announcements/{announcementId}", Method.Get);
@@ -117,9 +119,10 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+    #endregion
 
 
-
+    #region Add influencer application to announcement
     // POST
     // ENDPOINT: /announcements/{announcementId}/apply
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
@@ -171,9 +174,10 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+    #endregion
 
 
-
+    #region Update announcement
     public bool Update(Announcement announcement)
     {
         // Validates that the announcement object is not null
@@ -226,10 +230,10 @@ public class AnnouncementApiClient : IAnnouncementDao
 
         return response.Data;
     }
+    #endregion
 
 
-
-    #region helper method
+    #region Helper method
     /// <summary>
     /// Maps an AnnouncementUpdateDto object to a new Announcement object.
     /// The parameter, data transfer object(DTO), containing the updated announcement details.

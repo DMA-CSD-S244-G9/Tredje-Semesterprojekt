@@ -22,7 +22,7 @@ public class AnnouncementController : Controller
         _logger = logger;
     }
 
-
+    #region Create Announcement
     // GET:
     // ENDPOINT: /Announcement/Create
     [HttpGet]
@@ -41,7 +41,7 @@ public class AnnouncementController : Controller
         return View(anouncementCreateViewModel);
     }
 
-    #region Create Announcement
+
     // POST:
     // ENDPOINT: /Announcement/Create
     [HttpPost]
@@ -81,6 +81,7 @@ public class AnnouncementController : Controller
     }
     #endregion
 
+
     #region Index Announcement
     //public IActionResult Index()
     //{
@@ -115,141 +116,6 @@ public class AnnouncementController : Controller
             return View(new List<Announcement>());
         }
     }
-    #endregion
-
-        
-    #region Helper method
-    private Announcement ConvertFromViewModelToApiAnnouncement(AnnouncementCreateViewModel anouncementCreateViewModel)
-    {
-        Announcement announcement = new Announcement
-        {
-            UserId = anouncementCreateViewModel.UserId,
-
-            Title = anouncementCreateViewModel.Title,
-
-            // The creation and last edited date and time should be the time of creation
-            CreationDateTime = DateTime.Now,
-            LastEditDateTime = DateTime.Now,
-                
-            // Upon creation we always want our announcement to have 0 current applicants
-            CurrentApplicants = 0,
-
-            // Upon creation the announcement should be shown as open initially
-            StatusType = "Open",
-
-            // Upon creation the default visibility state is set to true
-            IsVisible = true,
-
-            StartDisplayDateTime = anouncementCreateViewModel.StartDisplayDateTime,
-            EndDisplayDateTime = anouncementCreateViewModel.EndDisplayDateTime,
-
-            MaximumApplicants = anouncementCreateViewModel.MaximumApplicants,
-            MinimumFollowersRequired = anouncementCreateViewModel.MinimumFollowersRequired,
-
-            CommunicationType = anouncementCreateViewModel.CommunicationType,
-            AnnouncementLanguage = anouncementCreateViewModel.AnnouncementLanguage,
-
-            IsKeepProducts = anouncementCreateViewModel.IsKeepProducts,
-            IsPayoutNegotiable = anouncementCreateViewModel.IsPayoutNegotiable,
-
-            TotalPayoutAmount = anouncementCreateViewModel.TotalPayoutAmount,
-
-            ShortDescriptionText = anouncementCreateViewModel.ShortDescriptionText,
-            AdditionalInformationText = anouncementCreateViewModel.AdditionalInformationText,
-
-            // Associated influencers list stays empty by design (until influencers apply)
-            ListOfAssociatedInfluencers = new List<int>()
-        };
-
-
-        // Creates a list of string objects that can hold up to three subject fields
-        List<string> subjects = new List<string>();
-
-        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject1);
-        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject2);
-        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject3);
-
-        // Only assign the subjects if they actually have any values
-        if (subjects.Any())
-        {
-            announcement.ListOfSubjects = subjects;
-        }
-
-        return announcement;
-    }
-
-
-    //TODO: Since Announcement, Influencer and Company will all use this method
-    // or one similar, maybe refactor it to be a universal method that can be used by all 3 classes.
-
-
-    /// <summary>
-    /// Takes a raw subject string from the ViewModel, trims it, ensures
-    /// it starts with '#', and adds it to the target list if not empty
-    /// and not already present (case-insensitive).
-    /// </summary>
-    private void AddSubjectIfValid(List<string> target, string? rawDomain)
-    {
-        // Checks if the data from the input field is empty in which case we simply skip
-        if (string.IsNullOrWhiteSpace(rawDomain))
-        {
-            return;
-        }
-
-        // Trimps the inputted values from the field so there are no spaces to make it a proper hashtag
-        string value = rawDomain.Trim();
-
-        // Makes it so that the inputted string always starts with #
-        if (!value.StartsWith("#"))
-        {
-            value = "#" + value;
-        }
-
-        // Prevent duplicates and also makes sure it is checked for using case insensitivity
-        if (!target.Contains(value, StringComparer.OrdinalIgnoreCase))
-        {
-            target.Add(value);
-        }
-    }
-
-
-    /// <summary>
-    /// Converts the AnnouncementEditViewModel to an Announcement
-    /// This is used in the Edit POST method
-    /// </summary>
-    private Announcement ConvertEditViewModelToAnnouncement(AnnouncementEditViewModel announcementEditViewModel)
-    {
-        Announcement announcement = new Announcement
-        {
-            AnnouncementId = announcementEditViewModel.AnnouncementId,
-            UserId = announcementEditViewModel.UserId,
-            Title = announcementEditViewModel.Title,
-            ShortDescriptionText = announcementEditViewModel.ShortDescriptionText,
-            AdditionalInformationText = announcementEditViewModel.AdditionalInformationText,
-            StartDisplayDateTime = announcementEditViewModel.StartDisplayDateTime,
-            EndDisplayDateTime = announcementEditViewModel.EndDisplayDateTime,
-            MaximumApplicants = announcementEditViewModel.MaximumApplicants,
-            MinimumFollowersRequired = announcementEditViewModel.MinimumFollowersRequired,
-            CommunicationType = announcementEditViewModel.CommunicationType,
-            AnnouncementLanguage = announcementEditViewModel.AnnouncementLanguage,
-            IsKeepProducts = announcementEditViewModel.IsKeepProducts,
-            IsPayoutNegotiable = announcementEditViewModel.IsPayoutNegotiable,
-            TotalPayoutAmount = announcementEditViewModel.TotalPayoutAmount,
-            StatusType = "Pending",
-            IsVisible = true,
-            RowVersion = Convert.FromBase64String(announcementEditViewModel.RowVersion)
-        };
-
-        List<string> subjects = new List<string>();
-        AddSubjectIfValid(subjects, announcementEditViewModel.Subject1);
-        AddSubjectIfValid(subjects, announcementEditViewModel.Subject2);
-        AddSubjectIfValid(subjects, announcementEditViewModel.Subject3);
-
-        announcement.ListOfSubjects = subjects;
-
-        return announcement;
-    }
-
     #endregion
 
 
@@ -332,8 +198,6 @@ public class AnnouncementController : Controller
         }
     }
     #endregion
-
-
 
 
     #region Edit Announcement
@@ -469,4 +333,140 @@ public class AnnouncementController : Controller
         }
     }
     #endregion
+
+
+    #region Helper method
+    private Announcement ConvertFromViewModelToApiAnnouncement(AnnouncementCreateViewModel anouncementCreateViewModel)
+    {
+        Announcement announcement = new Announcement
+        {
+            UserId = anouncementCreateViewModel.UserId,
+
+            Title = anouncementCreateViewModel.Title,
+
+            // The creation and last edited date and time should be the time of creation
+            CreationDateTime = DateTime.Now,
+            LastEditDateTime = DateTime.Now,
+
+            // Upon creation we always want our announcement to have 0 current applicants
+            CurrentApplicants = 0,
+
+            // Upon creation the announcement should be shown as open initially
+            StatusType = "Open",
+
+            // Upon creation the default visibility state is set to true
+            IsVisible = true,
+
+            StartDisplayDateTime = anouncementCreateViewModel.StartDisplayDateTime,
+            EndDisplayDateTime = anouncementCreateViewModel.EndDisplayDateTime,
+
+            MaximumApplicants = anouncementCreateViewModel.MaximumApplicants,
+            MinimumFollowersRequired = anouncementCreateViewModel.MinimumFollowersRequired,
+
+            CommunicationType = anouncementCreateViewModel.CommunicationType,
+            AnnouncementLanguage = anouncementCreateViewModel.AnnouncementLanguage,
+
+            IsKeepProducts = anouncementCreateViewModel.IsKeepProducts,
+            IsPayoutNegotiable = anouncementCreateViewModel.IsPayoutNegotiable,
+
+            TotalPayoutAmount = anouncementCreateViewModel.TotalPayoutAmount,
+
+            ShortDescriptionText = anouncementCreateViewModel.ShortDescriptionText,
+            AdditionalInformationText = anouncementCreateViewModel.AdditionalInformationText,
+
+            // Associated influencers list stays empty by design (until influencers apply)
+            ListOfAssociatedInfluencers = new List<int>()
+        };
+
+
+        // Creates a list of string objects that can hold up to three subject fields
+        List<string> subjects = new List<string>();
+
+        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject1);
+        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject2);
+        AddSubjectIfValid(subjects, anouncementCreateViewModel.Subject3);
+
+        // Only assign the subjects if they actually have any values
+        if (subjects.Any())
+        {
+            announcement.ListOfSubjects = subjects;
+        }
+
+        return announcement;
+    }
+
+
+    //TODO: Since Announcement, Influencer and Company will all use this method
+    // or one similar, maybe refactor it to be a universal method that can be used by all 3 classes.
+
+
+    /// <summary>
+    /// Takes a raw subject string from the ViewModel, trims it, ensures
+    /// it starts with '#', and adds it to the target list if not empty
+    /// and not already present (case-insensitive).
+    /// </summary>
+    private void AddSubjectIfValid(List<string> target, string? rawDomain)
+    {
+        // Checks if the data from the input field is empty in which case we simply skip
+        if (string.IsNullOrWhiteSpace(rawDomain))
+        {
+            return;
+        }
+
+        // Trimps the inputted values from the field so there are no spaces to make it a proper hashtag
+        string value = rawDomain.Trim();
+
+        // Makes it so that the inputted string always starts with #
+        if (!value.StartsWith("#"))
+        {
+            value = "#" + value;
+        }
+
+        // Prevent duplicates and also makes sure it is checked for using case insensitivity
+        if (!target.Contains(value, StringComparer.OrdinalIgnoreCase))
+        {
+            target.Add(value);
+        }
+    }
+
+
+    /// <summary>
+    /// Converts the AnnouncementEditViewModel to an Announcement
+    /// This is used in the Edit POST method
+    /// </summary>
+    private Announcement ConvertEditViewModelToAnnouncement(AnnouncementEditViewModel announcementEditViewModel)
+    {
+        Announcement announcement = new Announcement
+        {
+            AnnouncementId = announcementEditViewModel.AnnouncementId,
+            UserId = announcementEditViewModel.UserId,
+            Title = announcementEditViewModel.Title,
+            ShortDescriptionText = announcementEditViewModel.ShortDescriptionText,
+            AdditionalInformationText = announcementEditViewModel.AdditionalInformationText,
+            StartDisplayDateTime = announcementEditViewModel.StartDisplayDateTime,
+            EndDisplayDateTime = announcementEditViewModel.EndDisplayDateTime,
+            MaximumApplicants = announcementEditViewModel.MaximumApplicants,
+            MinimumFollowersRequired = announcementEditViewModel.MinimumFollowersRequired,
+            CommunicationType = announcementEditViewModel.CommunicationType,
+            AnnouncementLanguage = announcementEditViewModel.AnnouncementLanguage,
+            IsKeepProducts = announcementEditViewModel.IsKeepProducts,
+            IsPayoutNegotiable = announcementEditViewModel.IsPayoutNegotiable,
+            TotalPayoutAmount = announcementEditViewModel.TotalPayoutAmount,
+            StatusType = "Pending",
+            IsVisible = true,
+            RowVersion = Convert.FromBase64String(announcementEditViewModel.RowVersion)
+        };
+
+        List<string> subjects = new List<string>();
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject1);
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject2);
+        AddSubjectIfValid(subjects, announcementEditViewModel.Subject3);
+
+        announcement.ListOfSubjects = subjects;
+
+        return announcement;
+    }
+
+    #endregion
+
 }

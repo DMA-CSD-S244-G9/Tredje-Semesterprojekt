@@ -6,9 +6,11 @@ using Microsoft.Data.SqlClient;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Transactions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -667,14 +669,62 @@ public class AnnouncementDaoTests
     }
     #endregion
 
+    #region Test for ID: 017 - Edit Announcement
+
+    /// <summary>
+    /// Test for ID: 017 - Edit announcement
+    /// Acceptance Criteria:
+    /// - Alle informationer om det specifikke samarbejdsopslag kan hentes fra databasen.
+    /// - Ændringerne opdateret og gemt i databasen.
+    /// </summary>
+    /// <remarks>
+    /// This test updates an existing announcement with valid data and the correct RowVersion.
+    /// </remarks>
+    [Test]
+    public void Update_WithValidDataAndCorrectRowVersion_UpdatesAnnouncement()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+        //Instance of announcementId to update - this must exist in the test database
+        int announcementId = 1;
+
+        // Retrieves the existing announcement from the database
+        Announcement existing = _announcementDao.GetOne(announcementId);
+
+        // Asserts that the announcement exists
+        Assert.NotNull(existing, "Test-announcement skal eksistere i databasen");
+
+        // Modifies the announcement's properties
+        existing.Title = "Opdateret titel";
+        existing.ShortDescriptionText = "Opdateret beskrivelse";
+        existing.LastEditDateTime = DateTime.UtcNow;
 
 
+        /////////////
+        // - Act - //
+        /////////////
+        // Attempts to update the announcement in the database
+        bool result = _announcementDao.Update(existing);
 
 
+        /////////////
+        // - Act - //
+        /////////////
+        //Is true if update was successful
+        Assert.IsTrue(result, "Update skal returnere true");
 
+        // Retrieves the updated announcement from the database
+        Announcement updated = _announcementDao.GetOne(announcementId);
 
+        // Test that the properties were updated correctly
+        Assert.That(updated.Title, Is.EqualTo("Opdateret titel"));
 
+        // Tests that the ShortDescriptionText was updated correctly
+        Assert.That(updated.ShortDescriptionText, Is.EqualTo("Opdateret beskrivelse"));
+    }
 
+    #endregion
 
     #region Test for ID: 021 - AddInfluencerApplication With Concurrency Announcement
     /// <summary>
@@ -816,8 +866,6 @@ public class AnnouncementDaoTests
         }
     }
     #endregion
-
-
 
     #region Helper methods
 

@@ -4,6 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace InfiniteInfluence.Website.Models
 {
+    /// <summary>
+    /// Represents the data model for editing an announcement, including details such as title, display dates,
+    /// communication preferences, payment information, and additional metadata.
+    /// Is used in AnnouncementController for editing announcements, to capture user input and validate the data before processing.
+    /// </summary>
+    /// <remarks>This view model is used to capture and validate user input for updating announcements. 
+    /// It includes various fields with validation attributes to ensure data integrity, such as required
+    /// fields, string length constraints, and range limits. The model also supports optional metadata like subjects and
+    /// flags for payment preferences.</remarks>
     public class AnnouncementEditViewModel
     {
         public int AnnouncementId { get; set; }
