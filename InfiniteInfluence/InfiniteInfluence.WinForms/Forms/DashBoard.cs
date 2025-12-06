@@ -99,9 +99,9 @@ public partial class DashBoard : Form
 
 
 
-    ///////////////////////
-    //  Helper Methods   //
-    ///////////////////////
+    ////////////////////////
+    // - Helper Methods - //
+    ////////////////////////
 
     /// <summary>
     /// Stores a reference to the login form and hides it while the dashboard is displayed.
