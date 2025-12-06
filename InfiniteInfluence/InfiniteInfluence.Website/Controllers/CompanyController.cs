@@ -22,21 +22,20 @@ public class CompanyController : Controller
         _logger = logger;
     }
 
-
+    #region Create Influencer Profile
     /// <summary>
     /// Displays the form for creating a new company.
     /// GET: /Company/Create
     /// </summary>
     /// 
     /// <remarks>
-    /// Initializes the <see cref="CompanyCreateViewModel"/> with default values, including setting
+    /// Initializes the CompanyCreateViewModel with default values, including setting
     /// the <c>DateOfEstablishment</c> field to the current date. This ensures the form does not default to an invalid
     /// or unexpected date.
     /// </remarks>
     /// 
     /// <returns>
-    /// An <see cref="IActionResult"/> that renders the "Create" view with the pre-populated <see
-    /// cref="CompanyCreateViewModel"/>.
+    /// An IActionResult that renders the "Create" view with the pre-populated CompanyCreateViewModel
     /// </returns>
     [HttpGet]
     public IActionResult Create()
@@ -51,8 +50,6 @@ public class CompanyController : Controller
         return View(model);
     }
 
-    #region Create Influencer Profile
-
     /// <summary>
     /// Handles the creation of a new company profile based on the provided view model.
     /// </summary>
@@ -60,16 +57,12 @@ public class CompanyController : Controller
     /// <remarks>
     /// This method validates the input model, converts it to a format suitable for the API, and
     /// attempts to create a new company profile using the API client. If the operation is successful, a success message
-    /// is stored in <see cref="TempData"/> and the user is redirected to the home page. If an error occurs, the
+    /// is stored in TempData and the user is redirected to the home page. If an error occurs, the
     /// exception details are logged, and an error message is added to the model state.
     /// </remarks>
     /// 
-    /// <param name="companyModel">
-    /// The view model containing the data required to create a new company profile.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="IActionResult"/> that renders the view with validation errors if the model state is invalid,
+    /// An IActionResult that renders the view with validation errors if the model state is invalid,
     /// redirects to the home page upon successful creation, or re-renders the view with an error message if an
     /// exception occurs.
     /// </returns>
@@ -110,7 +103,7 @@ public class CompanyController : Controller
     }
     #endregion
 
-    #region Find and show Influencer Profile
+    #region Find and show company Profile
 
     [HttpGet]
     public IActionResult FindProfile()
@@ -128,11 +121,7 @@ public class CompanyController : Controller
     /// "ViewProfile" action, passing the user ID as a route parameter.
     /// </remarks>
     /// 
-    /// <param name="findProfile">
-    /// The view model containing the user profile search criteria, including the user ID.
-    /// </param>
-    /// 
-    /// <returns>An <see cref="IActionResult"/> that renders the current view with validation errors if the model state is
+    /// <returns>An IActionResult that renders the current view with validation errors if the model state is
     /// invalid, or redirects to the "ViewProfile" action with the specified user ID if the input is valid
     /// .</returns>
 

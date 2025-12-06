@@ -45,7 +45,8 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     }
     #endregion
 
-    #region Prepared SQL Statements
+
+    #region SQL Query - create
 
     ////////////////////////////////////
     // - SQL statements for Company - //
@@ -79,7 +80,10 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
 
     // SQL for inserting domains into the companyDomains table
     private readonly string queryInsertCompanyDomain = @" INSERT INTO CompanyDomains (userId, domain) VALUES (@UserId, @Domain);";
+    #endregion
 
+
+    #region SQL Query - get one
     private readonly string? queryFindCompany = @"
                 SELECT
                     u.userId, u.loginEmail, u.passwordHash,
@@ -102,20 +106,16 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
                 SELECT domain
                 FROM CompanyDomains
                 WHERE userId = @UserId;";
-
-
     #endregion
 
-    #region DAO methods
+
+    #region Create a company
 
     /// <summary>
     /// This method creates a company in the database.
     /// It performs multiple insert operations within a transaction to ensure atomicity.
     /// It uses Dapper for database interactions.
     /// </summary>
-    /// <param name="company"></param>
-    /// <returns></returns>
-    /// <exception cref="TransactionAbortedException"></exception>
     public int Create(Company company)
     {
         // Creates and opens a new database connection using the baseConnetionDao method CreateConnection()
@@ -187,24 +187,22 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
 
+
+    #region Get one company
     /// <summary>
     /// Retrieves a company associated with the specified user ID.
     /// </summary>
     /// 
     /// <remarks>
     /// This method queries the database to retrieve the company details and its associated domains
-    /// for the given user ID. If no company is found for the specified user ID, the method returns <see
-    /// langword="null"/>.
+    /// for the given user ID. If no company is found for the specified user ID, the method returns null.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose company information is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// A <see cref="Company"/> object containing the company's details and associated domains if the user ID is found;
-    /// otherwise, <see langword="null"/>.
+    /// A Company object containing the company's details and associated domains if the user ID is found;
+    /// otherwise,null.
     /// </returns>
     public Company? GetOne(int userId)
     {
@@ -228,7 +226,10 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
             return foundCompany;
         }
     }
+    #endregion
 
+
+    #region Delete company
     //TODO: write comments
     public bool Delete(int userId)
     {

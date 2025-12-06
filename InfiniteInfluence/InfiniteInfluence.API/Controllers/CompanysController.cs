@@ -14,7 +14,7 @@ namespace InfiniteInfluence.API.Controllers;
 /// <remarks>
 /// This controller handles HTTP requests related to company operations. 
 /// It uses dependency injection to access the company data access object 
-/// (<see cref="ICompanyDao"/>) and a logger (<see cref="ILogger{TCategoryName}"/>). 
+/// (ICompanyDao) and a logger (ILogger{TCategoryName}). 
 /// The controller includes endpoints for creating a new company, retrieving a company
 /// by userId, and deleting a company.
 /// </remarks>
@@ -41,21 +41,20 @@ public class CompanysController : Controller
     }
 
     #endregion
+
+    #region create Company
+
     /// <summary>
     /// Creates a new company record in the system.
     /// </summary>
     /// 
     /// <remarks>
-    /// This method attempts to create a new company record using the provided <paramref
-    /// name="company"/> object. Ensure that the input is valid and complete before calling this method. If an error
+    /// This method attempts to create a new company record using the provided company object. 
+    /// Ensure that the input is valid and complete before calling this method. If an error
     /// occurs, the method logs the exception and returns an appropriate error response.
     /// </remarks>
     /// 
-    /// <param name="company">
-    /// The <see cref="Company"/> object containing the details of the company to be created. Cannot be null.
-    /// </param>
-    /// 
-    /// <returns>An <see cref="ActionResult{T}"/> containing the unique identifier of the newly created company. Returns a status
+    /// <returns>An ActionResult{T} containing the unique identifier of the newly created company. Returns a status
     /// code of 500 if an error occurs during the operation.
     /// </returns>
     [HttpPost]
@@ -76,8 +75,9 @@ public class CompanysController : Controller
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
-
+    #region Get One Company by UserId 
     /// <summary>
     /// Retrieves the company associated with the specified userId.
     /// </summary>
@@ -88,13 +88,9 @@ public class CompanysController : Controller
     /// is returned, and the error is logged.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose company information is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="ActionResult{T}"/> containing the company information if found; <see cref="NoContentResult"/> if
-    /// no company is associated with the specified user ID; or a <see cref="StatusCodeResult"/> with a status code of
+    /// An ActionResult containing the company information if found; NoContentResult if
+    /// no company is associated with the specified user ID; or a StatusCodeResult with a status code of
     /// 500 if an error occurs.
     /// </returns>
     [HttpGet("{userId}")]
@@ -121,7 +117,9 @@ public class CompanysController : Controller
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 
+    #region Delete Company by UserId
 
     /// <summary>
     /// Deletes the user with the specified userId.
@@ -132,12 +130,8 @@ public class CompanysController : Controller
     /// during the operation, a 500 Internal Server Error response is returned with details about the error.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user to delete.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="ActionResult{T}"/> containing <see langword="true"/> if the user was successfully deleted;
+    /// An ActionResult containing true if the user was successfully deleted;
     /// otherwise, a status code indicating the result of the operation.
     /// </returns>
     [HttpDelete("{userId}")]
@@ -163,4 +157,5 @@ public class CompanysController : Controller
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
+    #endregion
 }
