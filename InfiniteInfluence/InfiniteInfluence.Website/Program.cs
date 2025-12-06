@@ -7,8 +7,8 @@ namespace InfiniteInfluence.Website
     public class Program
     {
         // The URL address for the REST API
-         private static readonly string _apiUrl = "https://localhost:7777";
-        //private static readonly string _apiUrl = "https://localhost:32769";
+        //private static readonly string _apiUrl = "https://localhost:7777";
+        private static readonly string _apiUrl = "https://localhost:32769";
 
 
         public static void Main(string[] args)

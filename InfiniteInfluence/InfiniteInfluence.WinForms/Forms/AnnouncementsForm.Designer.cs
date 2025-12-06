@@ -54,7 +54,7 @@
             buttonInfluencerCreate.Name = "buttonInfluencerCreate";
             buttonInfluencerCreate.Size = new Size(200, 50);
             buttonInfluencerCreate.TabIndex = 3;
-            buttonInfluencerCreate.Text = "Create";
+            buttonInfluencerCreate.Text = "&Create";
             buttonInfluencerCreate.UseVisualStyleBackColor = false;
             // 
             // buttonInfluencerEdit
@@ -71,7 +71,7 @@
             buttonInfluencerEdit.Name = "buttonInfluencerEdit";
             buttonInfluencerEdit.Size = new Size(200, 50);
             buttonInfluencerEdit.TabIndex = 4;
-            buttonInfluencerEdit.Text = "Edit";
+            buttonInfluencerEdit.Text = "&Edit";
             buttonInfluencerEdit.UseVisualStyleBackColor = false;
             // 
             // buttonInfluencerView
@@ -88,10 +88,10 @@
             buttonInfluencerView.Name = "buttonInfluencerView";
             buttonInfluencerView.Size = new Size(200, 50);
             buttonInfluencerView.TabIndex = 5;
-            buttonInfluencerView.Text = "View Details";
+            buttonInfluencerView.Text = "&View Details";
             buttonInfluencerView.UseVisualStyleBackColor = false;
             // 
-            // buttonInfluencerDelete
+            // buttonAnnouncementDelete
             // 
             buttonAnnouncementDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonAnnouncementDelete.BackColor = Color.FromArgb(130, 40, 58);
@@ -102,10 +102,10 @@
             buttonAnnouncementDelete.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             buttonAnnouncementDelete.ForeColor = Color.FromArgb(251, 250, 251);
             buttonAnnouncementDelete.Location = new Point(52, 55);
-            buttonAnnouncementDelete.Name = "buttonInfluencerDelete";
+            buttonAnnouncementDelete.Name = "buttonAnnouncementDelete";
             buttonAnnouncementDelete.Size = new Size(200, 50);
             buttonAnnouncementDelete.TabIndex = 6;
-            buttonAnnouncementDelete.Text = "Delete";
+            buttonAnnouncementDelete.Text = "&Delete";
             buttonAnnouncementDelete.UseVisualStyleBackColor = false;
             buttonAnnouncementDelete.Click += buttonAnnouncementDelete_Click;
             // 
@@ -131,7 +131,7 @@
             panelInfluencerSearch.Size = new Size(978, 85);
             panelInfluencerSearch.TabIndex = 6;
             // 
-            // roundedTextBoxInfluencerSearch
+            // roundedTextBoxAnnouncementsSearch
             // 
             roundedTextBoxAnnouncementsSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             roundedTextBoxAnnouncementsSearch.BackColor = Color.FromArgb(60, 54, 76);
@@ -142,24 +142,24 @@
             roundedTextBoxAnnouncementsSearch.Font = new Font("Segoe UI", 9F);
             roundedTextBoxAnnouncementsSearch.ForeColor = Color.FromArgb(134, 129, 158);
             roundedTextBoxAnnouncementsSearch.Location = new Point(727, 33);
-            roundedTextBoxAnnouncementsSearch.Name = "roundedTextBoxInfluencerSearch";
+            roundedTextBoxAnnouncementsSearch.Name = "roundedTextBoxAnnouncementsSearch";
             roundedTextBoxAnnouncementsSearch.Padding = new Padding(15, 2, 15, 2);
             roundedTextBoxAnnouncementsSearch.PlaceholderColor = Color.FromArgb(150, 144, 170);
             roundedTextBoxAnnouncementsSearch.PlaceholderText = "🔎   Search...";
             roundedTextBoxAnnouncementsSearch.Size = new Size(200, 31);
             roundedTextBoxAnnouncementsSearch.TabIndex = 5;
             // 
-            // panelInfluencerContent
+            // panelAnnouncementContent
             // 
             panelAnnouncementContent.BackColor = Color.FromArgb(54, 48, 66);
             panelAnnouncementContent.Dock = DockStyle.Fill;
             panelAnnouncementContent.Location = new Point(0, 85);
-            panelAnnouncementContent.Name = "panelInfluencerContent";
+            panelAnnouncementContent.Name = "panelAnnouncementContent";
             panelAnnouncementContent.Padding = new Padding(50, 0, 50, 0);
             panelAnnouncementContent.Size = new Size(978, 334);
             panelAnnouncementContent.TabIndex = 7;
             // 
-            // InfluencersForm
+            // AnnouncementsForm
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -168,7 +168,7 @@
             Controls.Add(panelAnnouncementContent);
             Controls.Add(panelInfluencerSearch);
             Controls.Add(panelInfluencerButtonRow);
-            Name = "InfluencersForm";
+            Name = "AnnouncementsForm";
             Text = "Form1";
             panelInfluencerButtonRow.ResumeLayout(false);
             panelInfluencerSearch.ResumeLayout(false);

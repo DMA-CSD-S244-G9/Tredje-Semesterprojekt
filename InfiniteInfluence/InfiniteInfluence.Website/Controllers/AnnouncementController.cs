@@ -277,7 +277,7 @@ public class AnnouncementController : Controller
     /// redirects to the home page upon successful update, or re-renders the view with an error message if an exception
     /// occurs.</returns>
     // POST:
-    // ENDPOINT: /Announcement/{announcementid}/Edit
+    // ENDPOINT: /Announcement/Edit?id={announcementid}
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(AnnouncementEditViewModel announcementEditViewModel)

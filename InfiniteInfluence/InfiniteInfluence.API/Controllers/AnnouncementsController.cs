@@ -222,7 +222,7 @@ public class AnnouncementsController : ControllerBase
     /// <returns>True if the announcement was successfully updated; NoContentResult if the update
     /// operation did not modify any data; or an appropriate HTTP status code indicating the result of the operation.</returns>
     // POST
-    // ENDPOINT: /announcements/{announcementId}
+    // ENDPOINT: /announcements/edit?id={announcementId}
     [HttpPut("{id}")]
     public ActionResult<bool> Update(int id, [FromBody] AnnouncementUpdateDto announcementDto)
     {
