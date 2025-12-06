@@ -256,6 +256,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     #endregion
 
+
     #region SQL Queries - DeleteAnnouncement
     // SQL Query that deletes the announcement with the specified announcementId
     // from the Announcements table.
@@ -269,6 +270,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         WHERE announcementId = @AnnouncementId;";
 
     #endregion
+
 
     #region SQL Queries - Delete
 
@@ -629,6 +631,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     }
     #endregion
 
+
     #region Update method
     public bool Update(Announcement announcement)
     {
@@ -707,6 +710,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         }
     }
     #endregion
+
 
     #region Delete method
     /// <summary>
