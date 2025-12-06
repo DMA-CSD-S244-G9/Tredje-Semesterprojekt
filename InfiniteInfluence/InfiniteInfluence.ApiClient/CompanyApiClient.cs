@@ -41,29 +41,23 @@ public class CompanyApiClient : ICompanyDao
     #endregion
 
     #region Create Method
-    
+
     /// <summary>
     /// Creates a new company by sending a POST request to the server.
     /// </summary>
     /// 
     /// <remarks>
     /// This method sends a JSON payload representing the company to the server's "companys"
-    /// endpoint. Ensure that the <paramref name="company"/> parameter is properly populated before calling this
-    /// method.
-    /// </remarks>
+    /// endpoint. Ensure that the company parameter is properly populated before calling this method.
     /// 
-    /// <param name="company">
-    /// The <see cref="Company"/> object containing the details of the company to be created.
-    /// </param>
+    /// Exception:
+    /// Thrown if the server does not respond, or if the server responds with an error. The exception message includes
+    /// the HTTP status code, status description, and response body for debugging purposes.
+    /// </remarks>
     /// 
     /// <returns>
     /// The unique identifier of the newly created company as an integer.
     /// </returns>
-    /// 
-    /// <exception cref="Exception">
-    /// Thrown if the server does not respond, or if the server responds with an error. The exception message includes
-    /// the HTTP status code, status description, and response body for debugging purposes.
-    /// </exception>
     public int Create(Company company)
     {
         //prepare the request and set the method to POST
@@ -95,34 +89,30 @@ public class CompanyApiClient : ICompanyDao
 
     #endregion
 
-
+    #region Delete
     //TODO: Implement the Delete method to remove a company by userId
     public bool Delete(int userId)
     {
         throw new NotImplementedException();
     }
+    #endregion
 
+    #region GetOne Methods
     /// <summary>
-    /// Retrieves a single <see cref="Company"/> object associated with the specified user ID.
+    /// Retrieves a single Company object associated with the specified user ID.
     /// </summary>
     /// 
     /// <remarks>
     /// This method sends a GET request to the server to retrieve the company data for the specified
     /// user ID. Ensure that the server is reachable and the user ID is valid before calling this method.
+    /// 
+    /// Exception:
+    /// Thrown when the server does not respond, or when the server responds with an error status code.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose associated company is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// The <see cref="Company"/> object associated with the specified user ID, or <see langword="null"/> if no data is
-    /// returned.
+    /// Company object associated with the specified user ID, or null if no data is returned.
     /// </returns>
-    /// 
-    /// <exception cref="Exception">
-    /// Thrown when the server does not respond, or when the server responds with an error status code.
-    /// </exception>
     public Company? GetOne(int userId)
     {
         // Prepare the request and set the method to GET
@@ -149,4 +139,5 @@ public class CompanyApiClient : ICompanyDao
         }
         return response.Data;
     }
+    #endregion
 }
