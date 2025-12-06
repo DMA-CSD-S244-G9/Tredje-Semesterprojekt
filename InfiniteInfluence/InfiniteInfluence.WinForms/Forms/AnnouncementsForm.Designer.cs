@@ -1,6 +1,6 @@
 ﻿namespace InfiniteInfluence.WinFormsApp.Forms
 {
-    partial class InfluencersForm
+    partial class AnnouncementsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -31,11 +31,11 @@
             buttonInfluencerCreate = new Button();
             buttonInfluencerEdit = new Button();
             buttonInfluencerView = new Button();
-            buttonInfluencerDelete = new Button();
+            buttonAnnouncementDelete = new Button();
             panelInfluencerButtonRow = new Panel();
             panelInfluencerSearch = new Panel();
-            roundedTextBoxInfluencerSearch = new InfiniteInfluence.WinFormsApp.Components.RoundedTextBox();
-            panelInfluencerContent = new Panel();
+            roundedTextBoxAnnouncementsSearch = new InfiniteInfluence.WinFormsApp.Components.RoundedTextBox();
+            panelAnnouncementContent = new Panel();
             panelInfluencerButtonRow.SuspendLayout();
             panelInfluencerSearch.SuspendLayout();
             SuspendLayout();
@@ -93,21 +93,21 @@
             // 
             // buttonInfluencerDelete
             // 
-            buttonInfluencerDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonInfluencerDelete.BackColor = Color.FromArgb(130, 40, 58);
-            buttonInfluencerDelete.FlatAppearance.BorderColor = Color.FromArgb(109, 84, 181);
-            buttonInfluencerDelete.FlatAppearance.BorderSize = 0;
-            buttonInfluencerDelete.FlatAppearance.MouseDownBackColor = Color.FromArgb(99, 30, 46);
-            buttonInfluencerDelete.FlatStyle = FlatStyle.Flat;
-            buttonInfluencerDelete.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonInfluencerDelete.ForeColor = Color.FromArgb(251, 250, 251);
-            buttonInfluencerDelete.Location = new Point(52, 55);
-            buttonInfluencerDelete.Name = "buttonInfluencerDelete";
-            buttonInfluencerDelete.Size = new Size(200, 50);
-            buttonInfluencerDelete.TabIndex = 6;
-            buttonInfluencerDelete.Text = "Delete";
-            buttonInfluencerDelete.UseVisualStyleBackColor = false;
-            buttonInfluencerDelete.Click += buttonInfluencerDelete_Click;
+            buttonAnnouncementDelete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonAnnouncementDelete.BackColor = Color.FromArgb(130, 40, 58);
+            buttonAnnouncementDelete.FlatAppearance.BorderColor = Color.FromArgb(109, 84, 181);
+            buttonAnnouncementDelete.FlatAppearance.BorderSize = 0;
+            buttonAnnouncementDelete.FlatAppearance.MouseDownBackColor = Color.FromArgb(99, 30, 46);
+            buttonAnnouncementDelete.FlatStyle = FlatStyle.Flat;
+            buttonAnnouncementDelete.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonAnnouncementDelete.ForeColor = Color.FromArgb(251, 250, 251);
+            buttonAnnouncementDelete.Location = new Point(52, 55);
+            buttonAnnouncementDelete.Name = "buttonInfluencerDelete";
+            buttonAnnouncementDelete.Size = new Size(200, 50);
+            buttonAnnouncementDelete.TabIndex = 6;
+            buttonAnnouncementDelete.Text = "Delete";
+            buttonAnnouncementDelete.UseVisualStyleBackColor = false;
+            buttonAnnouncementDelete.Click += buttonAnnouncementDelete_Click;
             // 
             // panelInfluencerButtonRow
             // 
@@ -115,7 +115,7 @@
             panelInfluencerButtonRow.Controls.Add(buttonInfluencerCreate);
             panelInfluencerButtonRow.Controls.Add(buttonInfluencerView);
             panelInfluencerButtonRow.Controls.Add(buttonInfluencerEdit);
-            panelInfluencerButtonRow.Controls.Add(buttonInfluencerDelete);
+            panelInfluencerButtonRow.Controls.Add(buttonAnnouncementDelete);
             panelInfluencerButtonRow.Dock = DockStyle.Bottom;
             panelInfluencerButtonRow.Location = new Point(0, 419);
             panelInfluencerButtonRow.Name = "panelInfluencerButtonRow";
@@ -124,7 +124,7 @@
             // 
             // panelInfluencerSearch
             // 
-            panelInfluencerSearch.Controls.Add(roundedTextBoxInfluencerSearch);
+            panelInfluencerSearch.Controls.Add(roundedTextBoxAnnouncementsSearch);
             panelInfluencerSearch.Dock = DockStyle.Top;
             panelInfluencerSearch.Location = new Point(0, 0);
             panelInfluencerSearch.Name = "panelInfluencerSearch";
@@ -133,31 +133,31 @@
             // 
             // roundedTextBoxInfluencerSearch
             // 
-            roundedTextBoxInfluencerSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            roundedTextBoxInfluencerSearch.BackColor = Color.FromArgb(60, 54, 76);
-            roundedTextBoxInfluencerSearch.BorderColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxInfluencerSearch.BorderFocusColor = Color.FromArgb(109, 84, 181);
-            roundedTextBoxInfluencerSearch.BorderThickness = 3;
-            roundedTextBoxInfluencerSearch.CornerRadius = 8;
-            roundedTextBoxInfluencerSearch.Font = new Font("Segoe UI", 9F);
-            roundedTextBoxInfluencerSearch.ForeColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxInfluencerSearch.Location = new Point(727, 33);
-            roundedTextBoxInfluencerSearch.Name = "roundedTextBoxInfluencerSearch";
-            roundedTextBoxInfluencerSearch.Padding = new Padding(15, 2, 15, 2);
-            roundedTextBoxInfluencerSearch.PlaceholderColor = Color.FromArgb(150, 144, 170);
-            roundedTextBoxInfluencerSearch.PlaceholderText = "🔎   Search...";
-            roundedTextBoxInfluencerSearch.Size = new Size(200, 31);
-            roundedTextBoxInfluencerSearch.TabIndex = 5;
+            roundedTextBoxAnnouncementsSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            roundedTextBoxAnnouncementsSearch.BackColor = Color.FromArgb(60, 54, 76);
+            roundedTextBoxAnnouncementsSearch.BorderColor = Color.FromArgb(134, 129, 158);
+            roundedTextBoxAnnouncementsSearch.BorderFocusColor = Color.FromArgb(109, 84, 181);
+            roundedTextBoxAnnouncementsSearch.BorderThickness = 3;
+            roundedTextBoxAnnouncementsSearch.CornerRadius = 8;
+            roundedTextBoxAnnouncementsSearch.Font = new Font("Segoe UI", 9F);
+            roundedTextBoxAnnouncementsSearch.ForeColor = Color.FromArgb(134, 129, 158);
+            roundedTextBoxAnnouncementsSearch.Location = new Point(727, 33);
+            roundedTextBoxAnnouncementsSearch.Name = "roundedTextBoxInfluencerSearch";
+            roundedTextBoxAnnouncementsSearch.Padding = new Padding(15, 2, 15, 2);
+            roundedTextBoxAnnouncementsSearch.PlaceholderColor = Color.FromArgb(150, 144, 170);
+            roundedTextBoxAnnouncementsSearch.PlaceholderText = "🔎   Search...";
+            roundedTextBoxAnnouncementsSearch.Size = new Size(200, 31);
+            roundedTextBoxAnnouncementsSearch.TabIndex = 5;
             // 
             // panelInfluencerContent
             // 
-            panelInfluencerContent.BackColor = Color.FromArgb(54, 48, 66);
-            panelInfluencerContent.Dock = DockStyle.Fill;
-            panelInfluencerContent.Location = new Point(0, 85);
-            panelInfluencerContent.Name = "panelInfluencerContent";
-            panelInfluencerContent.Padding = new Padding(50, 0, 50, 0);
-            panelInfluencerContent.Size = new Size(978, 334);
-            panelInfluencerContent.TabIndex = 7;
+            panelAnnouncementContent.BackColor = Color.FromArgb(54, 48, 66);
+            panelAnnouncementContent.Dock = DockStyle.Fill;
+            panelAnnouncementContent.Location = new Point(0, 85);
+            panelAnnouncementContent.Name = "panelInfluencerContent";
+            panelAnnouncementContent.Padding = new Padding(50, 0, 50, 0);
+            panelAnnouncementContent.Size = new Size(978, 334);
+            panelAnnouncementContent.TabIndex = 7;
             // 
             // InfluencersForm
             // 
@@ -165,7 +165,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(54, 48, 66);
             ClientSize = new Size(978, 544);
-            Controls.Add(panelInfluencerContent);
+            Controls.Add(panelAnnouncementContent);
             Controls.Add(panelInfluencerSearch);
             Controls.Add(panelInfluencerButtonRow);
             Name = "InfluencersForm";
@@ -180,10 +180,10 @@
         private Button buttonInfluencerCreate;
         private Button buttonInfluencerEdit;
         private Button buttonInfluencerView;
-        private Button buttonInfluencerDelete;
+        private Button buttonAnnouncementDelete;
         private Panel panelInfluencerButtonRow;
         private Panel panelInfluencerSearch;
-        private Components.RoundedTextBox roundedTextBoxInfluencerSearch;
-        private Panel panelInfluencerContent;
+        private Components.RoundedTextBox roundedTextBoxAnnouncementsSearch;
+        private Panel panelAnnouncementContent;
     }
 }

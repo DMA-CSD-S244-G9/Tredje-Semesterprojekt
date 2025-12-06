@@ -57,7 +57,7 @@ public class AnnouncementDaoTests
         /////////////////
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
         
         // Creates an announcement object with the very basic requirements
         Announcement announcement = CreateTestAnnouncement();
@@ -129,7 +129,7 @@ public class AnnouncementDaoTests
         /////////////////
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Creates an announcement object with the very basic requirements
         // CreateTestAnnouncement is a helper method defined at the bottom of this class
@@ -188,7 +188,7 @@ public class AnnouncementDaoTests
     /// 
     /// <remarks>
     /// Test:
-    /// If an error occurs during insertion of subjects, then the whole transaction should eb 
+    /// If an error occurs during insertion of subjects, then the whole transaction should be
     /// rolled back so there wont be created an announcement at all.
     /// </remarks>
     [Test]
@@ -199,7 +199,7 @@ public class AnnouncementDaoTests
         /////////////////
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Creates an announcement object with the very basic requirements
         // CreateTestAnnouncement is a helper method defined at the bottom of this class
@@ -279,7 +279,7 @@ public class AnnouncementDaoTests
         /////////////////
 
         // Calls the GetAll method to retrieve all announcements from the database 
-        var countBefore = _announcementDao.GetAll().Count();
+        int countBefore = _announcementDao.GetAll().Count();
 
         /////////////
         // - Act - //
@@ -293,7 +293,7 @@ public class AnnouncementDaoTests
         int newAnnouncementId3 = _announcementDao.Create(announcement);
 
         // Calls the GetAll method to retrieve all announcements from the database 
-        var countAfter = _announcementDao.GetAll().Count();
+        int countAfter = _announcementDao.GetAll().Count();
 
         ////////////////
         // - Assert - //
@@ -329,7 +329,7 @@ public class AnnouncementDaoTests
 
         // Calls the GetAll method to retrieve all announcements from the database 
         // and stores the result in the foundAnnouncements variable
-        var foundAnnouncements = _announcementDao.GetAll();
+        IEnumerable<Announcement> foundAnnouncements = _announcementDao.GetAll();
 
 
         ////////////////
@@ -362,6 +362,7 @@ public class AnnouncementDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
+        
         // Gets all announcements from the database
         List<Announcement> listOfAnnouncements = _announcementDao.GetAll().ToList();
 
@@ -369,6 +370,7 @@ public class AnnouncementDaoTests
         /////////////
         // - Act - //
         /////////////
+        
         // Sorts the announcements by StartDisplayDateTime in descending order
         List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
             (announcement => announcement.StartDisplayDateTime).ToList();
@@ -377,9 +379,9 @@ public class AnnouncementDaoTests
         /////////////
         // - Act - //
         /////////////
+        
         // Test whether the original list is equal to the sorted list
-        Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate),
-        "Announcements are not sorted by StartDisplayDateTime in descending order.");
+        Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate), "Announcements are not sorted by StartDisplayDateTime in descending order.");
     }
 
 
@@ -422,7 +424,7 @@ public class AnnouncementDaoTests
         };
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
 
 
@@ -480,7 +482,7 @@ public class AnnouncementDaoTests
         const int influencerUserId = 3;
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();
@@ -562,7 +564,7 @@ public class AnnouncementDaoTests
         const int influencerUserId = 2;
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();
@@ -631,18 +633,19 @@ public class AnnouncementDaoTests
         // - Arrange - //
         /////////////////
 
+        // InfluencerId 2 has already submitted to the announcement in the test data
         const int announcementId = 1;
-        const int influencerUserId = 2; // already applied to announcement 1 in seed data
+        const int influencerUserId = 2;
 
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
         connection.Open();
 
-        // Verify that seed data actually contains an application for (userId=2, announcementId=1)
+        // Verify that test data actually contains an application for (userId=2, announcementId=1)
         int existingLinkCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @AId AND userId = @UId", new { AId = announcementId, UId = influencerUserId });
 
         Assert.That(existingLinkCountBefore, Is.GreaterThanOrEqualTo(1), "Seed data is expected to contain at least one application for userId 2 on announcement 1.");
 
-        // Total number of applications for this announcement
+        // Retrieves the total number of application submissions for this announcement
         int totalApplicationsBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
 
         int currentApplicantsBefore = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
@@ -751,9 +754,8 @@ public class AnnouncementDaoTests
         // - Arrange - //
         /////////////////
 
-
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();
@@ -761,9 +763,15 @@ public class AnnouncementDaoTests
         // FitGear announcement from inserted test data
         const int announcementId = 4;
 
-        // Retrieves the maximumApplicants so that we can set the same value after having done our tests
+        // Specifies two influencers that have not yet applied to the announcement AnnaStyle and BeautySara respectively
+        int firstInfluencerUserId = 1;
+        int secondInfluencerUserId = 5;
+
+        // Retrieves the number of maximumApplicants so that we can set the same value after having done our tests
         int originalMaximumApplicants = connection.ExecuteScalar<int>("SELECT maximumApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
 
+        // Retrieves the number of currentApplicants so that we can set the same value after having done our tests
+        int originalCurrentApplicants = connection.ExecuteScalar<int>("SELECT currentApplicants FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
 
         try
         {
@@ -771,22 +779,24 @@ public class AnnouncementDaoTests
             // - Act - //
             /////////////
 
+            // Deletes the two influencers from the InfluencerAnnouncements table to ensure they haven't already submitted an application for this announcement
+            connection.Execute(@"DELETE FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId IN (@InfluencerOne, @InfluencerTwo)", new { Id = announcementId, InfluencerOne = firstInfluencerUserId, InfluencerTwo = secondInfluencerUserId });
+
             // Retrieves the number of applications that already exists for the announcement
             int existingApplicationCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+            // Changes the currentApplicants of the Announcement to be the number of applicants that was retrieved from the InfluencerAnnouncements table
+            connection.Execute("UPDATE Announcements SET currentApplicants = @UpdatedApplicants WHERE announcementId = @Id", new { UpdatedApplicants = existingApplicationCount, Id = announcementId });
 
             // Changes the maximum applicants to +1 so that there is only one spot left
             int adjustedMaximumApplicants = existingApplicationCount + 1;
 
-            // Makes the change in the database
+            // Makes the change of maximum applicants in the database
             connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = adjustedMaximumApplicants, Id = announcementId });
 
             // Prepares two DAO to help simulate two different users interactions
-            var daoForFirstInfluencer = new AnnouncementDao(_dataBaseConnectionString);
-            var daoForSecondInfluencer = new AnnouncementDao(_dataBaseConnectionString);
-
-            // Specifies two influencers that have not yet applied to the announcement AnnaStyle and BeautySara respectively
-            int firstInfluencerUserId = 1;
-            int secondInfluencerUserId = 5;
+            AnnouncementDao daoForFirstInfluencer = new AnnouncementDao(_dataBaseConnectionString);
+            AnnouncementDao daoForSecondInfluencer = new AnnouncementDao(_dataBaseConnectionString);
 
             // Sets the initial application success states to false
             bool firstApplicationSucceeded = false;
@@ -796,8 +806,9 @@ public class AnnouncementDaoTests
             Exception? exceptionFromFirstApplication = null;
             Exception? exceptionFromSecondApplication = null;
 
+
             // Starts too different tasks to simulate concurrent users applying to the announcement
-            Task? firstApplicationTask = Task.Run(() =>
+            Task firstApplicationTask = Task.Run(() =>
             {
                 try
                 {
@@ -812,8 +823,7 @@ public class AnnouncementDaoTests
                 }
             });
 
-
-            Task? secondApplicationTask = Task.Run(() =>
+            Task secondApplicationTask = Task.Run(() =>
             {
                 try
                 {
@@ -832,15 +842,15 @@ public class AnnouncementDaoTests
             Task.WaitAll(firstApplicationTask, secondApplicationTask);
 
             // Retrieves the number of rows that exists per influencer for Annastyle and Sarabeauty ideally this should total to only 1
-            int rowsForFirstInfluencer = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = firstInfluencerUserId });
-            int rowsForSecondInfluencer = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = secondInfluencerUserId });
+            int rowsForFirstInfluencer = connection.ExecuteScalar<int>(@"SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = firstInfluencerUserId });
+            int rowsForSecondInfluencer = connection.ExecuteScalar<int>(@"SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId = @UserId", new { Id = announcementId, UserId = secondInfluencerUserId });
 
 
 
             ////////////////
             // - Assert - //
             ////////////////
-            
+
             // Confirms that only one of the influencers have an application submitted, by ensuring there are only 1 when looking for both in the InfluencerAnnouncements table
             Assert.That(rowsForFirstInfluencer + rowsForSecondInfluencer, Is.EqualTo(1), "Only one of the two influencers should have 1 row in the InfluencerAnnouncements table.");
 
@@ -851,7 +861,6 @@ public class AnnouncementDaoTests
             Assert.That(exceptionFromFirstApplication != null || exceptionFromSecondApplication != null, Is.True, "One of the two applications should have thrown an exception due to the announcement's maximum of applicants being reached.");
         }
 
-
         finally
         {
             //////////////////
@@ -859,13 +868,150 @@ public class AnnouncementDaoTests
             //////////////////
 
             // Changes the maximum amount of applicants back to what it was previosuly
-            connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = originalMaximumApplicants, Id = announcementId });
+            connection.Execute("UPDATE Announcements SET maximumApplicants = @Max, currentApplicants = @UpdatedApplicants WHERE announcementId = @Id", new { Max = originalMaximumApplicants, UpdatedApplicants = originalCurrentApplicants, Id = announcementId });
 
             // Deletes the two potentially inserted applications
-            connection.Execute(@"DELETE FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId IN (1, 5)", new { Id = announcementId });
+            connection.Execute(@"DELETE FROM InfluencerAnnouncements WHERE announcementId = @Id AND userId IN (@InfluencerOne, @InfluencerTwo)", new { Id = announcementId, InfluencerOne = firstInfluencerUserId, InfluencerTwo = secondInfluencerUserId });
         }
     }
     #endregion
+
+
+
+    #region Test for ID: 022 - Delete Announcement
+    /// <summary>
+    /// Test for ID: 022 - Delete Announcement
+    /// 
+    /// Acceptance Criteria:
+    /// - Bekræftes sletningen, skal den valgte samarbejdsopslag slettes fra databasen
+    /// - Efter samarbejdsopslaget er fjernet fra databasen, skal tabellens indhold opdateres
+    /// 
+    /// </summary>
+    /// 
+    /// 
+    /// <remarks>
+    /// Test:
+    /// Deletes the announcement with the announcementId 1, from the database's Announcement table
+    /// which due to the database 'on delete cascade' structure will delete its associated AnnouncementSubjects 
+    /// and InfluencerAnnouncements.
+    /// 
+    /// Utilises TransactionScope, which allows us to roll back all changes when the test has
+    /// been completed, in order to ensure that the deletion is not actually committed to the 
+    /// database potentially messing up other tests.
+    /// </remarks>
+    [Test]
+    public void Delete_ExistingAnnouncement_RemovesAnnouncementAndRelatedRows()
+    {
+        /////////////////
+        // - Arrange - //
+        /////////////////
+
+        // Prepares for connecting to the database
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
+
+        // Establishes the connection to the database
+        connection.Open();
+
+        // Specifies the company userid to use which correlates to NoridcTech from the test data 
+        const int companyUserId = 6;
+
+        // Creates an announcement object for testing purposes
+        Announcement announcement = new Announcement
+        {
+            UserId = companyUserId,
+            Title = "Delete Test Announcement",
+            CreationDateTime = DateTime.Now,
+            LastEditDateTime = DateTime.Now,
+            StartDisplayDateTime = DateTime.Now,
+            EndDisplayDateTime = DateTime.Now.AddDays(7),
+            CurrentApplicants = 0,
+            MaximumApplicants = 3,
+            MinimumFollowersRequired = 0,
+            CommunicationType = "Email",
+            AnnouncementLanguage = "English",
+            IsKeepProducts = false,
+            IsPayoutNegotiable = false,
+            TotalPayoutAmount = 0m,
+            ShortDescriptionText = "Short text",
+            AdditionalInformationText = "Additional text",
+            StatusType = "Active",
+            IsVisible = true,
+            ListOfSubjects = new List<string> { "TestSubject1", "TestSubject2" }
+        };
+
+        // Creates and inserts the test announcement 
+        int announcementId = _announcementDao.Create(announcement);
+
+        // SQL Query for adding influencer applicants to the announcement
+        const string insertApplicationSql = @"
+            INSERT INTO InfluencerAnnouncements (userId, announcementId, applicationState)
+            VALUES (@UserId, @AnnouncementId, @State);" ;
+
+        // Inserts an influencer with the UserId of 1 in to the test data
+        connection.Execute(insertApplicationSql, new { UserId = 1, AnnouncementId = announcementId, State = "Pending" });
+            
+        // Inserts an influencer with the UserId of 2 in to the test data
+        connection.Execute(insertApplicationSql, new { UserId = 2, AnnouncementId = announcementId, State = "Pending" });
+
+        // Retrieves the number of rows that contain an announcement with the matching ID to confirm its existance
+        int countBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Retrieves the number of rows of subjects associated with the announcement with the ID 1
+        int subjectCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM AnnouncementSubjects WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Retrieves teh number of rows of applications associated with the announcement with the ID 1
+        int applicationCountBefore = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Validates that an announcement with the ID of 1 exists, that it has some subjects associated should be 2 with it and there are at least one applicant for the announcement already which should also be 2 applicants
+        Assert.That(countBefore, Is.EqualTo(1), "An announcement with the ID 1 must exist within the test data set");
+        Assert.That(subjectCountBefore, Is.GreaterThanOrEqualTo(2));
+        Assert.That(applicationCountBefore, Is.GreaterThanOrEqualTo(2));
+
+
+
+        /////////////
+        // - Act - //
+        /////////////
+            
+        bool isDeleted = _announcementDao.Delete(announcementId);
+
+        // Returns the amount of rows with a matching announcement is retrieved which should be 0 due to the deletion
+        int countAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM Announcements WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Returns the number of subjet rows from the announcement's subjects within the AnnouncementSubjects table that was tied to teh announcementId should also have been removed due to the cascade deletion
+        int subjectCountAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM AnnouncementSubjects WHERE announcementId = @Id", new { Id = announcementId });
+
+        // Returns the rows from the InfluencerAnnouncements that have the announcementId since the influencer applications should no longer be present due to teh cascade deletion
+        int applicationCountAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM InfluencerAnnouncements WHERE announcementId = @Id", new { Id = announcementId });
+
+
+
+        ////////////////
+        // - Assert - //
+        ////////////////
+
+        // Validates that the delete returns true confirming the deletion was done
+        Assert.That(isDeleted, Is.True, "The delete method call returned true, indicating successfull deletion");
+
+        // Validates that there are no rows containing an announcement with the specified ID in the Announcement table
+        Assert.That(countAfter, Is.EqualTo(0), "There are no Announcement row in the Announcements table with that id anymore");
+
+        // Validates that there are no rows in the AnnouncementSubjects table associated with the deleted announcement
+        Assert.That(subjectCountAfter, Is.EqualTo(0), "The Announcement's associated AnnouncementSubjects rows has been deleted");
+
+        // Validates that there are no rows in the InfluencerAnnouncements table associated with teh deleted announcement
+        Assert.That(applicationCountAfter, Is.EqualTo(0), "The announcement's associated InfluencerAnnouncements rows has been deleted");
+
+        // NOTE: Because the scope.complete method is never called, then when the scope disposing occurs then
+        // everything will be rolled back so that the test data remains unchanged and does not interfere with other tests.
+    }
+
+
+
+    #endregion
+
+
+
 
     #region Helper methods
 
@@ -874,9 +1020,8 @@ public class AnnouncementDaoTests
     /// </summary>
     public void Cleanup(int newAnnouncementId)
     {
-
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();

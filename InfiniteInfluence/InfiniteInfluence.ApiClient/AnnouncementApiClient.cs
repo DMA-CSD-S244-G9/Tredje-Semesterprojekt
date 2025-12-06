@@ -37,7 +37,7 @@ public class AnnouncementApiClient : IAnnouncementDao
         request.AddJsonBody(announcement);
 
         // Calls upon the API and expects an integer back in the form of an announcementId
-        var response = _restClient.Execute<int>(request);
+        RestResponse<int> response = _restClient.Execute<int>(request);
 
 
         if (response == null)
@@ -66,7 +66,7 @@ public class AnnouncementApiClient : IAnnouncementDao
         RestRequest? request = new RestRequest("announcements", Method.Get);
 
         // Calls upon the API and expects a list of Announcement objects back
-        var response = _restClient.Execute<List<Announcement>>(request);
+        RestResponse<List<Announcement>> response = _restClient.Execute<List<Announcement>>(request);
 
 
         if (response == null)
@@ -100,7 +100,7 @@ public class AnnouncementApiClient : IAnnouncementDao
     {
         RestRequest? request = new RestRequest($"announcements/{announcementId}", Method.Get);
 
-        var response = _restClient.Execute<Announcement>(request);
+        RestResponse<Announcement> response = _restClient.Execute<Announcement>(request);
 
         if (response == null)
         {
@@ -152,6 +152,7 @@ public class AnnouncementApiClient : IAnnouncementDao
             {
                 exceptionResponseMessage = "Unable to receive the request from the server.";
             }
+
             else
             {
                 // Assigns the text from our InvalidOperationException from the REST Web Api 
@@ -175,9 +176,11 @@ public class AnnouncementApiClient : IAnnouncementDao
         return response.Data;
     }
     #endregion
-
-
+    
+    
     #region Update announcement
+    // UPDATE:
+    // ENDPOINT: /announcements/Edit?id={announcementId}
     public bool Update(Announcement announcement)
     {
         // Validates that the announcement object is not null
@@ -226,6 +229,42 @@ public class AnnouncementApiClient : IAnnouncementDao
         if (!response.IsSuccessful || !response.IsSuccessStatusCode)
         {
             throw new Exception($"Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        return response.Data;
+    }
+    #endregion
+
+
+    #region Delete Announcement
+    // DELETE:
+    // ENDPOINT: /announcements/{announcementId}
+    public bool Delete(int announcementId)
+    {
+        RestRequest request = new RestRequest($"announcements/{announcementId}", Method.Delete);
+
+        // Calls upon the REST Web API and expects a boolean object back as a response
+        RestResponse<bool> response = _restClient.Execute<bool>(request);
+
+        if (response == null)
+        {
+            throw new Exception("Connection Failure: There were no response from the server.");
+        }
+
+        // If the returned status code was a 404 not found then execute this section
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+
+        if (!response.IsSuccessful)
+        {
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
         return response.Data;

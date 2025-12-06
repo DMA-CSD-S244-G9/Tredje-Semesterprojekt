@@ -100,7 +100,7 @@
             iconButtonInfluencer.FlatAppearance.BorderSize = 0;
             iconButtonInfluencer.FlatStyle = FlatStyle.Flat;
             iconButtonInfluencer.ForeColor = Color.FromArgb(222, 222, 222);
-            iconButtonInfluencer.IconChar = FontAwesome.Sharp.IconChar.User;
+            iconButtonInfluencer.IconChar = FontAwesome.Sharp.IconChar.Scroll;
             iconButtonInfluencer.IconColor = Color.FromArgb(251, 250, 251);
             iconButtonInfluencer.IconFont = FontAwesome.Sharp.IconFont.Auto;
             iconButtonInfluencer.ImageAlign = ContentAlignment.MiddleLeft;
@@ -109,10 +109,10 @@
             iconButtonInfluencer.Padding = new Padding(10, 0, 10, 0);
             iconButtonInfluencer.Size = new Size(250, 60);
             iconButtonInfluencer.TabIndex = 2;
-            iconButtonInfluencer.Text = "Influencers";
+            iconButtonInfluencer.Text = "Announcements";
             iconButtonInfluencer.TextImageRelation = TextImageRelation.ImageBeforeText;
             iconButtonInfluencer.UseVisualStyleBackColor = true;
-            iconButtonInfluencer.Click += IconButtonInfluencer_Click;
+            iconButtonInfluencer.Click += IconButtonAnnouncement_Click;
             // 
             // iconButtonHome
             // 
