@@ -273,16 +273,31 @@
         </p>
     </div>
 
+    <!-- Edit announcement button -->
+    <div class="text-center mb-6 mt-5">
+
+        <a asp-controller="Announcement" asp-action="Edit" asp-route-id="@Model.AnnouncementId" class="btn btn-primary px-5 py-2">
+            Edit Announcement
+        </a>
+    </div>
 
 
     <!-- Announcement application section -->
-    <form asp-action="Apply" asp-controller="Announcement" method="post">
+    <h1 class="text-center mb-1 main-heading-margins">
+        Apply for collaboration
+    </h1>
+    <p class="text-center mb-5">
+        If you wish to apply for this collaboration, enter your influencer ID below
+        and submit your application for review.
+        <br>Once submitted, the company will be able to view and respond to your application.
+    </p>
 
+    <form asp-action="Apply" asp-controller="Announcement" method="post">
         <!-- Hidden field for announcement id -->
         <input type="hidden" name="announcementId" value="@Model.AnnouncementId" />
 
         <!-- Influencer id input field -->
-        <div class="container mb-5">
+        <div class="container mb-4">
             <div class="row">
 
                 <div class="col-md-12 mb-3">
@@ -292,18 +307,28 @@
 
               </div>
             </div>
+
+
         </div>
 
         <!-- Submit application button -->
-        <div class="text-center mb-5">
+        <div class="text-center mb-6">
             <button type="submit" class="btn btn-primary px-5 py-2">Submit Application</button>
         </div>
-
     </form>
 
 
 
+
     <!-- Applicant list and actions section -->
+    <h1 class="text-center mb-1 main-heading-margins">
+        List of applicants
+    </h1>
+    <p class="text-center mb-5">
+        Below you can see all influencers who have applied for this collaboration.
+        <br> Use the list to review applicants and decide who to engage with.
+    </p>
+
     <div class="announcement-details-card-bottom">
 
         <!-- Title influencer contact information -->
@@ -372,6 +397,7 @@
         }
 
     </div>
+
 
 </div>
 

@@ -4,6 +4,7 @@ using InfiniteInfluence.DataAccessLibrary.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.PortableExecutable;
@@ -64,6 +65,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     #endregion
 
+
     #region SQL Queries - GetAll
     
     // This SQL query retrieves all of the announcement records from the database's announcement table, the name of the company that created each announcement is also included.
@@ -118,6 +120,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         WHERE announcementId IN @Ids";
 
     #endregion
+
 
     #region SQL Queries - GetOne
     
@@ -188,6 +191,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     WHERE influencerAnnouncement.announcementId = @AnnouncementId;";
     #endregion
+
 
     #region SQL Queries - AddInfluencerApplication
     /////////////////////////////////////////////////
@@ -266,7 +270,41 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     #endregion
 
+    #region SQL Queries - Delete
 
+    // This SQL query delete all of the subjects from the AnnouncementSubjects table, with the matching announcementId
+    private const string _sqlQueryDelteSubjectsByAnnouncementId = @"
+        DELETE FROM AnnouncementSubjects
+        WHERE announcementId = @AnnouncementId;";
+
+    #endregion
+
+
+    #region SQL Queries - Update
+    // This SQL query updates an existing announcement in the Announcements table.
+    private const string SqlQueryUpdateAnnouncementByAnnouncementId = @"
+        UPDATE Announcements
+        SET 
+            title = @Title,
+            lastEditDateTime = @LastEditDateTime,
+            startDisplayDateTime = @StartDisplayDateTime,
+            endDisplayDateTime = @EndDisplayDateTime,
+            maximumApplicants = @MaximumApplicants,
+            minimumFollowersRequired = @MinimumFollowersRequired,
+            communicationType = @CommunicationType,
+            announcementLanguage = @AnnouncementLanguage,
+            isKeepProducts = @IsKeepProducts,
+            isPayoutNegotiable = @IsPayoutNegotiable,
+            totalPayoutAmount = @TotalPayoutAmount,
+            shortDescriptionText = @ShortDescriptionText,
+            additionalInformationText = @AdditionalInformationText,
+            statusType = @StatusType,
+            isVisible = @IsVisible
+        WHERE AnnouncementId = @AnnouncementId AND RowVersion = @RowVersion;";
+    #endregion
+
+
+    #region Create Method
     // Please note that the list ListOfAssociatedInfluencers is not included in the
     // AnnouncementDao's Create method as the list is initially instantiated as an
     // empty list so that influencers can eventually apply to it.
@@ -340,9 +378,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
 
 
-
+    #region GetAll Method
     /// <summary>
     /// Returns all of the announcements from the database with their respective subjects from the AnnouncementSubjects table,
     /// and includes the related company name from the Companys table.
@@ -426,9 +465,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // Return all announcements, each enriched with its subjects and company name
         return announcements;
     }
+    #endregion
 
 
-
+    #region helper classes
     /// <summary>
     /// An helper class used to map rows from the AnnouncementSubjects query and represents a single subject entry for a specific announcement.
     /// </summary>
@@ -437,9 +477,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         public int AnnouncementId { get; set; }
         public string AnnouncementSubject { get; set; } = string.Empty;
     }
+    #endregion
 
 
-
+    #region GetOne Method
     /// <summary>
     /// Returns one single announcements from the database with the matching AnnouncementId that was supplied in the parameter,
     /// also retrurns the respective subjects associated with the announcement from the AnnouncementSubjects table.
@@ -480,8 +521,10 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // ListOfAssociatedInfluencers bliver ikke loadet i denne version
         return announcement;
     }
+    #endregion
 
 
+    #region AddInfluencerApplication Method
     /// <summary>
     /// This method will attempt to add an influencers application to hte announcement with the specificed id.
     ///
@@ -490,15 +533,17 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     ///     The announcement must not already have a maximum number of applicants
     ///     The influencer must not already have applied to the announcement
     ///     The application is inserted with a default state of pending and +1 is added to the current application counter 
-    ///
+    ///</summary>
     /// 
-    /// Returns:
-    ///   true if the influencer's application was successfully submitted and inserted in to the database else false
+    /// <returns>
+    /// True if the influencer's application was successfully submitted and inserted in to the database else false
+    /// </returns>
     ///
+    /// <remarks>
     /// Exceptions:
     ///   InvalidOperationException is thrown if the maximum number of applicants is reached or if the influencer has already applied to this announcement
     ///   TransactionAbortedException is thrown if any of the steps fail and the transaction is rolled back as a result thereof
-    /// </summary>
+    /// </remarks>
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
     {
         // Creates and opens the database connection
@@ -582,8 +627,88 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
             throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
         }
     }
+    #endregion
+
+    #region Update method
+    public bool Update(Announcement announcement)
+    {
+        // Creates and opens the database connection
+        using IDbConnection connection = CreateConnection();
+        connection.Open();
+
+        // Begins a transaction since we have to make changes by performing multiple queries we have to
+        // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
+        using IDbTransaction transaction = connection.BeginTransaction();
+
+        try
+        {
+            // Updates the information of the announcement with the matching announcementId and returns the amount of rows that was affected ideally this is 1
+            int rowsAffected = connection.Execute(SqlQueryUpdateAnnouncementByAnnouncementId, new
+            {
+                AnnouncementId = announcement.AnnouncementId,
+                Title = announcement.Title,
+                LastEditDateTime = announcement.LastEditDateTime,
+                StartDisplayDateTime = announcement.StartDisplayDateTime,
+                EndDisplayDateTime = announcement.EndDisplayDateTime,
+                MaximumApplicants = announcement.MaximumApplicants,
+                MinimumFollowersRequired = announcement.MinimumFollowersRequired,
+                CommunicationType = announcement.CommunicationType,
+                AnnouncementLanguage = announcement.AnnouncementLanguage,
+                IsKeepProducts = announcement.IsKeepProducts,
+                IsPayoutNegotiable = announcement.IsPayoutNegotiable,
+                TotalPayoutAmount = announcement.TotalPayoutAmount,
+                ShortDescriptionText = announcement.ShortDescriptionText,
+                AdditionalInformationText = announcement.AdditionalInformationText,
+                StatusType = announcement.StatusType,
+                IsVisible = announcement.IsVisible,
+                RowVersion = announcement.RowVersion,
+            }, transaction);
+
+            // If rowsAffected is 0 then the update failed most likely due to concurrency issues and an umatching RowVersion and we throw an exception to indicate another transaction happened first
+            if (rowsAffected == 0)
+            {
+                throw new InvalidOperationException("The announcement was edited by another user. Please reload and try again.");
+            }
+
+            // Deletes all existing subjects for the announcement
+            // This is done to simplify the update process by removing all old subjects and re-inserting the current list
+            connection.Execute(_sqlQueryDelteSubjectsByAnnouncementId, new { AnnouncementId = announcement.AnnouncementId }, transaction);
 
 
+            // Inserts zero or more subject domains in to the AnnouncementSubjects table
+            if (announcement.ListOfSubjects != null)
+            {
+                foreach (string subject in announcement.ListOfSubjects)
+                {
+                    connection.Execute(_sqlQueryInsertAnnouncementSubject, new { AnnouncementId = announcement.AnnouncementId, AnnouncementSubject = subject }, transaction);
+                }
+            }
+
+            // Commits the transactions if everything went as expected
+            transaction.Commit();
+
+            return true;
+        }
+
+        catch (InvalidOperationException)
+        {
+            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+            transaction.Rollback();
+
+            throw;
+        }
+
+        catch (Exception exception)
+        {
+            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+            transaction.Rollback();
+
+            throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
+        }
+    }
+    #endregion
+
+    #region Delete method
     /// <summary>
     /// A Helper class used to map rows from the query for retrieving Announcement
     /// </summary>
@@ -620,4 +745,5 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // If the number of affected rows are more than 0 then returns true else false
         return rowsAffected > 0;
     }
+     #endregion
 }

@@ -32,6 +32,13 @@ public interface IAnnouncementDao
     /// </summary>
     bool AddInfluencerApplication(int announcementId, int influencerUserId);
 
+
+    /// <summary>
+    /// Updates an existing Announcement in the database. Returns true if the update was successful.
+    /// </summary>
+    bool Update(Announcement announcement);
+  
+  
     /// <summary>
     /// Deletes an announcement from the database tables based on its AnnouncementId and returns true if the announcement was deleted elsewise returns false
     /// <returns></returns>
