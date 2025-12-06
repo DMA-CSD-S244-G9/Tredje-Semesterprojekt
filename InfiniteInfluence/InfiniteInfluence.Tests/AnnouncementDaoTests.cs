@@ -876,8 +876,6 @@ public class AnnouncementDaoTests
     }
     #endregion
 
-
-
     #region Test for ID: 022 - Delete Announcement
     /// <summary>
     /// Test for ID: 022 - Delete Announcement
@@ -1009,9 +1007,6 @@ public class AnnouncementDaoTests
 
 
     #endregion
-
-
-
 
     #region Helper methods
 
