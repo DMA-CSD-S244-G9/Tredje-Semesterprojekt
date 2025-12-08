@@ -258,6 +258,7 @@ public class AnnouncementDaoTests
     }
     #endregion
 
+
     #region Test for ID: 006 - GetAll Announcements
 
     /// <summary>
@@ -345,6 +346,7 @@ public class AnnouncementDaoTests
 
     #endregion
 
+
     #region Test for ID: 008 - Sort GetAll Announcement
 
     /// <summary>
@@ -386,6 +388,7 @@ public class AnnouncementDaoTests
 
 
     #endregion
+
 
     #region Test for ID: 007 - GetOne Announcement
 
@@ -455,6 +458,7 @@ public class AnnouncementDaoTests
     }
 
     #endregion
+
 
     #region Test for ID: 005 - AddInfluencerApplication Announcement
 
