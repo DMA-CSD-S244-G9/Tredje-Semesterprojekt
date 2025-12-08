@@ -129,6 +129,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         
         try
         {
+            // Hashes the password before storing it in the database
             string passwordHash = BCryptTool.HashPassword(company.PasswordHash);
 
             // Uses dapper to insert into the Users table and return the newest generated UserId using SCOPE_IDENTITY()
