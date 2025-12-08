@@ -129,9 +129,11 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         
         try
         {
+            string passwordHash = BCryptTool.HashPassword(company.PasswordHash);
+
             // Uses dapper to insert into the Users table and return the newest generated UserId using SCOPE_IDENTITY()
             // Dapper parameterizes the query to prevent SQL injection attacks
-            int newUserId = connection.QuerySingle<int>(queryInsertUser, new { company.LoginEmail, company.PasswordHash }, transaction);
+            int newUserId = connection.QuerySingle<int>(queryInsertUser, new { company.LoginEmail, passwordHash }, transaction);
 
             // Updates the company's UserId to match the newly generated UserId
             company.UserId = newUserId;
