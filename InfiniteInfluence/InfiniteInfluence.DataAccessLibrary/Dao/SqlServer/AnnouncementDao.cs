@@ -319,7 +319,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
         // Begins a transaction Since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
-        using IDbTransaction transaction = connection.BeginTransaction();
+        using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
 
         try
         {
@@ -554,7 +554,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
         // Begins a transaction since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
-        using IDbTransaction transaction = connection.BeginTransaction();
+        using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
 
         try
         {
@@ -641,7 +641,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
         // Begins a transaction since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
-        using IDbTransaction transaction = connection.BeginTransaction();
+        using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
 
         try
         {
