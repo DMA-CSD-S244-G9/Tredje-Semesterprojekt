@@ -843,7 +843,7 @@ public class AnnouncementDaoTests
         // - Arrange - //
         /////////////////
         //Instance of announcementId to update - this must exist in the test database
-        int announcementId = 1;
+        int announcementId = 2;
 
         // Retrieves the existing announcement from the database
         Announcement existing = _announcementDao.GetOne(announcementId);

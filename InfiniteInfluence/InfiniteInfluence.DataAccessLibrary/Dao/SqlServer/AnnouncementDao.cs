@@ -546,90 +546,325 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     ///   InvalidOperationException is thrown if the maximum number of applicants is reached or if the influencer has already applied to this announcement
     ///   TransactionAbortedException is thrown if any of the steps fail and the transaction is rolled back as a result thereof
     /// </remarks>
+    /// 
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
     {
         // Creates and opens the database connection
         using IDbConnection connection = CreateConnection();
         connection.Open();
 
-        // Begins a transaction since we have to make changes by performing multiple queries we have to
-        // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
-        using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+        // Creates a random object that we will use to generate randomized waiting times
+        Random random = new Random();
 
-        try
+        // Defines the maximum amount of times we wish to attempt the transaction
+        const int maximumRetryAttempts = 5;
+
+        // Uses a classic for loop to iterate up to 5 times in case of failed transaction attempts
+        for (int attempt = 1; attempt <= maximumRetryAttempts; attempt++)
         {
-            // Retrieves the current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
-            AnnouncementConcurrencyInfo? announcementWithConcurrencyInfo = connection.QuerySingleOrDefault<AnnouncementConcurrencyInfo>(_sqlQueryGetAnnouncementWithConcurrency, new { AnnouncementId = announcementId }, transaction);
+            // Begins a transaction since we have to make changes by performing multiple queries we have to
+            // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
+            using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted);
 
-            // If the announcement with the specified id was not retrieved from the database then execute this section
-            if (announcementWithConcurrencyInfo == null)
+
+            try
             {
-                throw new InvalidOperationException("The announcement was unable to be found");
+                // Retrieves the current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
+                AnnouncementConcurrencyInfo? announcementWithConcurrencyInfo = connection.QuerySingleOrDefault<AnnouncementConcurrencyInfo>(_sqlQueryGetAnnouncementWithConcurrency, new { AnnouncementId = announcementId }, transaction);
+
+                // If the announcement with the specified id was not retrieved from the database then execute this section
+                if (announcementWithConcurrencyInfo == null)
+                {
+                    throw new InvalidOperationException("The announcement was unable to be found");
+                }
+
+                // Assigns the retrieved values to the variables
+                int currentNumberOfApplicants = announcementWithConcurrencyInfo.CurrentApplicants;
+                int maximumNumberOfApplicants = announcementWithConcurrencyInfo.MaximumApplicants;
+                byte[] rowVersion = announcementWithConcurrencyInfo.RowVersion;
+
+                // If there already are the same or more appicants than the specified maximum of applicants then execute this section
+                // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
+                if (currentNumberOfApplicants >= maximumNumberOfApplicants)
+                {
+                    // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+                }
+
+                // Retrieves the number of application entries for the given influencer userid on the specific application
+                int alreadyApplied = connection.ExecuteScalar<int>(_sqlQueryCheckIfInfluencerAlreadyApplied, new { AnnouncementId = announcementId, UserId = influencerUserId }, transaction);
+
+                // If the influencer has applied to this announcement once or more already then execute this esction
+                if (alreadyApplied > 0)
+                {
+                    // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+                    transaction.Rollback();
+
+                    throw new InvalidOperationException("You have already applied to this announcement.");
+                }
+
+                // Inserts the influencer's application for a collaboration with a status of Pending into the database's InfluencerAnnouncements table
+                int rowsInserted = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
+
+                // If something went wrong during the insertion then execute this esction
+                if (rowsInserted == 0)
+                {
+                    throw new InvalidOperationException("Your submitted application could not be saved");
+                }
+
+                // Only if the rowVersion is the correct value then adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
+                int rowsUpdated = connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
+
+                // If 0 rows were updated it means the rowVersion no longer was a match, meaning some other user updated it first already
+                if (rowsUpdated == 0)
+                {
+                    // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+                    transaction.Rollback();
+
+                    // If the current attempt is the last attempt then execute this section
+                    if (attempt == maximumRetryAttempts)
+                    {
+                        // NOTE: We probably could throw another exception informing the user that somebody else took the last spot, but this exception should suffice I believe?
+                        throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+                    }
+
+                    // Adds a random delay between 10 and 20 mili seconds
+                    int delayInMilliseconds = random.Next(10, 21);
+
+                    // Makes the thread sleep for the decided upon random time period
+                    Thread.Sleep(delayInMilliseconds);
+
+                    // Moves on to the next iteration in the retry loop
+                    continue;
+                }
+
+                // Commits the transactions if everything went as expected
+                transaction.Commit();
+
+                return true;
             }
 
-            // Assigns the retrieved values to the variables
-            int currentNumberOfApplicants = announcementWithConcurrencyInfo.CurrentApplicants;
-            int maximumNumberOfApplicants = announcementWithConcurrencyInfo.MaximumApplicants;
-            byte[] rowVersion = announcementWithConcurrencyInfo.RowVersion;
-
-            // If there already are the same or more appicants than the specified maximum of applicants then execute this section
-            // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
-            if (currentNumberOfApplicants >= maximumNumberOfApplicants)
+            catch (InvalidOperationException)
             {
-                throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+                // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+                transaction.Rollback();
+
+                throw;
             }
 
-            // Retrieves the number of application entries for the given influencer userid on the specific application
-            int alreadyApplied = connection.ExecuteScalar<int>(_sqlQueryCheckIfInfluencerAlreadyApplied, new { AnnouncementId = announcementId, UserId = influencerUserId }, transaction);
-
-            // If the influencer has applied to this announcement once or more already then execute this esction
-            if (alreadyApplied > 0)
+            catch (Exception exception)
             {
-                throw new InvalidOperationException("You have already applied to this announcement.");
+                // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+                transaction.Rollback();
+
+                // If the current attempt is the last attempt then execute this section
+                if (attempt == maximumRetryAttempts)
+                {
+                    throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
+                }
+
+                // Adds a random delay between 10 and 20 mili seconds
+                int delayInMilliseconds = random.Next(10, 21);
+
+                // Makes the thread sleep for the decided upon random time period
+                Thread.Sleep(delayInMilliseconds);
             }
-
-            // Inserts the influencer's application for a collaboration with a status of Pending into the database's InfluencerAnnouncements table
-            int rowsInserted = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
-
-            // If something went wrong during the insertion then execute this esction
-            if (rowsInserted == 0)
-            {
-                throw new InvalidOperationException("Your submitted application could not be saved");
-            }
-
-            // Only if the rowVersion is the correct value then adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
-            int rowsUpdated = connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
-
-            // If 0 rows were updated it means the rowVersion no longer was a match, meaning some other user updated it first already
-            if (rowsUpdated == 0)
-            {
-                // NOTE: We probably could throw another exception informing the user that somebody else took the last spot, but this exception should suffice I believe?
-                throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
-            }
-
-            // Commits the transactions if everything went as expected
-            transaction.Commit();
-
-            return true;
         }
 
-        catch (InvalidOperationException)
-        {
-            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
-            transaction.Rollback();
-
-            throw;
-        }
-
-        catch (Exception exception)
-        {
-            // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
-            transaction.Rollback();
-
-            throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
-        }
+        return false;
     }
+
+
+
+    //public bool AddInfluencerApplication_OLD(int announcementId, int influencerUserId)
+    //{
+    //    // Creates and opens the database connection
+    //    using IDbConnection connection = CreateConnection();
+    //    connection.Open();
+
+    //    // Begins a transaction since we have to make changes by performing multiple queries we have to
+    //    // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
+    //    using IDbTransaction transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
+
+    //    try
+    //    {
+    //        // Retrieves the current number of applicants, the maximum number of applicants, and current row version for the announcement with the specified announcementid
+    //        AnnouncementConcurrencyInfo? announcementWithConcurrencyInfo = connection.QuerySingleOrDefault<AnnouncementConcurrencyInfo>(_sqlQueryGetAnnouncementWithConcurrency, new { AnnouncementId = announcementId }, transaction);
+
+    //        // If the announcement with the specified id was not retrieved from the database then execute this section
+    //        if (announcementWithConcurrencyInfo == null)
+    //        {
+    //            throw new InvalidOperationException("The announcement was unable to be found");
+    //        }
+
+    //        // Assigns the retrieved values to the variables
+    //        int currentNumberOfApplicants = announcementWithConcurrencyInfo.CurrentApplicants;
+    //        int maximumNumberOfApplicants = announcementWithConcurrencyInfo.MaximumApplicants;
+    //        byte[] rowVersion = announcementWithConcurrencyInfo.RowVersion;
+
+    //        // If there already are the same or more appicants than the specified maximum of applicants then execute this section
+    //        // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
+    //        if (currentNumberOfApplicants >= maximumNumberOfApplicants)
+    //        {
+    //            throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+    //        }
+
+    //        // Retrieves the number of application entries for the given influencer userid on the specific application
+    //        int alreadyApplied = connection.ExecuteScalar<int>(_sqlQueryCheckIfInfluencerAlreadyApplied, new { AnnouncementId = announcementId, UserId = influencerUserId }, transaction);
+
+    //        // If the influencer has applied to this announcement once or more already then execute this esction
+    //        if (alreadyApplied > 0)
+    //        {
+    //            throw new InvalidOperationException("You have already applied to this announcement.");
+    //        }
+
+    //        // Inserts the influencer's application for a collaboration with a status of Pending into the database's InfluencerAnnouncements table
+    //        int rowsInserted = connection.Execute(_sqlQueryInsertInfluencerApplication, new { UserId = influencerUserId, AnnouncementId = announcementId }, transaction);
+
+    //        // If something went wrong during the insertion then execute this esction
+    //        if (rowsInserted == 0)
+    //        {
+    //            throw new InvalidOperationException("Your submitted application could not be saved");
+    //        }
+
+    //        // Only if the rowVersion is the correct value then adds +1 to the current number of applicants on the announcement so that it is displayed correctly in the announcement
+    //        int rowsUpdated = connection.Execute(_sqlQueryUpdateCurrentNumberOfApplicants, new { AnnouncementId = announcementId, RowVersion = rowVersion }, transaction);
+
+    //        // If 0 rows were updated it means the rowVersion no longer was a match, meaning some other user updated it first already
+    //        if (rowsUpdated == 0)
+    //        {
+    //            // NOTE: We probably could throw another exception informing the user that somebody else took the last spot, but this exception should suffice I believe?
+    //            throw new InvalidOperationException("The maximum number of applicants has been reached for this announcement.");
+    //        }
+
+    //        // Commits the transactions if everything went as expected
+    //        transaction.Commit();
+
+    //        return true;
+    //    }
+
+    //    catch (InvalidOperationException)
+    //    {
+    //        // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+    //        transaction.Rollback();
+
+    //        throw;
+    //    }
+
+    //    catch (Exception exception)
+    //    {
+    //        // If something went wrong during the insertion then we roll back to ensure atomicity and a stable database
+    //        transaction.Rollback();
+
+    //        throw new TransactionAbortedException("Transaction failed: Something went wrong during the transaction, and a rollback to a stable version prior to the insertion has been performed. See inner exception for details.", exception);
+    //    }
+    //}
     #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+     * Laver en live lock
+     * - må jeg placere?
+     * - Kan jeg placere en bold på bordet?
+     * 
+     * 
+     * tjek er der en plads til en bold på bordet?
+     * - Så sætter
+     * 
+     * 
+     * 
+     * Rollback
+     * 
+     * 
+     * Samme lykke på bordet:
+     * - er der 
+     * 
+     * 
+     * 
+     * Tilføjer en random mellem 10 til 20 milisekunder?
+     * - så er der bare en som er hurtigere end andre
+     * - de andre har talt at der er tre
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * Kombiner 
+     * Read uncommitted
+     * Lykke
+     * Ventetids pause
+     * 
+     * 
+     * 
+     * Optimistisk - CPU tid
+     * 
+     * 
+     * Pessimistisk - der kommer en kollision og det kan mærkes for det tager tid for databasen at finde ud af at
+     * der er en deadlock og hvem der skal slåes ihjel, og det er som regel random.
+     * 
+     * 
+     * 
+     * Livelock - optimistisk 
+     * 
+     * 
+     * Phantoms?
+     * 
+     * 
+     * 
+     * Værdien er bare beregnet, (computeret)
+     * 
+     * 
+     * 
+     * 
+     * 
+     * Anomalitype
+     * Vi har fat i at indsætte data i et row
+     * Phantom reads or writes (Phantoms) 
+     * 
+     * Ved at indsætte hele rows eller slette hele rows 
+     * 
+     * 
+     * Køres serializable så kan kun den som har semaphoren gøre noget
+     * 
+     * 
+     * 
+     * 
+     * Vi smider alle tingene 
+     * 
+     * 
+     * 
+     * Dette er et phantom write
+     * 
+     * 
+     * 
+     * Vi bør slet ikke have dette felt, men det gør det hurtigere at skrive det på siden.
+     * Det er nødvendigt at have en stabil værdi, og da vi bruger 
+     * 
+     * I sjældne tilfælde kan vi 
+     * 
+     * 
+     * 
+     */
 
 
     #region Update method
