@@ -1,11 +1,9 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 
 namespace InfiniteInfluence.API.Controllers;
-
 
 
 [ApiController]
@@ -62,7 +60,7 @@ public class InfluencersController : ControllerBase
         try
         {
             Influencer? influencer = _influencerDao.GetOne(userId);
-            
+
             // If the influencer with the specified userId does not exist, a 400 Bad Request response is returned.
             if (influencer == null)
             {

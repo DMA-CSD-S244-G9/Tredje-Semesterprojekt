@@ -1,10 +1,10 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
-using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
-using System;
+
 
 namespace InfiniteInfluence.API.Controllers;
+
 
 /// <summary>
 /// Provides API endpoints for managing company data, including creating, retrieving, 
@@ -22,7 +22,7 @@ namespace InfiniteInfluence.API.Controllers;
 // Applys attributes to define this class as an API controller and set the route
 // The route is set to the name of the controller without the "Controller" suffix
 [ApiController]
-[Route("[controller]")] 
+[Route("[controller]")]
 public class CompanysController : Controller
 {
     #region Attributes and Constructor
