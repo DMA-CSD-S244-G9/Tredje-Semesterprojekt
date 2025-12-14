@@ -1,11 +1,8 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+
 
 public interface IAnnouncementDao
 {
@@ -37,8 +34,8 @@ public interface IAnnouncementDao
     /// Updates an existing Announcement in the database. Returns true if the update was successful.
     /// </summary>
     bool Update(Announcement announcement);
-  
-  
+
+
     /// <summary>
     /// Deletes an announcement from the database tables based on its AnnouncementId and returns true if the announcement was deleted elsewise returns false
     /// <returns></returns>

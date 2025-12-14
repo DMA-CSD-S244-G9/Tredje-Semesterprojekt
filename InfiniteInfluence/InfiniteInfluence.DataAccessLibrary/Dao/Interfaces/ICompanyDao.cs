@@ -1,11 +1,8 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+
 
 /// <summary>
 /// Defines the contract for data access operations related to companies.

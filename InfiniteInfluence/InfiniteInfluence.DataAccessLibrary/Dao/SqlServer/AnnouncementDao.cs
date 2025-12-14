@@ -1,21 +1,11 @@
 ﻿using Dapper;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
-
 
 
 public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
@@ -27,7 +17,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     }
     #endregion
 
-    
+
     #region SQL Queries - Create
 
     // This SQL query inserts a new announcement into the Announcements table.
@@ -67,7 +57,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
 
     #region SQL Queries - GetAll
-    
+
     // This SQL query retrieves all of the announcement records from the database's announcement table, the name of the company that created each announcement is also included.
     // The company name information is obtained by joining the Announcements table with the Companys table, based on the userId column that they share.
     //
@@ -123,7 +113,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
 
     #region SQL Queries - GetOne
-    
+
     // This SQL query retrieves ONE specific announcement from the database, based on the supplied @AnnouncementId and then
     // also LEFT JOINs the "Companys" table so we can get the company name belonging to the user who created the announcement.
     //
@@ -984,5 +974,5 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // If the number of affected rows are more than 0 then returns true else false
         return rowsAffected > 0;
     }
-     #endregion
+    #endregion
 }

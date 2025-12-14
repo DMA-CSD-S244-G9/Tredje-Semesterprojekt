@@ -2,16 +2,12 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.DataAccessLibrary.Tools;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
+
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
+
 
 /// <summary>
 /// Provides data access operations for managing company in the database.
@@ -24,7 +20,7 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 public class CompanyDao : BaseConnectionDao, ICompanyDao
 {
     #region Constructors
- 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CompanyDao"/> class 
     /// with the specified database connection string.
@@ -126,7 +122,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         // Begins a transaction Since we have to make changes by performing multiple queries we have to
         // use a transaction to ensure that all inserts succeed together or fail together thereby enforcing atomicity
         using IDbTransaction transaction = connection.BeginTransaction();
-        
+
         try
         {
             // Hashes the password before storing it in the database
@@ -141,29 +137,29 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
 
             // Inserts into the Companys table using the newly generated UserId
             connection.Execute(queryInsertCompany, new
-                {
-                    UserId = company.UserId,
-                    company.IsCompanyVerified,
-                    company.VerificationDate,
-                    company.CompanyName,
-                    company.CompanyLogoUrl,
-                    company.CeoName,
-                    company.DateOfEstablishment,
-                    company.OrganisationNumber,
-                    company.StandardIndustryClassification,
-                    company.WebsiteUrl,
-                    company.CompanyEmail,
-                    company.CompanyPhoneNumber,
-                    company.Country,
-                    company.CompanyState,
-                    company.City,
-                    company.CompanyAddress,
-                    company.CompanyLanguage,
-                    company.Biography,
-                    company.ContactPerson,
-                    company.ContactEmailAddress,
-                    company.ContactPhoneNumber
-                }, transaction);
+            {
+                UserId = company.UserId,
+                company.IsCompanyVerified,
+                company.VerificationDate,
+                company.CompanyName,
+                company.CompanyLogoUrl,
+                company.CeoName,
+                company.DateOfEstablishment,
+                company.OrganisationNumber,
+                company.StandardIndustryClassification,
+                company.WebsiteUrl,
+                company.CompanyEmail,
+                company.CompanyPhoneNumber,
+                company.Country,
+                company.CompanyState,
+                company.City,
+                company.CompanyAddress,
+                company.CompanyLanguage,
+                company.Biography,
+                company.ContactPerson,
+                company.ContactEmailAddress,
+                company.ContactPhoneNumber
+            }, transaction);
 
 
             // Inserts zero or more company domains in to the CompanyDomain table 

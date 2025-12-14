@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InfiniteInfluence.DataAccessLibrary.Model;
+﻿namespace InfiniteInfluence.DataAccessLibrary.Model;
 
 
 public class Influencer : BaseUser
@@ -27,7 +21,7 @@ public class Influencer : BaseUser
     public string InfluencerLanguage { get; set; } = string.Empty;
     public string Biography { get; set; } = string.Empty;
 
-    
+
     public string? InstagramProfileUrl { get; set; } = string.Empty;
     public int InstagramFollowers { get; set; }
 
@@ -59,12 +53,12 @@ public class Influencer : BaseUser
     /// This default constructor is necessary to ensure deserialization.
     /// The lack of the default constructor was what lead issues during one of the live code project sessions.
     /// </summary>
-    public Influencer() 
-    { 
-    
+    public Influencer()
+    {
+
     }
 
-    
+
 
     public Influencer(int userId, string loginEmail, string passwordHash, bool isInfluencerVerified, DateTime? verificationDate, string displayName, string firstName, string lastName, string profileImageUrl, IEnumerable<string> influencerDomains, int? age, string gender, string country, string influencerState, string city, string influencerLanguage, string biography, string instagramProfileUrl, int instagramFollowers, string youTubeProfileUrl, int youTubeFollowers, string tikTokProfileUrl, int tikTokFollower, string snapchatProfileUrl, int snapchatFollowers, string xProfileUrl, int xFollowers, string contactPhoneNumber, string contactEmailAddress)
     {

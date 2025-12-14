@@ -2,14 +2,7 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.DataAccessLibrary.Tools;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 
 
@@ -209,7 +202,7 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
     /// </exception>
     public Influencer? GetOne(int userId)
     {
-        
+
         using IDbConnection connection = CreateConnection();
         {
             // Dapper will be mapping both the BaseUser and the Influencer classes' properties
@@ -231,7 +224,6 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
         }
     }
     #endregion
-
 }
 
 
