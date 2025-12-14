@@ -17,9 +17,6 @@ public partial class MainForm : Form
 
         // Defines the minimum and maximum size for the form forcing it to be the same size all the time
         SetFormSize();
-
-        // Adds a yellow tint animation to the picture box elements which are the white stars
-        AddHoverTintAnimationsToPictureBoxes();
     }
 
 
@@ -89,17 +86,5 @@ public partial class MainForm : Form
         // Defines the minimum and maximum size for the form forcing it to be the same size all the time
         MaximumSize = new Size(950, 660);
         MinimumSize = new Size(950, 660);
-    }
-
-
-    /// <summary>
-    /// Adds hover tint animations to all of the specified pictureBox star images.
-    /// </summary>
-    private void AddHoverTintAnimationsToPictureBoxes()
-    {
-        // Apply orange tint to PictureBox objects over a half a second's duration
-        HoverTintAnimator.Attach(pictureBoxStarSmall, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarMedium, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarLarge, Color.Orange, 500);
     }
 }

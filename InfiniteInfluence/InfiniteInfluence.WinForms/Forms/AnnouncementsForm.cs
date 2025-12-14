@@ -37,7 +37,7 @@ public partial class AnnouncementsForm : Form
         InitializeComponent();
 
         // Initializes the API client with the url and port matching the web api
-        _announcementApiClient = new AnnouncementApiClient("https://localhost:32769");
+        _announcementApiClient = new AnnouncementApiClient("https://localhost:32771");
 
         // Creates and adds the grid data view controls to the panel
         _announcementGridControl = new AnnouncementGridControl();

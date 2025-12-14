@@ -34,7 +34,7 @@
             buttonAnnouncementDelete = new Button();
             panelInfluencerButtonRow = new Panel();
             panelInfluencerSearch = new Panel();
-            roundedTextBoxAnnouncementsSearch = new InfiniteInfluence.WinFormsApp.Components.RoundedTextBox();
+            roundedTextBoxAnnouncementsSearch = new TextBox();
             panelAnnouncementContent = new Panel();
             panelInfluencerButtonRow.SuspendLayout();
             panelInfluencerSearch.SuspendLayout();
@@ -135,16 +135,11 @@
             // 
             roundedTextBoxAnnouncementsSearch.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             roundedTextBoxAnnouncementsSearch.BackColor = Color.FromArgb(60, 54, 76);
-            roundedTextBoxAnnouncementsSearch.BorderColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxAnnouncementsSearch.BorderFocusColor = Color.FromArgb(109, 84, 181);
-            roundedTextBoxAnnouncementsSearch.BorderThickness = 3;
-            roundedTextBoxAnnouncementsSearch.CornerRadius = 8;
             roundedTextBoxAnnouncementsSearch.Font = new Font("Segoe UI", 9F);
             roundedTextBoxAnnouncementsSearch.ForeColor = Color.FromArgb(134, 129, 158);
             roundedTextBoxAnnouncementsSearch.Location = new Point(727, 33);
             roundedTextBoxAnnouncementsSearch.Name = "roundedTextBoxAnnouncementsSearch";
             roundedTextBoxAnnouncementsSearch.Padding = new Padding(15, 2, 15, 2);
-            roundedTextBoxAnnouncementsSearch.PlaceholderColor = Color.FromArgb(150, 144, 170);
             roundedTextBoxAnnouncementsSearch.PlaceholderText = "🔎   Search...";
             roundedTextBoxAnnouncementsSearch.Size = new Size(200, 31);
             roundedTextBoxAnnouncementsSearch.TabIndex = 5;
@@ -183,7 +178,7 @@
         private Button buttonAnnouncementDelete;
         private Panel panelInfluencerButtonRow;
         private Panel panelInfluencerSearch;
-        private Components.RoundedTextBox roundedTextBoxAnnouncementsSearch;
+        private TextBox roundedTextBoxAnnouncementsSearch;
         private Panel panelAnnouncementContent;
     }
 }
