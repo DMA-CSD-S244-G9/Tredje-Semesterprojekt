@@ -1,5 +1,4 @@
 ﻿using FontAwesome.Sharp;
-using InfiniteInfluence.WinFormsApp.Components;
 using InfiniteInfluence.WinFormsApp.Forms;
 
 
@@ -15,7 +14,7 @@ public partial class DashBoard : Form
 {
     // A reference to the login form so we can show it again when logging out
     private MainForm _loginForm;
-    
+
     // The chosen form window to be displayed inside of the designated area for different content
     private Form currentFormWindow;
 

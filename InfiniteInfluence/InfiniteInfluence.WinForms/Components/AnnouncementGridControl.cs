@@ -1,14 +1,9 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Model;
-using InfiniteInfluence.WinFormsApp.Components;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 
 namespace InfiniteInfluence.WinFormsApp.Components;
+
 
 /// <summary>
 /// A reusable WinForms <see cref="UserControl"/> that encapsulates all of the DataGridView related

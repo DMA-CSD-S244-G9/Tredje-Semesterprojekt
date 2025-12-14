@@ -1,7 +1,4 @@
-﻿using InfiniteInfluence.WinFormsApp.Components;
-
-
-namespace InfiniteInfluence.WinFormsApp;
+﻿namespace InfiniteInfluence.WinFormsApp;
 
 
 /// <summary>

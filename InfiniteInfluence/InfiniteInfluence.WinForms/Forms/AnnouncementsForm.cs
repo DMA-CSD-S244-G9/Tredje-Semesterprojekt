@@ -2,10 +2,6 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.WinFormsApp.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 
 
 namespace InfiniteInfluence.WinFormsApp.Forms;
