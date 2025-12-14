@@ -1,5 +1,4 @@
-﻿using Azure;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
 

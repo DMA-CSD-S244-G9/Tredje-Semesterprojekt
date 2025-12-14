@@ -1,13 +1,10 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InfiniteInfluence.ApiClient;
+
 
 /// <summary>
 /// Provides methods for interacting with the Company API, including creating, retrieving, and deleting company records.

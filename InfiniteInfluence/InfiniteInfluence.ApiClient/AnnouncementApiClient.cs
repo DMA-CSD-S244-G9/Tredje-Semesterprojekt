@@ -1,14 +1,8 @@
 ﻿using InfiniteInfluence.API.Dtos;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
-using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace InfiniteInfluence.ApiClient;
@@ -176,8 +170,8 @@ public class AnnouncementApiClient : IAnnouncementDao
         return response.Data;
     }
     #endregion
-    
-    
+
+
     #region Update announcement
     // UPDATE:
     // ENDPOINT: /announcements/Edit?id={announcementId}
