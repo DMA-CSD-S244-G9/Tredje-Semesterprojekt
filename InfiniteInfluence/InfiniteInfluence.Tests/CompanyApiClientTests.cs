@@ -1,15 +1,10 @@
-﻿using Dapper;
-using InfiniteInfluence.API.Controllers;
-using InfiniteInfluence.ApiClient;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging.Abstractions;
-using RestSharp; //NullLogger for testing
+
 
 namespace InfiniteInfluence.Tests;
+
 
 public class CompanyApiClientTests
 {
@@ -43,7 +38,7 @@ public class CompanyApiClientTests
         /////////////////
 
         // Instantiate with a userId that is known to exist in the test database
-        int existingCompanyUserId = 6; 
+        int existingCompanyUserId = 6;
 
         /////////////
         // - Act - //

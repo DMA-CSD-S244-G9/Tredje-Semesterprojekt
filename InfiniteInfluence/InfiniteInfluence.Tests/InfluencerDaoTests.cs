@@ -1,9 +1,9 @@
 using Dapper;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.Data.SqlClient;
 using System.Data;
+
 
 namespace InfiniteInfluence.Tests;
 
@@ -39,7 +39,7 @@ public class InfluencerDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         connection.Open();
 
 
@@ -47,7 +47,7 @@ public class InfluencerDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.That(connection.State, Is.EqualTo(ConnectionState.Open));
     }
 
@@ -74,7 +74,7 @@ public class InfluencerDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
-        
+
         Influencer influencer = new Influencer
         {
             // User properties
@@ -121,7 +121,7 @@ public class InfluencerDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         int newUserId = _influencerDao.Create(influencer);
 
 
@@ -129,10 +129,10 @@ public class InfluencerDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.That(newUserId, Is.GreaterThan(0), "The Create method should return a UserId that is above 0");
         Assert.That(influencer.UserId, Is.EqualTo(newUserId), "The Influencer.UserId should be updated and be equals to that of the newly generated UserID.");
-        
+
 
         //////////////////
         // - Clean up - //
@@ -163,7 +163,7 @@ public class InfluencerDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
-        
+
         // We first create a new influencer using the Create method,
         // so the test does not depend on external seed data.
 
@@ -204,7 +204,7 @@ public class InfluencerDaoTests
             XProfileUrl = "https://x.com/getone_test",
             XFollowers = 2222,
             ContactPhoneNumber = "+45 12 34 56 78",
-//            ContactEmailAddress = $"contact_getone_{uniqueSuffix}@example.com",
+            //            ContactEmailAddress = $"contact_getone_{uniqueSuffix}@example.com",
             ContactEmailAddress = $"c_{uniqueSuffix}@x.com",
             InfluencerDomains = new System.Collections.Generic.List<string>
                 {
@@ -221,7 +221,7 @@ public class InfluencerDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         Influencer? foundInfluencer = _influencerDao.GetOne(createdUserId);
 
 
@@ -229,7 +229,7 @@ public class InfluencerDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.That(foundInfluencer, Is.Not.Null, "GetOne should return an influencer for an existing UserId.");
         Assert.That(foundInfluencer!.UserId, Is.EqualTo(createdUserId));
 
@@ -260,7 +260,7 @@ public class InfluencerDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
-        
+
         int nonExistingUserId = 500;
 
 
@@ -268,7 +268,7 @@ public class InfluencerDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         Influencer? foundInfluencer = _influencerDao.GetOne(nonExistingUserId);
 
 
@@ -276,7 +276,7 @@ public class InfluencerDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.That(foundInfluencer, Is.Null, "GetOne should return null for a non-existing UserId.");
     }
 

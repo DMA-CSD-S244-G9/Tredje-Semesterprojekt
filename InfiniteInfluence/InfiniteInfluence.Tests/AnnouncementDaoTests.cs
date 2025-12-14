@@ -1,20 +1,8 @@
 ﻿using Dapper;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.Data.SqlClient;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using System.Transactions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
 
 
 namespace InfiniteInfluence.Tests;
@@ -58,7 +46,7 @@ public class AnnouncementDaoTests
 
         // Prepares for connecting to the database
         using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
-        
+
         // Creates an announcement object with the very basic requirements
         Announcement announcement = CreateTestAnnouncement();
 
@@ -94,7 +82,7 @@ public class AnnouncementDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.That(newAnnouncementId, Is.GreaterThan(0));
         Assert.That(countAfter, Is.EqualTo(countBefore + 1));
 
@@ -222,7 +210,7 @@ public class AnnouncementDaoTests
         // Each subject can only hold 20 characters, so we insert more than 20 to provoke an error
         announcement.ListOfSubjects = new List<string> { "This is a very long subject and should cause an error upon insertion leading to a rollback " };
 
-        
+
 
         ////////////////
         // - Assert - //
@@ -244,7 +232,7 @@ public class AnnouncementDaoTests
 
         // Gets the amount of registered announcements in the Announcement table after the attempted creation of the announcement the before and after should be equal in this case since the insertion should have faiked
         int countAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM Announcements");
-        
+
         // The counters from before and after are expected to be equals since the insertion of data should have failed due
         Assert.That(countAfter, Is.EqualTo(countBefore), "A new Announcement should not be added when the transaction has performed a rollback.");
 
@@ -253,7 +241,7 @@ public class AnnouncementDaoTests
         //////////////////
         // - Clean up - //
         //////////////////
-        
+
         // Note: clean up shouldn't be needed here, because the transaction did this for us by rolling back so nothing was ever inserted
     }
     #endregion
@@ -299,7 +287,7 @@ public class AnnouncementDaoTests
         ////////////////
         // - Assert - //
         ////////////////
-        
+
         Assert.IsTrue(countBefore < countAfter);
 
 
@@ -364,7 +352,7 @@ public class AnnouncementDaoTests
         /////////////////
         // - Arrange - //
         /////////////////
-        
+
         // Gets all announcements from the database
         List<Announcement> listOfAnnouncements = _announcementDao.GetAll().ToList();
 
@@ -372,7 +360,7 @@ public class AnnouncementDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         // Sorts the announcements by StartDisplayDateTime in descending order
         List<Announcement> announcementSortedByDisplayDate = listOfAnnouncements.OrderByDescending
             (announcement => announcement.StartDisplayDateTime).ToList();
@@ -381,7 +369,7 @@ public class AnnouncementDaoTests
         /////////////
         // - Act - //
         /////////////
-        
+
         // Test whether the original list is equal to the sorted list
         Assert.That(listOfAnnouncements, Is.Not.EqualTo(announcementSortedByDisplayDate), "Announcements are not sorted by StartDisplayDateTime in descending order.");
     }
@@ -608,7 +596,7 @@ public class AnnouncementDaoTests
         //////////////////
         // - Clean up - //
         //////////////////
-        
+
         finally
         {
             connection.Execute("UPDATE Announcements SET maximumApplicants = @Max WHERE announcementId = @Id", new { Max = maxApplicantsOriginal, Id = announcementId });
@@ -950,11 +938,11 @@ public class AnnouncementDaoTests
         // SQL Query for adding influencer applicants to the announcement
         const string insertApplicationSql = @"
             INSERT INTO InfluencerAnnouncements (userId, announcementId, applicationState)
-            VALUES (@UserId, @AnnouncementId, @State);" ;
+            VALUES (@UserId, @AnnouncementId, @State);";
 
         // Inserts an influencer with the UserId of 1 in to the test data
         connection.Execute(insertApplicationSql, new { UserId = 1, AnnouncementId = announcementId, State = "Pending" });
-            
+
         // Inserts an influencer with the UserId of 2 in to the test data
         connection.Execute(insertApplicationSql, new { UserId = 2, AnnouncementId = announcementId, State = "Pending" });
 
@@ -977,7 +965,7 @@ public class AnnouncementDaoTests
         /////////////
         // - Act - //
         /////////////
-            
+
         bool isDeleted = _announcementDao.Delete(announcementId);
 
         // Returns the amount of rows with a matching announcement is retrieved which should be 0 due to the deletion

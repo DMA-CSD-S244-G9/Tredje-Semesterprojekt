@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 
 namespace InfiniteInfluence.Tests;
 
+
 public class CompanyDaoTests
 {
     private const string _dataBaseConnectionString = "Data Source=localhost;Initial Catalog=InfiniteInfluence;User ID=sa;Password=@12tf56so;Trust Server Certificate=True";
@@ -39,7 +40,7 @@ public class CompanyDaoTests
             verificationDate: DateTime.UtcNow,
             companyName: "Catch Sushi - CompanyName",
             companyLogoUrl: "companyLogoUrl",
-            companyDomains: new List<string> { "Food", "Vlog", "Starters"},
+            companyDomains: new List<string> { "Food", "Vlog", "Starters" },
             ceoName: "Catch Ceo Name",
             dateOfEstablishment: new DateTime(1995, 3, 1),
             organisationNumber: "12345OrgNumber",
@@ -148,6 +149,6 @@ public class CompanyDaoTests
           DELETE FROM Users WHERE userId = @UserId;", new { UserId = newCompanyId });
     }
 
-    
+
     #endregion
 }

@@ -3,10 +3,13 @@ using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions; //NullLogger for testing
+
+// NullLogger for testing
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace InfiniteInfluence.Tests;
+
 
 public class CompanyApiTests
 {
