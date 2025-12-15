@@ -779,8 +779,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     /// Updates an existing announcement in the database's Announcements table,
     /// and updates the associated subjects in the AnnouncementSubjects table.
     /// If the announcement does not exist or has been modified by another user, an exception is thrown.
-    /// It uses optimistic concurrency control by checking the RowVersion to ensure 
-    /// that no other user has modified the announcement since it was last retrieved.
+    /// The method uses a database transaction to ensure atomicity, meaning that either all updates announcement and subjects
     /// </remarks>
     public bool Update(Announcement announcement)
     {
