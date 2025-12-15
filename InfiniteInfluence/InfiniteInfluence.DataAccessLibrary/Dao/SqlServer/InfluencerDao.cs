@@ -5,13 +5,28 @@ using InfiniteInfluence.DataAccessLibrary.Tools;
 using System.Data;
 using System.Transactions;
 
-
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 
+
+///<summary>
+/// This class provides data access methods for managing Influencer entities in a SQL Server database.
+/// It includes functionality to create new influencers and retrieve existing ones by their user ID.
+/// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
+///</summary>
 
 public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 {
     #region Constructors
+    /// <summary>
+    /// Empty constructor that calls the base class constructor with the provided connection string
+    /// This allows the InfluencerDao to inherit the database connection functionality from BaseConnectionDao
+    /// 
+    /// How it works:
+    /// - In API's program, InfluencerDao is instansiated with a connection string
+    /// - It sends the string to BaseConnectionDao which stores it
+    /// - Every time InfluencerDao needs to access the database, it calls CreateConnection()
+    /// - CreateConnection() creates a SqlConnection using that stored connection string
+    /// </summary>
     public InfluencerDao(string dataBaseConnectionString) : base(dataBaseConnectionString)
     {
 
@@ -96,6 +111,20 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 
 
     #region Create Influencer
+    /// <summary>
+    /// Creates a new Influencer in the database.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Inserts data into both the Users and Influencers tables,
+    /// storing the password securely using hashing.
+    /// 
+    /// Transaction management is employed to ensure atomicity of the operation.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// This method returns the newly created Influencer's UserId.
+    /// </returns>
     public int Create(Influencer influencer)
     {
 

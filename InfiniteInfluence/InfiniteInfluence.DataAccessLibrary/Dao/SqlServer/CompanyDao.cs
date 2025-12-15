@@ -11,20 +11,17 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 
 /// <summary>
 /// Provides data access operations for managing company in the database.
-/// </summary>
-/// 
-/// <remarks>
 /// This class is responsible for creating, retrieving, and deleting company records, 
 /// It ensures atomicity of operations by utilizing transactions for multi-step database interactions.
 /// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
-/// </remarks>
+/// </summary>
 public class CompanyDao : BaseConnectionDao, ICompanyDao
 {
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CompanyDao"/> class 
-    /// with the specified database connection string.
+    /// Empty constructor that calls the base class constructor with the provided connection string
+    /// This allows the CompanyDao to inherit the database connection functionality from BaseConnectionDao
     /// 
     /// How it works:
     /// - In API's program, CompanyDao is instansiated with a connection string
@@ -32,10 +29,6 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     /// - Every time CompanyDAO needs to access the database, it calls CreateConnection()
     /// - CreateConnection() creates a SqlConnection using that stored connection string
     /// </summary>
-    /// 
-    /// <param name="connectionString">
-    /// The connection string used to establish a connection to the database.
-    /// </param>
     public CompanyDao(string connectionString) : base(connectionString)
     {
 
