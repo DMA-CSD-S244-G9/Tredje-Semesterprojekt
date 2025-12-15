@@ -154,16 +154,12 @@ public class CompanyController : Controller
     /// 
     /// <remarks>
     /// This method attempts to retrieve the company profile using the provided 
-    /// <param name="userId"/>. If an error occurs during the retrieval process, the error is logged, and an appropriate error
+    /// userud. If an error occurs during the retrieval process, the error is logged, and an appropriate error
     /// message is added to the model state for display in the view.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose company profile is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="IActionResult"/> that renders the company profile view if the profile is successfully retrieved;
+    /// An IActionResult that renders the company profile view if the profile is successfully retrieved;
     /// otherwise, renders the view with an error message if an exception occurs.
     /// </returns>
     [HttpGet]
