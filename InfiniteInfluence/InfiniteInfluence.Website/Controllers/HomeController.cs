@@ -10,24 +10,18 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    // TODO: Use this to obtain the list of announcement items that should be shown on the page later
-    //    IInfluencerDao _InfluencerApiClient = new InfluencerApiClient("https://localhost:32773");
-
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     public IActionResult Login()
     {
         return View();
     }
+
 
     public IActionResult ChooseProfileType()
     {
