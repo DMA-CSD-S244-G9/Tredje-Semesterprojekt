@@ -219,12 +219,47 @@ public class AnnouncementApiClient : IAnnouncementDao
 
 
     #region Add influencer application to announcement
-    // POST
-    // ENDPOINT: /announcements/{announcementId}/apply
+    /// <summary>
+    /// Submits an application from an influencer to a specific announcement.
+    /// </summary>
+    /// 
+    /// <param name="announcementId">
+    /// The identifier of the announcement the influencer is applying to.
+    /// </param>
+    /// 
+    /// <param name="influencerUserId">
+    /// The identifier of the influencer submitting the application.
+    /// </param>
+    /// 
+    /// <returns>
+    /// Returns <c>true</c> if the application was successfully created; otherwise <c>false</c>.
+    /// </returns>
+    /// 
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the REST Web API rejects the request with a 400 (Bad Request),
+    /// typically caused by business rule violations such as no remaining available slots,
+    /// duplicate applications, or other domain-specific constraints.
+    /// </exception>
+    /// 
+    /// <exception cref="Exception">
+    /// Thrown if the REST Web API returns an unsuccessful HTTP status code (non-2xx),
+    /// indicating a server-side, transport-level, or unexpected error.
+    /// </exception>
+    /// 
+    /// <remarks>
+    /// Method:      POST  
+    /// Controller:  Announcement  
+    /// Endpoint:    /announcements/{announcementId}
+    /// 
+    /// This method sends the influencer identifier as a JSON payload to the REST Web API,
+    /// which handles validation and business logic related to influencer applications.
+    /// Business rule violations are communicated using HTTP 400 (Bad Request) and handled
+    /// explicitly to allow user-friendly feedback in the presentation layer.
+    /// </remarks>
     public bool AddInfluencerApplication(int announcementId, int influencerUserId)
     {
         // Creates a rest request representing a HTTP request
-        RestRequest? restHttpRequest = new RestRequest($"announcements/{announcementId}/apply", Method.Post);
+        RestRequest? restHttpRequest = new RestRequest($"announcements/{announcementId}", Method.Post);
 
         // RestSharp serializes the c# object to a JSON format and adds it to the body in the HTTP request, and when
         // the request is sent the API automatically deserializes the JSON back to a C# object
@@ -234,11 +269,6 @@ public class AnnouncementApiClient : IAnnouncementDao
         // a HTTP status code, whether the call was a success, potential exception info and the 
         // deserialized C# object that restsharp has already mapped for us under the hood
         RestResponse<bool> restHttpResponse = _restClient.Execute<bool>(restHttpRequest);
-
-        if (restHttpResponse == null)
-        {
-            throw new Exception("Connection Failure: There were no response from the server.");
-        }
 
         // If the REST Web API returns a Bad Request this would typically be from our InvalidOperationException business logic exception
         if (restHttpResponse.StatusCode == HttpStatusCode.BadRequest)
@@ -273,8 +303,41 @@ public class AnnouncementApiClient : IAnnouncementDao
 
 
     #region Update announcement
-    // UPDATE:
-    // ENDPOINT: /announcements/Edit?id={announcementId}
+    /// <summary>
+    /// Updates an existing announcement in the system.
+    /// </summary>
+    /// 
+    /// <param name="announcement">
+    /// The <see cref="Announcement"/> object containing the updated data.
+    /// </param>
+    /// 
+    /// <returns>
+    /// Returns <c>true</c> if the announcement was successfully updated; otherwise <c>false</c>.
+    /// </returns>
+    /// 
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if the supplied <paramref name="announcement"/> is <c>null</c>.
+    /// </exception>
+    /// 
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if a concurrency conflict occurs (HTTP 409 Conflict), typically because the announcement
+    /// was modified by another user since it was last retrieved.
+    /// </exception>
+    /// 
+    /// <exception cref="Exception">
+    /// Thrown if the REST Web API returns an unsuccessful HTTP status code (non-2xx),
+    /// indicating a server-side or transport-level error.
+    /// </exception>
+    /// 
+    /// <remarks>
+    /// Method:      PUT  
+    /// Controller:  Announcement  
+    /// Endpoint:    /announcements/{announcementId}
+    /// 
+    /// If the API detects that the announcement has been modified by another user, a 409 (Conflict) status code is returned and handled explicitly.
+    /// The announcement data is mapped to an <see cref="AnnouncementUpdateDto"/> before being sent to the API
+    /// to ensure only updatable fields are transferred.
+    /// </remarks>
     public bool Update(Announcement announcement)
     {
         // Validates that the announcement object is not null
@@ -297,11 +360,6 @@ public class AnnouncementApiClient : IAnnouncementDao
         // a HTTP status code, whether the call was a success, potential exception info and the 
         // deserialized C# object that restsharp has already mapped for us under the hood
         RestResponse<bool> restHttpResponse = _restClient.Execute<bool>(restHttpRequest);
-
-        if (restHttpResponse == null)
-        {
-            throw new Exception("Connection Failure: There were no response from the server.");
-        }
 
         // In case of an expected concurrency conflict
         if (restHttpResponse.StatusCode == HttpStatusCode.Conflict)

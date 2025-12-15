@@ -78,12 +78,12 @@ public class AnnouncementsController : ControllerBase
     #region Get one Announcement by ID
     // GET
     // ENDPOINT: /announcements/{announcementId}
-    [HttpGet("{id:int}")]
-    public ActionResult<Announcement> GetOne(int id)
+    [HttpGet("{announcementId:int}")]
+    public ActionResult<Announcement> GetOne(int announcementId)
     {
         try
         {
-            Announcement? announcement = _announcementDao.GetOne(id);
+            Announcement? announcement = _announcementDao.GetOne(announcementId);
 
             // If no announcement was found then execute this section
             if (announcement == null)
@@ -96,7 +96,7 @@ public class AnnouncementsController : ControllerBase
 
         catch (Exception exception)
         {
-            _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {Id}.", id);
+            _logger.LogError(exception, "An error has occurred when attempting to get an announcement with id {Id}.", announcementId);
 
             string? innerMessage = exception.InnerException?.Message;
 
@@ -135,8 +135,8 @@ public class AnnouncementsController : ControllerBase
     /// body.
     /// </returns>
     // POST
-    // ENDPOINT: /announcements/{announcementId}/apply
-    [HttpPost("{announcementId}/apply")]
+    // ENDPOINT: /announcements/{announcementId}
+    [HttpPost("{announcementId}")]
     public IActionResult Apply(int announcementId, [FromBody] ApplyRequest request)
     {
         try
@@ -224,19 +224,19 @@ public class AnnouncementsController : ControllerBase
     /// operation did not modify any data; or an appropriate HTTP status code indicating the result of the operation.</returns>
     // POST
     // ENDPOINT: /announcements/edit?id={announcementId}
-    [HttpPut("{id}")]
-    public ActionResult<bool> Update(int id, [FromBody] AnnouncementUpdateDto announcementDto)
+    [HttpPut("{announcementId}")]
+    public ActionResult<bool> Update(int announcementId, [FromBody] AnnouncementUpdateDto announcementDto)
     {
         try
         {
             // If the DTO is null or the DTO's id does not match the specified one then execute this section
-            if (announcementDto == null || id != announcementDto.AnnouncementId)
+            if (announcementDto == null || announcementId != announcementDto.AnnouncementId)
             {
                 return BadRequest("The inserted Announcement ID did not match the announcement ID.");
             }
 
             // Calls upon the Data access layer to retrieve an announcement with the specified id
-            Announcement existingAnnouncement = _announcementDao.GetOne(id);
+            Announcement existingAnnouncement = _announcementDao.GetOne(announcementId);
 
             // If no announcement with a matching id could be found then execute this section
             if (existingAnnouncement == null)
@@ -269,7 +269,7 @@ public class AnnouncementsController : ControllerBase
 
         catch (Exception exception)
         {
-            _logger.LogError(exception, "An error has occurred when attempting to update an announcement with id {id}.", id);
+            _logger.LogError(exception, "An error has occurred when attempting to update an announcement with id {id}.", announcementId);
 
             string? innerMessage = exception.InnerException?.Message;
 
