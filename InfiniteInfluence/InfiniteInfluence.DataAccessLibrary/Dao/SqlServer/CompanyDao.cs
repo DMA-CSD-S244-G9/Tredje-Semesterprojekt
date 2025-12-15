@@ -213,7 +213,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
         using IDbConnection connection = CreateConnection();
         try
         {
-            // Dapper will be mapping both the BaseUser and the Company classes' properties
+            // Dapper maps both the BaseUser and the Company classes' properties
             Company? foundCompany = connection.QuerySingleOrDefault<Company>(queryFindCompany, new { UserId = userId });
 
             // Returns null if the Company is not found using the guard clause

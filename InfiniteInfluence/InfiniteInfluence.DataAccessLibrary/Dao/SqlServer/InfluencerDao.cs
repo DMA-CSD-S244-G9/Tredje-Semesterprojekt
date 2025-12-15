@@ -198,6 +198,7 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
     {
 
         using IDbConnection connection = CreateConnection();
+
         try{
             // Dapper will be mapping both the BaseUser and the Influencer classes' properties
             Influencer? foundInfluencer = connection.QuerySingleOrDefault<Influencer>(queryFindInfluencer, new { UserId = userId });
@@ -216,9 +217,12 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 
             return foundInfluencer;
         }
+
         // Catches any exceptions that occur during the database operations and wraps them in a DataException
         catch (Exception exception)
         {
+            // Rethrows the exception with additional context about the failure 
+            // Its caught higher up the call stack where it can be logged appropriately in the API controller
             throw new DataException("Failed to retrieve influencer from the database.", exception);
         }
     }
