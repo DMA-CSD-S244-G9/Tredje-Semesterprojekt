@@ -15,19 +15,17 @@ namespace InfiniteInfluence.Website.Controllers;
 
 public class CompanyController : Controller
 {
-    //ICompanyDao _companyApiClient = new CompanyApiClient("https://localhost:7777");
+    #region Attributes and Constructor
     private readonly ICompanyDao _CompanyApiClient;
     private readonly ILogger<CompanyController> _logger;
 
 
-
-    #region constructor
     // Utilises Dependency injection from the Program.cs 
     public CompanyController(ICompanyDao companyApiClient, ILogger<CompanyController> logger)
     {
         _CompanyApiClient = companyApiClient;
 
-        // Logger used for logging errors and information
+        // Logger used for logging errors and information ui context
         _logger = logger;
     }
     #endregion

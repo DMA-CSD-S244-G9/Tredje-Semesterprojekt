@@ -16,18 +16,17 @@ namespace InfiniteInfluence.Website.Controllers;
 
 public class InfluencerController : Controller
 {
+    #region Attributes and Constructor
     private readonly IInfluencerDao _InfluencerApiClient;
     private readonly ILogger<InfluencerController> _logger;
 
 
-
-    #region constructor
     // Utilises Dependency injection from the Program.cs 
     public InfluencerController(IInfluencerDao influencerClient, ILogger<InfluencerController> logger)
     {
         _InfluencerApiClient = influencerClient;
 
-        // Logger used for logging errors and information
+        // Logger used for logging errors and information about ui context
         _logger = logger;
     }
     #endregion
