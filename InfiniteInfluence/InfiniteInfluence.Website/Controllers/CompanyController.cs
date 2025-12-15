@@ -3,6 +3,12 @@ using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 
+///  <summary>
+///  This controller handles HTTP requests related to company operations in the MVC web application.
+///  It uses dependency injection to access the company data access object ICompanyDao and a logger.
+///  It uses API client to communicate with the API layer.
+///  </summary>
+
 
 namespace InfiniteInfluence.Website.Controllers;
 
@@ -13,12 +19,20 @@ public class CompanyController : Controller
     private readonly ICompanyDao _CompanyApiClient;
     private readonly ILogger<CompanyController> _logger;
 
+
+
+    #region constructor
     // Utilises Dependency injection from the Program.cs 
     public CompanyController(ICompanyDao companyApiClient, ILogger<CompanyController> logger)
     {
         _CompanyApiClient = companyApiClient;
+
+        // Logger used for logging errors and information
         _logger = logger;
     }
+    #endregion
+
+
 
     #region Create Influencer Profile
     /// <summary>
@@ -101,6 +115,8 @@ public class CompanyController : Controller
     }
     #endregion
 
+
+
     #region Find and show company Profile
 
     [HttpGet]
@@ -135,15 +151,19 @@ public class CompanyController : Controller
         // Check if userId exists
         try
         {
+            // Attempts to retrieve the company profile using the provided userId
             Company company = _CompanyApiClient.GetOne(findProfile.UserId);
         }
         catch
         {
+            // This error message is shown in the browser when entering a wrong id in findprofile view for company
             ModelState.AddModelError(nameof(findProfile.UserId), "No company profile was found with this User Id.");
+            
+            // Return the same findprofil view with the error message
             return View(findProfile);
         }
 
-        // If valid, redirect to GET
+        // If valid, redirect to GET ViewProfile action with the userId as parameter
         return RedirectToAction("ViewProfile", new { userId = findProfile.UserId });
     }
 
@@ -168,9 +188,13 @@ public class CompanyController : Controller
         // kald dit API med userId
         try
         {
+            // Retrieves the influencer profile from the API using the provided userId
             Company? companyProfile = _CompanyApiClient.GetOne(userId);
+
+            // Passes the retrieved influencer profile to the ViewProfile view for rendering
             return View(companyProfile);
         }
+
         catch (Exception exception)
         {
             _logger.LogError(exception, "Error while getting an company from MVC.");
@@ -183,6 +207,8 @@ public class CompanyController : Controller
         }
     }
     #endregion
+
+
 
     #region Helper methods
 

@@ -4,6 +4,12 @@ using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+///  <summary>
+///  This controller handles HTTP requests related to influencer operations in the MVC web application.
+///  It uses dependency injection to access the influencer data access object IInfluencerDao and a logger.
+///  It uses API client to communicate with the API layer.
+///  </summary>
+
 
 namespace InfiniteInfluence.Website.Controllers;
 
@@ -14,17 +20,19 @@ public class InfluencerController : Controller
     private readonly ILogger<InfluencerController> _logger;
 
 
+
+    #region constructor
     // Utilises Dependency injection from the Program.cs 
     public InfluencerController(IInfluencerDao influencerClient, ILogger<InfluencerController> logger)
     {
         _InfluencerApiClient = influencerClient;
+
+        // Logger used for logging errors and information
         _logger = logger;
     }
+    #endregion
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+
 
     #region Create Influencer Profile
 
@@ -85,12 +93,14 @@ public class InfluencerController : Controller
 
     #endregion
 
+
+
     #region Find and show Influencer Profile
 
     /// <summary>
     /// Displays the influencer profile view.
     /// </summary>
-    /// <returns>An <see cref="IActionResult"/> that renders the influencer profile view.</returns>
+    /// <returns>An IActionResult that renders the influencer profile view.</returns>
     [HttpGet]
     public IActionResult FindProfile()
     {
@@ -108,11 +118,8 @@ public class InfluencerController : Controller
     /// "ViewProfile" action, passing the user ID as a route parameter.
     /// </remarks>
     /// 
-    /// <param name="findProfile">
-    /// The view model containing the user profile search criteria, including the user ID.
-    /// </param>
-    /// 
-    /// <returns>An <see cref="IActionResult"/> that renders the current view with validation errors if the model state is
+    /// <returns>
+    /// An IActionResult that renders the current view with validation errors if the model state is
     /// invalid, or redirects to the "ViewProfile" action with the specified user ID if the input is valid. 
     /// </returns>
     [HttpPost]
@@ -127,17 +134,20 @@ public class InfluencerController : Controller
         // Check if userId exists
         try
         {
+            // Attempts to retrieve the influencer profile using the provided userId
             Influencer? influencer = _InfluencerApiClient.GetOne(findProfile.UserId);
         }
 
         catch
         {
+            // This error message is shown in the browser when entering a wrong id in findprofile view for influencer
             ModelState.AddModelError(nameof(findProfile.UserId), "No influencer profile was found with this User Id.");
-            
+
+            // Return the same findprofil view with the error message
             return View(findProfile);
         }
 
-        // If valid, redirect to GET
+        // If valid, redirect to GET ViewProfile action with userId as route parameter
         return RedirectToAction("ViewProfile", new { userId = findProfile.UserId });
     }
 
@@ -147,17 +157,13 @@ public class InfluencerController : Controller
     /// </summary>
     /// 
     /// <remarks>
-    /// This method attempts to retrieve the influencer profile using the provided 
-    /// <param name="userId"/>. If an error occurs during the retrieval process, the error is logged, and an appropriate error
+    /// This method attempts to retrieve the influencer profile using the provided userId. 
+    /// If an error occurs during the retrieval process, the error is logged, and an appropriate error
     /// message is added to the model state for display in the view.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose influencer profile is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="IActionResult"/> that renders the influencer profile view if the profile is successfully retrieved;
+    /// An IActionResult that renders the influencer profile view if the profile is successfully retrieved;
     /// otherwise, renders the view with an error message if an exception occurs.
     /// </returns>
     [HttpGet]
@@ -166,10 +172,14 @@ public class InfluencerController : Controller
         // Call your API with userId
         try
         {
+            // Retrieves the influencer profile from the API using the provided userId
             Influencer? influencerProfile = _InfluencerApiClient.GetOne(userId);
 
+            // Passes the retrieved influencer profile to the ViewProfile view for rendering
             return View(influencerProfile);
         }
+
+
         catch (Exception exception)
         {
             _logger.LogError(exception, "Error while getting an influencer from MVC.");
@@ -181,6 +191,8 @@ public class InfluencerController : Controller
     }
 
     #endregion
+
+
 
     #region Helper method
 
