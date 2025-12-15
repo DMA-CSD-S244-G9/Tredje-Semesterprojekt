@@ -16,6 +16,7 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 /// <remarks>
 /// This class is responsible for creating, retrieving, and deleting company records, 
 /// It ensures atomicity of operations by utilizing transactions for multi-step database interactions.
+/// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
 /// </remarks>
 public class CompanyDao : BaseConnectionDao, ICompanyDao
 {
@@ -80,6 +81,9 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
 
 
     #region SQL Query - get one
+    // SQL statement for retrieving a company by userId
+    // Uses an INNER JOIN to combine data from Users and Companys tables
+    // To ensure that the userId entered is a company Id and also to get access to the loginEmail and passwordHash from Users table when login is implemented
     private readonly string? queryFindCompany = @"
                 SELECT
                     u.userId, u.loginEmail, u.passwordHash,
@@ -97,7 +101,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
                 INNER JOIN Companys c ON c.userId = u.userId
                 WHERE u.userId = @UserId;";
 
-
+    // SQL statement for retrieving company domains by userId
     private readonly string? queryFindCompanyDomains = @"
                 SELECT domain
                 FROM CompanyDomains
@@ -165,6 +169,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
             // Inserts zero or more company domains in to the CompanyDomain table 
             if (company.CompanyDomains != null)
             {
+                // Loops through each domain and inserts it into the CompanyDomains table
                 foreach (string domain in company.CompanyDomains)
                 {
                     connection.Execute(queryInsertCompanyDomain, new { UserId = company.UserId, Domain = domain }, transaction);
@@ -206,6 +211,7 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     public Company? GetOne(int userId)
     {
         using IDbConnection connection = CreateConnection();
+        try
         {
             // Dapper will be mapping both the BaseUser and the Company classes' properties
             Company? foundCompany = connection.QuerySingleOrDefault<Company>(queryFindCompany, new { UserId = userId });
@@ -223,6 +229,11 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
             foundCompany.CompanyDomains = domains.ToList();
 
             return foundCompany;
+        }
+        // Catches any exceptions that occur during the database operations and wraps them in a DataException
+        catch (Exception exception)
+        {
+            throw new DataException("Failed to retrieve company from the database.", exception);
         }
     }
     #endregion
