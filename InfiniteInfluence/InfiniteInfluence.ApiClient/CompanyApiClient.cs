@@ -18,7 +18,6 @@ namespace InfiniteInfluence.ApiClient;
 public class CompanyApiClient : ICompanyDao
 {
     #region attributes and constructor
-
     //The address of the API server
     //Its a specific URI e.g. "https://localhost:7777"
     private readonly string _apiUri;
@@ -37,8 +36,9 @@ public class CompanyApiClient : ICompanyDao
     }
     #endregion
 
-    #region Create Method
 
+
+    #region Create Method
     /// <summary>
     /// Creates a new company by sending a POST request to the server.
     /// </summary>
@@ -71,28 +71,29 @@ public class CompanyApiClient : ICompanyDao
         {
             throw new Exception("Connection Failure: There were no response from the server.");
         }
+
         if (!response.IsSuccessful)
         {
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
-        if (!response.IsSuccessStatusCode)
-        {
-            // throw new Exception("Server reply: Unsuccessful request");
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
 
         return response.Data;
     }
-
     #endregion
+
+
 
     #region Delete
     //TODO: Implement the Delete method to remove a company by userId
+    // NOTE: Currently this is added because we have delete in the DAO, and since we use the DAO's interface
+    // we must implement it here too, although the delete is curerntly just used in a test and not fully integrated.
     public bool Delete(int userId)
     {
         throw new NotImplementedException();
     }
     #endregion
+
+
 
     #region GetOne Methods
     /// <summary>
@@ -129,11 +130,6 @@ public class CompanyApiClient : ICompanyDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            // API returned error - is the status code a 4xx or 5xx?
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
         return response.Data;
     }
     #endregion

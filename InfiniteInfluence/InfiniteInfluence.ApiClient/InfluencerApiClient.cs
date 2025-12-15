@@ -21,6 +21,7 @@ public class InfluencerApiClient : IInfluencerDao
     }
 
 
+
     //TODO: Make this code prettier during refactoring
     public int Create(Influencer influencer)
     {
@@ -42,19 +43,9 @@ public class InfluencerApiClient : IInfluencerDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            // throw new Exception("Server reply: Unsuccessful request");
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
-        //if (response.Data == null)
-        //{
-        //    throw new Exception("Server response did not contain an integer id.");
-        //}
-
         return response.Data;
     }
+
 
 
     public Influencer? GetOne(int userId)
@@ -76,11 +67,6 @@ public class InfluencerApiClient : IInfluencerDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            // API returned error - is the status code a 4xx or 5xx?
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
         return response.Data;
     }
 }

@@ -22,6 +22,8 @@ public class AnnouncementApiClient : IAnnouncementDao
         _restClient = new RestClient(apiUri);
     }
 
+
+
     #region Create announcement
     public int Create(Announcement announcement)
     {
@@ -44,14 +46,10 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
         return response.Data;
     }
     #endregion
+
 
 
     #region Get all announcements
@@ -73,11 +71,6 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
         // Since the response data can be null then we return an empty list in that case
         if (response.Data == null)
         {
@@ -87,6 +80,7 @@ public class AnnouncementApiClient : IAnnouncementDao
         return response.Data;
     }
     #endregion
+
 
 
     #region Get one announcement by announcementid
@@ -106,14 +100,10 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
         return response.Data;
     }
     #endregion
+
 
 
     #region Add influencer application to announcement
@@ -156,20 +146,15 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new InvalidOperationException(exceptionResponseMessage);
         }
 
-
         if (!response.IsSuccessful)
         {
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
         return response.Data;
     }
     #endregion
+
 
 
     #region Update announcement
@@ -220,14 +205,15 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new InvalidOperationException(message);
         }
 
-        if (!response.IsSuccessful || !response.IsSuccessStatusCode)
+        if (!response.IsSuccessful)
         {
-            throw new Exception($"Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
+            throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
         return response.Data;
     }
     #endregion
+
 
 
     #region Delete Announcement
@@ -256,14 +242,10 @@ public class AnnouncementApiClient : IAnnouncementDao
             throw new Exception($"Step 1: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
         }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Step 2: Server replied with error. Status: {(int)response.StatusCode} - {response.StatusDescription}. Body: {response.Content}");
-        }
-
         return response.Data;
     }
     #endregion
+
 
 
     #region Helper method
