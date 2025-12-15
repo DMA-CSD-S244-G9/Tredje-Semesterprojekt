@@ -24,6 +24,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6 mb-3">
             <label asp-for="UserId" class="form-label"></label>
+            @*numeric: for phone numberpad
+            pattern: for which type of input it accept 
+            on-in-put: for what the inputfield can accept while typing and it only accept numbers numbers*@
             <input asp-for="UserId" class="form-control" type="text" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="How many influencers do you need?" />
 
             @* error message *@
