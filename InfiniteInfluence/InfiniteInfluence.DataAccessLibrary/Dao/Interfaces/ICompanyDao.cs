@@ -15,29 +15,13 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 public interface ICompanyDao
 {
     /// <summary>
-    /// This method creates a company in the database.
+    /// Creates a company and return an userId as int.
     /// </summary>
-    /// 
-    /// <param name="company">
-    /// It takes a Company object as a parameter.
-    /// </param>
-    /// 
-    /// <returns name="int">
-    /// It returns an int which is The userId of the created company.
-    /// </returns>
     int Create(Company company);
 
     /// <summery>
-    /// This method gets a company by userId.
+    /// Gets a company by userId and return a company object.
     /// </summery>>
-    /// 
-    ///<param name="userId">
-    /// It takes an int userId as a parameter.
-    ///</param>
-    ///
-    ///<returns name="Company?">
-    /// It returns a Company object if found, otherwise null.
-    ///</returns>>
     Company? GetOne(int userId);
 
     /// TODO: Write comments
