@@ -1,5 +1,6 @@
 ﻿namespace InfiniteInfluence.DataAccessLibrary.Model;
 
+
 /// <summary>
 /// This class represents a Company user in the Infinite Influence system.
 /// Inherits from BaseUser and includes properties specific to companies.
@@ -10,7 +11,7 @@ public class Company : BaseUser
     public bool IsCompanyVerified { get; set; }
     public DateTime? VerificationDate { get; set; }
     public string CompanyName { get; set; }
-    public string? CompanyLogoUrl { get; set; } 
+    public string? CompanyLogoUrl { get; set; }
     public List<string>? CompanyDomains { get; set; } = new List<string>();
     public string CeoName { get; set; }
     public DateTime? DateOfEstablishment { get; set; }
@@ -55,7 +56,7 @@ public class Company : BaseUser
     /// It's used in companyDaoTest to manually constructor a Company object in code.
     /// The Construtor is optional and exists only if developers prefer to use it.
     /// </summary>
-    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string companyState, string city, string companyAddress, string companyLanguage, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(string loginEmail, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string companyState, string city, string companyAddress, string companyLanguage, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber)
     {
         LoginEmail = loginEmail;
         PasswordHash = passwordHash;
@@ -95,7 +96,7 @@ public class Company : BaseUser
     /// If the parameter names do NOT match the SQL columns,
     /// Dapper falls back to the empty constructor + property mapping.
     /// </summary>
-    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string language, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber) 
+    public Company(int userId, string email, string passwordHash, bool isCompanyVerified, DateTime verificationDate, string companyName, string companyLogoUrl, List<string> companyDomains, string ceoName, DateTime dateOfEstablishment, string organisationNumber, int standardIndustryClassification, string? websiteUrl, string companyEmail, string companyPhoneNumber, string country, string state, string city, string address, string language, string biography, string contactPerson, string contactEmailAddress, string contactPhoneNumber)
     {
         UserId = userId;
         LoginEmail = email;
@@ -121,6 +122,6 @@ public class Company : BaseUser
         ContactPerson = contactPerson;
         ContactEmailAddress = contactEmailAddress;
         ContactPhoneNumber = contactPhoneNumber;
-    } 
+    }
     #endregion
 }

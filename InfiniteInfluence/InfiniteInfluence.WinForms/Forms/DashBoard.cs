@@ -1,5 +1,4 @@
 ﻿using FontAwesome.Sharp;
-using InfiniteInfluence.WinFormsApp.Components;
 using InfiniteInfluence.WinFormsApp.Forms;
 
 
@@ -15,7 +14,7 @@ public partial class DashBoard : Form
 {
     // A reference to the login form so we can show it again when logging out
     private MainForm _loginForm;
-    
+
     // The chosen form window to be displayed inside of the designated area for different content
     private Form currentFormWindow;
 
@@ -44,8 +43,8 @@ public partial class DashBoard : Form
         // Defines a minimum window size so the layout does not break
         SetFormSize();
 
-        // Adds a yellow tint animation to the picture box elements which are the white stars
-        AddHoverTintAnimationsToPictureBoxes();
+        // Adds the picture box elements which are the white stars
+        AttachPictureBoxesWithTransparency();
     }
 
 
@@ -261,19 +260,10 @@ public partial class DashBoard : Form
 
 
     /// <summary>
-    /// Adds hover tint animations to the PictureBox elements and sets their parent to the top frame so
-    /// that the transparency and layering work correctly
+    /// Adds the PictureBox elements and sets their parent to the top frame so that the transparency and layering work correctly
     /// </summary>
-    private void AddHoverTintAnimationsToPictureBoxes()
+    private void AttachPictureBoxesWithTransparency()
     {
-        // Apply orange tint to PictureBox objects over half a second's duration
-        HoverTintAnimator.Attach(pictureBoxStarTiny, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarSmall1, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarSmall2, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarMedium, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxStarLarge, Color.Orange, 500);
-        HoverTintAnimator.Attach(pictureBoxCompanyLogo, Color.Orange, 500);
-
         // Attaches the pictureboxes of stars and the company logo to the dashboard's top frame to have transparency work correctly
         pictureBoxStarTiny.Parent = pictureBoxTopFrame;
         pictureBoxStarSmall1.Parent = pictureBoxTopFrame;

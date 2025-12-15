@@ -1,11 +1,5 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Model;
-using InfiniteInfluence.WinFormsApp.Components;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 
 
 namespace InfiniteInfluence.WinFormsApp.Components;
@@ -18,7 +12,6 @@ namespace InfiniteInfluence.WinFormsApp.Components;
 /// This control is responsible for configuring the <see cref="DataGridView"/> columns, styling, and selection behavior.
 /// Binding announcements using the <see cref="BindingSource"/> as well as setting and filtering announcements.
 /// It also provides a <see cref="SelectedAnnouncement"/> property which allows for finding the currently selected announcement in the AnnouncementsForm.
-/// The control also handles managing custom scrollbars and synchronizing them with the grid.
 ///
 /// The goal is to keep all of the data grid view specific behavior in one place so that the AnnouncementsForm
 /// does not get cluttered, and only contain essentials such as API calls, dialogs, and other UI logic.
@@ -31,10 +24,6 @@ public class AnnouncementGridControl : UserControl
 
     // The DataGridView that displays the announcements
     private readonly DataGridView dataGridView;
-
-    // Custom scrollbars for the grid
-    private ColorScrollBar verticalScrollBar;
-    private ColorScrollBar horizontalScrollBar;
 
     // Holds the full list of announcements for filtering purposes.
     // We never bind this list directly; instead we wrap it in a BindingList for BindingSource.
@@ -70,8 +59,7 @@ public class AnnouncementGridControl : UserControl
     /// <item>Creates and configures the internal <see cref="DataGridView"/>.</item>
     /// <item>Applies rules, styling, and adds the announcement-specific columns.</item>
     /// <item>Sets up data binding via the internal <see cref="BindingSource"/>.</item>
-    /// <item>Creates and wires custom vertical and horizontal <see cref="ColorScrollBar"/> controls.</item>
-    /// <item>Hooks up events to keep scrollbars, grid size, and formatting in sync.</item>
+    /// <item>Hooks up events to keep grid size and formatting in sync.</item>
     /// </list>
     /// 
     /// After construction the control is ready to receive data via the <see cref="SetAnnouncements"/> method.
@@ -86,12 +74,6 @@ public class AnnouncementGridControl : UserControl
 
         // Initialize the grid (rules, styling, columns, binding, basic events)
         InitializeDataGridView();
-
-        // Create and add the custom scrollbars
-        InitializeScrollBars();
-
-        // Sets up all scrollbar synchronization logic between the grid and the custom bars
-        InitializeScrollSynchronization();
     }
 
 
@@ -463,8 +445,8 @@ public class AnnouncementGridControl : UserControl
         // Add grid to this UserControl so it becomes visible
         Controls.Add(dataGridView);
 
-        // Hide built-in scrollbars since we use our own custom scrollbars
-        dataGridView.ScrollBars = ScrollBars.None;
+        // Use built-in DataGridView scrollbars (vertical + horizontal)
+        dataGridView.ScrollBars = ScrollBars.Both;
 
         // Make the grid fill all available space inside this control
         dataGridView.Dock = DockStyle.Fill;
@@ -493,239 +475,5 @@ public class AnnouncementGridControl : UserControl
 
         // Initial height fitting after the grid is fully configured
         FitGridHeightToContent();
-    }
-
-
-
-    /// <summary>
-    /// Creates the custom vertical and horizontal <see cref="ColorScrollBar"/> controls,
-    /// configures their orientation, docking, and size, and adds them to the control.
-    /// </summary>
-    private void InitializeScrollBars()
-    {
-        // Create the vertical custom scrollbar and configure it
-        verticalScrollBar = new ColorScrollBar
-        {
-            Direction = ColorScrollBar.Orientation.Vertical,
-            Dock = DockStyle.Right,
-            Width = 12
-        };
-
-        // Create the horizontal custom scrollbar and configure it
-        horizontalScrollBar = new ColorScrollBar
-        {
-            Direction = ColorScrollBar.Orientation.Horizontal,
-            Dock = DockStyle.Bottom,
-            Height = 12
-        };
-
-        // Add the scrollbars to the same container as the DataGridView
-        Controls.Add(horizontalScrollBar);
-        Controls.Add(verticalScrollBar);
-    }
-
-
-
-    /// <summary>
-    /// Wires up all synchronization logic between the <see cref="DataGridView"/> and the custom scrollbars:
-    /// <list type="bullet">
-    /// <item>When the user moves the custom scrollbars, the grid scrolls.</item>
-    /// <item>When the grid scrolls, resizes, or changes its data, the scrollbars update their range/value.</item>
-    /// <item>The mouse wheel scrolls via the custom vertical scrollbar.</item>
-    /// </list>
-    /// </summary>
-    private void InitializeScrollSynchronization()
-    {
-        // Sync: user scrolls with the custom vertical bar -> grid scrolls vertically
-        verticalScrollBar.ValueChanged += VerticalScrollBar_ValueChanged;
-
-        // Sync: user scrolls with the custom horizontal bar -> grid scrolls horizontally
-        horizontalScrollBar.ValueChanged += HorizontalScrollBar_ValueChanged;
-
-        // Hooks that keep the scrollbars and grid in synchronization when the grid itself changes
-        dataGridView.Scroll += (sender, eventArgs) => RefreshScrollModels();
-        dataGridView.Resize += (sender, eventArgs) => RefreshScrollModels();
-        dataGridView.ColumnWidthChanged += (sender, eventArgs) => RefreshScrollModels();
-        dataGridView.DataBindingComplete += (sender, eventArgs) => RefreshScrollModels();
-        _bindingSource.ListChanged += (sender, eventArgs) => RefreshScrollModels();
-        dataGridView.RowsAdded += (sender, eventArgs) => RefreshScrollModels();
-        dataGridView.RowsRemoved += (sender, eventArgs) => RefreshScrollModels();
-
-        // (optional) makes the mouse wheel control vertical scrolling via the custom scrollbar
-        dataGridView.MouseWheel += DataGridView_MouseWheel;
-
-        // Initial synchronization after all has been added and bound
-        RefreshScrollModels();
-    }
-
-
-
-    /// <summary>
-    /// Calculates and updates scrollbar models (Minimum, Maximum, LargeChange, Value)
-    /// based on the current DataGridView scroll position, visible rows, and total content size.
-    /// This keeps the custom scrollbars visually and functionally in sync with the grid.
-    /// </summary>
-    private void RefreshScrollModels()
-    {
-        // -----------------------------
-        // Vertical scrollbar model
-        // -----------------------------
-
-        int firstVisibleRowIndex = 0;
-
-        try
-        {
-            // FirstDisplayedScrollingRowIndex tells which row index is currently at the top of the grid.
-            firstVisibleRowIndex = Math.Max(0, dataGridView.FirstDisplayedScrollingRowIndex);
-        }
-
-        catch
-        {
-            // If the grid has no rows yet, we safely fall back to 0.
-            firstVisibleRowIndex = 0;
-        }
-
-        // Calculate how many rows are visible (fully or partially) in the current viewport.
-        int visibleRowCount = Math.Max(1, dataGridView.DisplayedRowCount(includePartialRow: false));
-
-        // verticalScrollBar.Minimum is the first possible scroll value (top of grid)
-        verticalScrollBar.Minimum = 0;
-
-        // verticalScrollBar.Maximum is the last row index we can scroll to (or 0 if no rows)
-        verticalScrollBar.Maximum = Math.Max(0, dataGridView.RowCount - 1);
-
-        // LargeChange represents how many "units" move when the scrollbar track is clicked (page up/down)
-        verticalScrollBar.LargeChange = visibleRowCount;
-
-        // The current value represents which row index should be considered the "top" when painting the thumb
-        verticalScrollBar.Value = Math.Max(verticalScrollBar.Minimum, Math.Min(verticalScrollBar.Maximum, firstVisibleRowIndex));
-
-
-
-        // -----------------------------
-        // Horizontal scrollbar model
-        // -----------------------------
-
-        // Start with row header width (if row headers are visible)
-        int totalContentWidth;
-
-        if (dataGridView.RowHeadersVisible)
-        {
-            totalContentWidth = dataGridView.RowHeadersWidth;
-        }
-
-        else
-        {
-            totalContentWidth = 0;
-        }
-
-        // Sum up the width of all columns except the spacer column
-        foreach (DataGridViewColumn dataGridViewColumn in dataGridView.Columns)
-        {
-            if (dataGridViewColumn.Name == "_spacer")
-            {
-                // Skip spacer since it auto-expands and doesn't contribute to scrollable content
-                continue;
-            }
-
-            totalContentWidth += dataGridViewColumn.Width;
-        }
-
-        // Width of the visible client area of the grid
-        int clientAreaWidth = dataGridView.ClientSize.Width;
-
-        // How much wider the content is than the viewport (if at all)
-        int horizontalOverflowWidth = Math.Max(0, totalContentWidth - clientAreaWidth);
-
-        // Minimum horizontal scroll offset
-        horizontalScrollBar.Minimum = 0;
-
-        // Maximum horizontal scroll offset (how far we can scroll to the right)
-        horizontalScrollBar.Maximum = horizontalOverflowWidth;
-
-        // LargeChange here can be roughly one "page" width
-        horizontalScrollBar.LargeChange = Math.Max(1, clientAreaWidth);
-
-        // Current horizontal scroll offset should follow the DataGridView's HorizontalScrollingOffset
-        horizontalScrollBar.Value = Math.Max(horizontalScrollBar.Minimum, Math.Min(horizontalScrollBar.Maximum, dataGridView.HorizontalScrollingOffset));
-    }
-
-
-
-    /// <summary>
-    /// Handles scrolling when the user interacts with the vertical custom scrollbar.
-    /// Updates the DataGridView's first displayed row to match the scrollbar's value.
-    /// 
-    /// Internally this works by setting <see cref="DataGridView.FirstDisplayedScrollingRowIndex"/>,
-    /// which tells the grid which row should appear at the top of the viewport.
-    /// </summary>
-    private void VerticalScrollBar_ValueChanged(object? sender, EventArgs eventArgs)
-    {
-        // If there are no rows, there is nothing to scroll
-        if (dataGridView.RowCount == 0)
-        {
-            return;
-        }
-
-        // Clamp the desired row index between 0 and RowCount - 1 so it is always valid
-        int targetFirstDisplayedRowIndex = Math.Max(0, Math.Min(dataGridView.RowCount - 1, verticalScrollBar.Value));
-
-        // Protect against exception when the grid does not yet have a "first" row
-        try
-        {
-            // This line actually scrolls the DataGridView vertically.
-            // NOTE: FirstDisplayedScrollingRowIndex is the index of the row that should be at the top.
-            dataGridView.FirstDisplayedScrollingRowIndex = targetFirstDisplayedRowIndex;
-        }
-
-        // We deliberately do not rethrow, since this is triggered by user scrolling and we want to avoid crashing the UI
-        catch (Exception exception)
-        {
-            // TODO: Figure out the scenarios where this exception occurs so we can handle them explicitly.
-            // For now we just log the error for debugging purposes instead of catching it with no form of response.
-            System.Diagnostics.Debug.WriteLine($"VerticalScrollBar_ValueChanged: Failed to set FirstDisplayedScrollingRowIndex. " + $"Index={targetFirstDisplayedRowIndex}, RowCount={dataGridView.RowCount}, Error={exception}");
-        }
-    }
-
-
-
-    /// <summary>
-    /// Handles horizontal scrolling when the user interacts with the custom horizontal scrollbar.
-    /// Updates the DataGridView's horizontal offset.
-    /// 
-    /// This works by setting <see cref="DataGridView.HorizontalScrollingOffset"/>, which determines
-    /// how many pixels to shift columns to the left (to show content that overflows to the right).
-    /// </summary>
-    private void HorizontalScrollBar_ValueChanged(object? sender, EventArgs eventArgs)
-    {
-        // Clamp the desired offset to be within the scrollbar's range
-        int targetHorizontalOffset = Math.Max(0, Math.Min(horizontalScrollBar.Maximum, horizontalScrollBar.Value));
-
-        // Setting HorizontalScrollingOffset scrolls the grid horizontally in pixel units.
-        dataGridView.HorizontalScrollingOffset = targetHorizontalOffset;
-    }
-
-
-
-    /// <summary>
-    /// Allows the mouse wheel to control vertical scrolling through the custom scrollbar
-    /// instead of default DataGridView scrolling.
-    /// </summary>
-    private void DataGridView_MouseWheel(object? sender, MouseEventArgs mouseEventArgs)
-    {
-        // e.Delta is +/-120 per notch; adjust step size as desired
-        int oneNotchScrollStep = Math.Max(1, verticalScrollBar.LargeChange / 3);
-
-        // If this event supports being marked as handled, do so to prevent default scrolling behavior
-        if (mouseEventArgs is HandledMouseEventArgs handledMouseEventArgs)
-        {
-            handledMouseEventArgs.Handled = true;
-        }
-
-        // Decide whether to scroll up or down based on the wheel direction
-        int newScrollValue = verticalScrollBar.Value + (mouseEventArgs.Delta > 0 ? -oneNotchScrollStep : oneNotchScrollStep);
-
-        // Clamp the new scroll value into the scrollbar's range
-        verticalScrollBar.Value = Math.Max(verticalScrollBar.Minimum, Math.Min(verticalScrollBar.Maximum, newScrollValue));
     }
 }

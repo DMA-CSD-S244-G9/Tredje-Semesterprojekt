@@ -2,9 +2,10 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
-using System;
+
 
 namespace InfiniteInfluence.API.Controllers;
+
 
 /// <summary>
 /// Provides API endpoints for managing company data, including creating, retrieving, 
@@ -22,9 +23,10 @@ namespace InfiniteInfluence.API.Controllers;
 // Applys attributes to define this class as an API controller and set the route
 // The route is set to the name of the controller without the "Controller" suffix
 [ApiController]
-[Route("[controller]")] 
+[Route("[controller]")]
 public class CompanysController : Controller
 {
+
     #region Attributes and Constructor
     // Logger for logging information and errors about the controller's operations
     private readonly ILogger<CompanysController> _logger;
@@ -36,14 +38,15 @@ public class CompanysController : Controller
     // This constructor might appear to have no references, but are called internally by the framework
     public CompanysController(ILogger<CompanysController> logger, ICompanyDao companyDao)
     {
+        // Logger used for logging errors and information about API context
         _logger = logger;
         _companyDao = companyDao;
     }
-
     #endregion
 
-    #region create Company
 
+
+    #region create Company
     /// <summary>
     /// Creates a new company record in the system.
     /// </summary>
@@ -62,20 +65,28 @@ public class CompanysController : Controller
     {
         try
         {
-            // Attempt to create the company and return the new company's userId
-            return Ok(_companyDao.Create(company));
+            // Calls upon the DAO class to create the new object and return its newly generated ID
+            int createdCompanyId = _companyDao.Create(company);
+
+            // Returns the HTTP status code 201 (Created) along with the Id of the object that was created
+            return StatusCode(StatusCodes.Status201Created, createdCompanyId);
         }
 
         catch (Exception exception)
         {
-            _logger.LogError(exception, "An error has occured when attempting to create a Company.");
+            // Logs the exception and returns a 500 Internal Server Error response with error details.
+            _logger.LogError(exception, "An error has occured when attempting to create an company.");
 
-            var innerMessage = exception.InnerException?.Message;
+            // Retrieves the inner exception message if available.
+            string? innerMessage = exception.InnerException?.Message;
 
+            // Returns a 500 Internal Server Error response with the error message and inner exception details.
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
     #endregion
+
+
 
     #region Get One Company by UserId 
     /// <summary>
@@ -98,49 +109,48 @@ public class CompanysController : Controller
     {
         try
         {
-            // Attempt to retrieve the company by userId and return it
+            // Attempts to retrieve the company by userId with CompanyDao GetOne method.
             Company? company = _companyDao.GetOne(userId);
+
+            // If the company with the specified userId does not exist, a 400 Bad Request response is returned.
             if (company == null)
             {
                 return StatusCode(400, "The company could not be found.");
             }
 
+            // Returns the company information with a 200 OK response if found.
             return Ok(company);
         }
 
         catch (Exception exception)
         {
+            // Logs the exception and returns a 500 Internal Server Error response with error details.
             _logger.LogError(exception, $"An error occurred trying to retrieve the company with user id {userId}.");
 
-            var innerMessage = exception.InnerException?.Message;
+            // Retrieves the inner exception message if available.
+            string? innerMessage = exception.InnerException?.Message;
 
+            //// Returns a 500 Internal Server Error response with the error message and inner exception details.
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }
     #endregion
 
+
+
     #region Delete Company by UserId
 
     /// <summary>
-    /// Deletes the user with the specified userId.
+    /// This method isnt implemented in the front end, but it deletes a company by userId.
     /// </summary>
-    /// 
-    /// <remarks>
-    /// If the user does not exist, the method returns a 204 No Content response. If an error occurs
-    /// during the operation, a 500 Internal Server Error response is returned with details about the error.
-    /// </remarks>
-    /// 
-    /// <returns>
-    /// An ActionResult containing true if the user was successfully deleted;
-    /// otherwise, a status code indicating the result of the operation.
-    /// </returns>
     [HttpDelete("{userId}")]
     public ActionResult<bool> Delete(int userId)
     {
         try
         {
             // Attempt to delete the user by userId
-            var deleted = _companyDao.Delete(userId);
+            bool deleted = _companyDao.Delete(userId);
+            
             if (!deleted)
             {
                 return NoContent();
@@ -152,7 +162,7 @@ public class CompanysController : Controller
         {
             _logger.LogError(exception, $"An error occurred trying to delete the author with id {userId}.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }

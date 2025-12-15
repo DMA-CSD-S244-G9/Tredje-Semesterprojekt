@@ -1,33 +1,34 @@
 ﻿using Dapper;
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.PortableExecutable;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 
 
-
 public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 {
     #region Constructors
+    /// <summary>
+    /// Empty constructor that calls the base class constructor with the provided connection string
+    /// This allows the AnnouncementDao to inherit the database connection functionality from BaseConnectionDao
+    /// 
+    /// How it works:
+    /// - In API's program, AnnouncementDao is instansiated with a connection string
+    /// - It sends the string to BaseConnectionDao which stores it
+    /// - Every time AnnouncementDao needs to access the database, it calls CreateConnection()
+    /// - CreateConnection() creates a SqlConnection using that stored connection string
+    /// </summary>
     public AnnouncementDao(string dataBaseConnectionString) : base(dataBaseConnectionString)
     {
 
     }
     #endregion
 
-    
+
+
     #region SQL Queries - Create
 
     // This SQL query inserts a new announcement into the Announcements table.
@@ -66,8 +67,9 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region SQL Queries - GetAll
-    
+
     // This SQL query retrieves all of the announcement records from the database's announcement table, the name of the company that created each announcement is also included.
     // The company name information is obtained by joining the Announcements table with the Companys table, based on the userId column that they share.
     //
@@ -122,8 +124,9 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region SQL Queries - GetOne
-    
+
     // This SQL query retrieves ONE specific announcement from the database, based on the supplied @AnnouncementId and then
     // also LEFT JOINs the "Companys" table so we can get the company name belonging to the user who created the announcement.
     //
@@ -193,12 +196,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region SQL Queries - AddInfluencerApplication
-    /////////////////////////////////////////////////
-    // - AddInfluencerApplication Method Queries - //
-    /////////////////////////////////////////////////
-
-
     // SQL query that retrieves the currentApplicants, maximumApplicants and the
     // RowVersion for the announcement with a matching announcementId.
     private const string _sqlQueryGetAnnouncementWithConcurrency = @"
@@ -257,6 +256,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region SQL Queries - DeleteAnnouncement
     // SQL Query that deletes the announcement with the specified announcementId
     // from the Announcements table.
@@ -271,6 +271,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
     #endregion
 
+    
 
     #region SQL Queries - Delete
 
@@ -280,6 +281,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         WHERE announcementId = @AnnouncementId;";
 
     #endregion
+
 
 
     #region SQL Queries - Update
@@ -306,10 +308,24 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region Create Method
-    // Please note that the list ListOfAssociatedInfluencers is not included in the
-    // AnnouncementDao's Create method as the list is initially instantiated as an
-    // empty list so that influencers can eventually apply to it.
+    /// <summary>
+    /// Creates a new announcement in the database's Announcements table,
+    /// and inserts zero or more subjects into the AnnouncementSubjects table.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Transaction:
+    /// The method uses a database transaction to ensure atomicity, meaning that either all inserts (announcement and subjects)
+    /// or none are performed. If any insert fails, the transaction is rolled back to maintain database integrity.
+    /// 
+    /// Please note: that the list ListOfAssociatedInfluencers is not included in the
+    /// AnnouncementDao's Create method as the list is initially instantiated as an
+    /// empty list so that influencers can eventually apply to it.
+    /// </remarks>
+    /// 
+    /// <returns></returns>
     public int Create(Announcement announcement)
     {
         // Creates and opens the database connection
@@ -383,6 +399,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region GetAll Method
     /// <summary>
     /// Returns all of the announcements from the database with their respective subjects from the AnnouncementSubjects table,
@@ -393,7 +410,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     /// 
     /// 
     /// <returns>
-    /// A collection of <see cref="Announcement"/> objects, each populated with
+    /// A collection of Announcement objects, each populated with
     /// its company name and a list of associated subjects.
     /// </returns>
     public IEnumerable<Announcement> GetAll()
@@ -470,17 +487,6 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
-    #region helper classes
-    /// <summary>
-    /// An helper class used to map rows from the AnnouncementSubjects query and represents a single subject entry for a specific announcement.
-    /// </summary>
-    private class AnnouncementSubjectRow
-    {
-        public int AnnouncementId { get; set; }
-        public string AnnouncementSubject { get; set; } = string.Empty;
-    }
-    #endregion
-
 
     #region GetOne Method
     /// <summary>
@@ -488,10 +494,8 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     /// also retrurns the respective subjects associated with the announcement from the AnnouncementSubjects table.
     /// </summary>
     /// 
-    /// <param name="announcementId">The unique announcementID to look for and retrieve from the database's Announcement table</param>
-    /// 
     /// <returns>
-    /// One single <see cref="Announcement"/> object or returns null, if no announcement with the specified id was found
+    /// One single Announcement object or returns null, if no announcement with the specified id was found
     /// </returns>
     public Announcement? GetOne(int announcementId)
     {
@@ -524,6 +528,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         return announcement;
     }
     #endregion
+
 
 
     #region AddInfluencerApplication Method
@@ -765,109 +770,17 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-     * Laver en live lock
-     * - må jeg placere?
-     * - Kan jeg placere en bold på bordet?
-     * 
-     * 
-     * tjek er der en plads til en bold på bordet?
-     * - Så sætter
-     * 
-     * 
-     * 
-     * Rollback
-     * 
-     * 
-     * Samme lykke på bordet:
-     * - er der 
-     * 
-     * 
-     * 
-     * Tilføjer en random mellem 10 til 20 milisekunder?
-     * - så er der bare en som er hurtigere end andre
-     * - de andre har talt at der er tre
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * Kombiner 
-     * Read uncommitted
-     * Lykke
-     * Ventetids pause
-     * 
-     * 
-     * 
-     * Optimistisk - CPU tid
-     * 
-     * 
-     * Pessimistisk - der kommer en kollision og det kan mærkes for det tager tid for databasen at finde ud af at
-     * der er en deadlock og hvem der skal slåes ihjel, og det er som regel random.
-     * 
-     * 
-     * 
-     * Livelock - optimistisk 
-     * 
-     * 
-     * Phantoms?
-     * 
-     * 
-     * 
-     * Værdien er bare beregnet, (computeret)
-     * 
-     * 
-     * 
-     * 
-     * 
-     * Anomalitype
-     * Vi har fat i at indsætte data i et row
-     * Phantom reads or writes (Phantoms) 
-     * 
-     * Ved at indsætte hele rows eller slette hele rows 
-     * 
-     * 
-     * Køres serializable så kan kun den som har semaphoren gøre noget
-     * 
-     * 
-     * 
-     * 
-     * Vi smider alle tingene 
-     * 
-     * 
-     * 
-     * Dette er et phantom write
-     * 
-     * 
-     * 
-     * Vi bør slet ikke have dette felt, men det gør det hurtigere at skrive det på siden.
-     * Det er nødvendigt at have en stabil værdi, og da vi bruger 
-     * 
-     * I sjældne tilfælde kan vi 
-     * 
-     * 
-     * 
-     */
-
-
     #region Update method
+    /// <summary>
+    /// Update announcement and return true if successful.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Updates an existing announcement in the database's Announcements table,
+    /// and updates the associated subjects in the AnnouncementSubjects table.
+    /// If the announcement does not exist or has been modified by another user, an exception is thrown.
+    /// The method uses a database transaction to ensure atomicity, meaning that either all updates announcement and subjects
+    /// </remarks>
     public bool Update(Announcement announcement)
     {
         // Creates and opens the database connection
@@ -947,31 +860,21 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     #endregion
 
 
+
     #region Delete method
     /// <summary>
-    /// A Helper class used to map rows from the query for retrieving Announcement
-    /// </summary>
-    private class AnnouncementConcurrencyInfo
-    {
-        public int CurrentApplicants { get; set; }
-        public int MaximumApplicants { get; set; }
-        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
-    }
-
-
-
-    /// <summary>
     /// This method will attempt to remove an announcement that matches the specified id.
+    /// </summary>
     /// 
+    /// <remarks>
     /// Upon the announcement being deleted within the Announcement table, a cascade deletion will ensure
     /// causing the announcement's associated rows within the AnnouncementSubjects and InfluencerAnnouncements tables
     /// to also be removed.
+    /// </remarks>
     /// 
-    /// 
-    /// Returns:
+    /// <returns>
     ///   true if one or multiple rows were affected by the deletion, else returns false
-    ///
-    /// </summary>
+    /// </returns>
     public bool Delete(int announcementId)
     {
         // Creates and opens the database connection
@@ -984,5 +887,30 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
         // If the number of affected rows are more than 0 then returns true else false
         return rowsAffected > 0;
     }
-     #endregion
+    #endregion
+
+
+
+    #region helper classes
+    /// <summary>
+    /// A Helper class used to map rows from the query for retrieving Announcement
+    /// </summary>
+    private class AnnouncementConcurrencyInfo
+    {
+        public int CurrentApplicants { get; set; }
+        public int MaximumApplicants { get; set; }
+        public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+    }
+
+
+    /// <summary>
+    /// An helper class used to map rows from the AnnouncementSubjects query and represents a single subject entry for a specific announcement.
+    /// </summary>
+    private class AnnouncementSubjectRow
+    {
+        public int AnnouncementId { get; set; }
+        public string AnnouncementSubject { get; set; } = string.Empty;
+    }
+    #endregion
+
 }

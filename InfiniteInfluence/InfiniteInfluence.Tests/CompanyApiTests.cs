@@ -3,10 +3,13 @@ using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions; //NullLogger for testing
+
+// NullLogger for testing
+using Microsoft.Extensions.Logging.Abstractions;
 
 
 namespace InfiniteInfluence.Tests;
+
 
 public class CompanyApiTests
 {
@@ -39,7 +42,7 @@ public class CompanyApiTests
         int expectedCompanyId = 6;
 
         // A mock logger, that doesnt log anything, just for testing purposes
-        var nullLogger = NullLogger<CompanysController>.Instance;
+        NullLogger<CompanysController> nullLogger = NullLogger<CompanysController>.Instance;
 
         CompanysController companyApi = new CompanysController(nullLogger, _companyDao);
 

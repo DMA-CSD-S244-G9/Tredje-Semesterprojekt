@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -42,7 +41,7 @@ public class CompanyCreateViewModel
     [Display(Name = "Standard Industry Classification")]
     public int StandardIndustryClassification { get; set; }
 
-    [Display(Name = "Company homepage URL")]    
+    [Display(Name = "Company homepage URL")]
     public string? WebsiteUrl { get; set; } = string.Empty;
 
     [Required]
@@ -79,7 +78,7 @@ public class CompanyCreateViewModel
 
     [Display(Name = "Contact phone number")]
     [Required]
-    public string ContactPhoneNumber{ get; set; } = string.Empty;
+    public string ContactPhoneNumber { get; set; } = string.Empty;
 
 
 

@@ -1,26 +1,36 @@
-﻿using InfiniteInfluence.ApiClient;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
-using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Reflection;
+
+///  <summary>
+///  This controller handles HTTP requests related to company operations in the MVC web application.
+///  It uses dependency injection to access the company data access object ICompanyDao and a logger.
+///  It uses API Client to communicate with the API.
+///  </summary>
+
 
 namespace InfiniteInfluence.Website.Controllers;
 
+
 public class CompanyController : Controller
 {
-    //ICompanyDao _companyApiClient = new CompanyApiClient("https://localhost:7777");
+    #region Attributes and Constructor
     private readonly ICompanyDao _CompanyApiClient;
     private readonly ILogger<CompanyController> _logger;
+
 
     // Utilises Dependency injection from the Program.cs 
     public CompanyController(ICompanyDao companyApiClient, ILogger<CompanyController> logger)
     {
         _CompanyApiClient = companyApiClient;
+
+        // Logger used for logging errors and information ui context
         _logger = logger;
     }
+    #endregion
+
+
 
     #region Create Influencer Profile
     /// <summary>
@@ -40,7 +50,7 @@ public class CompanyController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        var model = new CompanyCreateViewModel
+        CompanyCreateViewModel model = new CompanyCreateViewModel
         {
             //Adds a default value of today datetime, to the DateOfEstablishment field, so it doesnt start at year 1
             DateOfEstablishment = DateTime.Today
@@ -87,7 +97,7 @@ public class CompanyController : Controller
             TempData["SuccessMessage"] = "The company profile was successfully created.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Announcement");
         }
 
         catch (Exception exception)
@@ -102,6 +112,8 @@ public class CompanyController : Controller
         }
     }
     #endregion
+
+
 
     #region Find and show company Profile
 
@@ -137,15 +149,19 @@ public class CompanyController : Controller
         // Check if userId exists
         try
         {
+            // Attempts to retrieve the company profile using the provided userId
             Company company = _CompanyApiClient.GetOne(findProfile.UserId);
         }
         catch
         {
+            // This error message is shown in the browser when entering a wrong id in findprofile view for company
             ModelState.AddModelError(nameof(findProfile.UserId), "No company profile was found with this User Id.");
+            
+            // Return the same findprofil view with the error message
             return View(findProfile);
         }
 
-        // If valid, redirect to GET
+        // If valid, redirect to GET ViewProfile action with the userId as parameter
         return RedirectToAction("ViewProfile", new { userId = findProfile.UserId });
     }
 
@@ -156,16 +172,12 @@ public class CompanyController : Controller
     /// 
     /// <remarks>
     /// This method attempts to retrieve the company profile using the provided 
-    /// <param name="userId"/>. If an error occurs during the retrieval process, the error is logged, and an appropriate error
+    /// userud. If an error occurs during the retrieval process, the error is logged, and an appropriate error
     /// message is added to the model state for display in the view.
     /// </remarks>
     /// 
-    /// <param name="userId">
-    /// The unique identifier of the user whose company profile is to be retrieved.
-    /// </param>
-    /// 
     /// <returns>
-    /// An <see cref="IActionResult"/> that renders the company profile view if the profile is successfully retrieved;
+    /// An IActionResult that renders the company profile view if the profile is successfully retrieved;
     /// otherwise, renders the view with an error message if an exception occurs.
     /// </returns>
     [HttpGet]
@@ -174,9 +186,13 @@ public class CompanyController : Controller
         // kald dit API med userId
         try
         {
+            // Retrieves the influencer profile from the API using the provided userId
             Company? companyProfile = _CompanyApiClient.GetOne(userId);
+
+            // Passes the retrieved influencer profile to the ViewProfile view for rendering
             return View(companyProfile);
         }
+
         catch (Exception exception)
         {
             _logger.LogError(exception, "Error while getting an company from MVC.");
@@ -189,6 +205,8 @@ public class CompanyController : Controller
         }
     }
     #endregion
+
+
 
     #region Helper methods
 
@@ -210,13 +228,11 @@ public class CompanyController : Controller
     /// <returns>A Company object ready to be sent to the API for creation.</returns>
     private Company ConvertFromViewModelToApiInfluencer(CompanyCreateViewModel model)
     {
-        var company = new Company
+        Company company = new Company
         {
             // BaseUser related fields
             LoginEmail = model.LoginEmail,
-            // TODO: This should be hashed later on
             PasswordHash = model.Password,
-
 
             // Company related fields
             IsCompanyVerified = false,
@@ -305,5 +321,4 @@ public class CompanyController : Controller
         return Json(true);
     }
     #endregion
-
 }

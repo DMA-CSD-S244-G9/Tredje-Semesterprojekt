@@ -2,15 +2,20 @@
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Reflection;
 
+///<summary> 
+/// Provides MVC endpoints for managing announcement data, including creating, editing, viewing details,
+/// and listing announcements. 
+/// The controller uses dependency injection to access the announcement data access object IAnnouncementDao.
+/// It uses API Client to communicate with the API.
+///</summary>>
 
 namespace InfiniteInfluence.Website.Controllers;
 
 
 public class AnnouncementController : Controller
 {
+    #region Attributes and Constructor
     private readonly IAnnouncementDao _announcementApiClient;
     private readonly ILogger<AnnouncementController> _logger;
 
@@ -19,15 +24,36 @@ public class AnnouncementController : Controller
     public AnnouncementController(IAnnouncementDao announcementApiClient, ILogger<AnnouncementController> logger)
     {
         _announcementApiClient = announcementApiClient;
+
+        // Logger used for logging errors and information about API context
         _logger = logger;
     }
+    #endregion
+
+
 
     #region Create Announcement
+
+    /// <summary>
+    /// Returns the view for creating a new announcement.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Initializes the announcement creation form with default start and end display dates, as well
+    /// as a default communication type.  The returned view model provides initial values to assist users in creating a
+    /// new announcement.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An IActionResult that renders the announcement creation view with a prepopulated
+    /// AnnouncementCreateViewModel.
+    /// </returns>
     // GET:
     // ENDPOINT: /Announcement/Create
     [HttpGet]
     public IActionResult Create()
     {
+        // Initializes a new instance of the AnnouncementCreateViewModel to hold default values for the view
         AnnouncementCreateViewModel anouncementCreateViewModel = new AnnouncementCreateViewModel();
 
         // Adds a default value to the start and end display dates down to dayte/hours/minutes so they are already set when the view is returned
@@ -41,7 +67,22 @@ public class AnnouncementController : Controller
         return View(anouncementCreateViewModel);
     }
 
-
+    /// <summary>
+    /// Handles HTTP POST requests to create a new announcement using the provided view model data.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// This action validates the input model and, if valid, attempts to create a new announcement
+    /// via the API client. If creation succeeds, a success message is stored in <c>TempData</c> and the user is
+    /// redirected to the announcement index page. If validation fails or an error occurs, the view is redisplayed with
+    /// the original input and an appropriate error message.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An IActionResult that renders the creation view with validation errors if the model state is
+    /// invalid, redirects to the announcement index page upon successful creation, or redisplays the view with an error
+    /// message if an exception occurs.
+    /// </returns>
     // POST:
     // ENDPOINT: /Announcement/Create
     [HttpPost]
@@ -65,7 +106,7 @@ public class AnnouncementController : Controller
             TempData["SuccessMessage"] = "The announcement was created successfully.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Announcement");
         }
 
         catch (Exception exception)
@@ -82,13 +123,22 @@ public class AnnouncementController : Controller
     #endregion
 
 
+
     #region Index Announcement
-    //public IActionResult Index()
-    //{
-    //    return View();
-    //}
-
-
+    /// <summary>
+    /// Displays a list of announcements, ordered by their start display date in descending order.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Retrieves all announcements from the underlying API client and sorts them so that the most
+    /// recent announcements appear first.  If an error occurs while retrieving the announcements, logs the error, adds
+    /// an error message to the model state, and returns an empty list to the view.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An IActionResult that renders the view with a list of announcements. The list is empty if an error
+    /// occurs during retrieval.
+    /// </returns>
     // GET:
     // ENDPOINT /Announcement/Index
     public IActionResult Index()
@@ -119,7 +169,21 @@ public class AnnouncementController : Controller
     #endregion
 
 
+
     #region Details Announcement and Apply to Announcement
+    /// <summary>
+    /// Shows the details of a specific announcement identified by its ID.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Gets the announcement details from the API client using the provided ID.
+    /// If the announcement is not found, returns a 404 Not Found response. If an error occurs during retrieval,
+    /// an error is logged, an error message is added to the model state, and the user is redirected to the index page.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An IActionResult renders the view with a specific announcements.
+    /// </returns>
     // GET
     // ENDPOINT: /Announcement/Details/{id}
     [HttpGet]
@@ -200,12 +264,24 @@ public class AnnouncementController : Controller
     #endregion
 
 
+
     #region Edit Announcement
     /// <summary>
-    /// TODO:
+    /// Retrieves the announcement with the specified identifier and displays the edit view for that announcement.
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// 
+    /// <remarks>
+    /// This action method fetches the announcement data using the provided id and
+    /// maps it to an AnnouncementEditViewModel for editing. If the announcement cannot be found, a 404 Not
+    /// Found result is returned. In the event of an error during retrieval,  an error message is logged and the user is
+    /// redirected to the index view.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// An IActionResult that renders the edit view populated with the announcement's details if found; 
+    /// otherwise, a NotFoundResult if the announcement does not exist, or a redirect to the index view if
+    /// an error occurs.
+    /// </returns>
     [HttpGet]
     public IActionResult Edit(int id)
     {
@@ -294,13 +370,11 @@ public class AnnouncementController : Controller
             // Converts the input received from the MVC View Model to an Announcement that the API can work with
             Announcement updatedAnnouncement = ConvertEditViewModelToAnnouncement(announcementEditViewModel);
 
-            // Genskab RowVersion byte[] fra skjult Base64-felt
-
             // Ensures that the RowVersion is correctly set for concurrency control to work and converts the base64 string back to a byte array
             updatedAnnouncement.RowVersion = string.IsNullOrWhiteSpace(announcementEditViewModel.RowVersion) ? Array.Empty<byte>() : Convert.FromBase64String(announcementEditViewModel.RowVersion);
 
             _announcementApiClient.Update(updatedAnnouncement);
-            
+
             // Defines a success message that is stored in the users session or cookies and then shown
             TempData["SuccessMessage"] = "The announcement was updated successfully.";
 
@@ -316,6 +390,7 @@ public class AnnouncementController : Controller
             // We use the exception from our DAO as the error message in our notification
             TempData["ErrorMessage"] = exception.Message;
 
+            // return view with the same model to show the error
             return View(announcementEditViewModel);
         }
 
@@ -335,7 +410,12 @@ public class AnnouncementController : Controller
     #endregion
 
 
+
     #region Helper method
+    /// <summary>
+    /// Helpers method to convert the AnnouncementCreateViewModel to an Announcement object
+    /// in order to send it to the API for creation.
+    /// </summary>
     private Announcement ConvertFromViewModelToApiAnnouncement(AnnouncementCreateViewModel anouncementCreateViewModel)
     {
         Announcement announcement = new Announcement

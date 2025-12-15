@@ -37,9 +37,9 @@ namespace InfiniteInfluence.WinFormsApp
             pictureBoxBackground = new PictureBox();
             pictureBoxStarMedium = new PictureBox();
             pictureBoxStarSmall = new PictureBox();
-            username = new RoundedTextBox();
-            roundedTextBoxUsername = new RoundedTextBox();
-            roundedTextBoxPassword = new RoundedTextBox();
+            username = new TextBox();
+            roundedTextBoxUsername = new TextBox();
+            roundedTextBoxPassword = new TextBox();
             pictureBoxStarLarge = new PictureBox();
             linkLabelForgotPassword = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)pictureBoxBackground).BeginInit();
@@ -126,15 +126,11 @@ namespace InfiniteInfluence.WinFormsApp
             // username
             // 
             username.BackColor = Color.FromArgb(60, 54, 76);
-            username.BorderColor = Color.FromArgb(134, 129, 158);
-            username.BorderFocusColor = Color.FromArgb(190, 170, 255);
-            username.CornerRadius = 8;
             username.Font = new Font("Segoe UI", 10F);
             username.ForeColor = Color.FromArgb(134, 129, 158);
             username.Location = new Point(0, 0);
             username.Name = "username";
             username.Padding = new Padding(12, 8, 12, 8);
-            username.PlaceholderColor = Color.FromArgb(150, 144, 170);
             username.Size = new Size(235, 32);
             username.TabIndex = 0;
             // 
@@ -142,16 +138,11 @@ namespace InfiniteInfluence.WinFormsApp
             // 
             roundedTextBoxUsername.Anchor = AnchorStyles.None;
             roundedTextBoxUsername.BackColor = Color.FromArgb(60, 54, 76);
-            roundedTextBoxUsername.BorderColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxUsername.BorderFocusColor = Color.FromArgb(109, 84, 181);
-            roundedTextBoxUsername.BorderThickness = 3;
-            roundedTextBoxUsername.CornerRadius = 8;
             roundedTextBoxUsername.Font = new Font("Segoe UI", 9F);
             roundedTextBoxUsername.ForeColor = Color.FromArgb(134, 129, 158);
             roundedTextBoxUsername.Location = new Point(572, 263);
             roundedTextBoxUsername.Name = "roundedTextBoxUsername";
             roundedTextBoxUsername.Padding = new Padding(15, 2, 15, 2);
-            roundedTextBoxUsername.PlaceholderColor = Color.FromArgb(150, 144, 170);
             roundedTextBoxUsername.PlaceholderText = "MariaJuhl27";
             roundedTextBoxUsername.RightToLeft = RightToLeft.No;
             roundedTextBoxUsername.Size = new Size(236, 31);
@@ -161,17 +152,11 @@ namespace InfiniteInfluence.WinFormsApp
             // 
             roundedTextBoxPassword.Anchor = AnchorStyles.None;
             roundedTextBoxPassword.BackColor = Color.FromArgb(60, 54, 76);
-            roundedTextBoxPassword.BorderColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxPassword.BorderFocusColor = Color.FromArgb(109, 84, 181);
-            roundedTextBoxPassword.BorderThickness = 3;
-            roundedTextBoxPassword.CornerRadius = 8;
             roundedTextBoxPassword.Font = new Font("Segoe UI", 9F);
             roundedTextBoxPassword.ForeColor = Color.FromArgb(134, 129, 158);
-            roundedTextBoxPassword.IsPasswordField = true;
             roundedTextBoxPassword.Location = new Point(572, 312);
             roundedTextBoxPassword.Name = "roundedTextBoxPassword";
             roundedTextBoxPassword.Padding = new Padding(15, 2, 15, 2);
-            roundedTextBoxPassword.PlaceholderColor = Color.FromArgb(150, 144, 170);
             roundedTextBoxPassword.PlaceholderText = "Password";
             roundedTextBoxPassword.Size = new Size(236, 31);
             roundedTextBoxPassword.TabIndex = 8;
@@ -243,9 +228,9 @@ namespace InfiniteInfluence.WinFormsApp
         private PictureBox pictureBoxBackground;
         private PictureBox pictureBoxStarMedium;
         private PictureBox pictureBoxStarSmall;
-        private RoundedTextBox username;
-        private RoundedTextBox roundedTextBoxUsername;
-        private RoundedTextBox roundedTextBoxPassword;
+        private TextBox username;
+        private TextBox roundedTextBoxUsername;
+        private TextBox roundedTextBoxPassword;
         private PictureBox pictureBoxStarLarge;
         private LinkLabel linkLabelForgotPassword;
     }
