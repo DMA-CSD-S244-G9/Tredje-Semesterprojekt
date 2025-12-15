@@ -115,7 +115,6 @@ public class InfluencerController : Controller
     /// <returns>An <see cref="IActionResult"/> that renders the current view with validation errors if the model state is
     /// invalid, or redirects to the "ViewProfile" action with the specified user ID if the input is valid. 
     /// </returns>
-
     [HttpPost]
     public IActionResult FindProfile(FindProfileViewModel findProfile)
     {
@@ -128,11 +127,13 @@ public class InfluencerController : Controller
         // Check if userId exists
         try
         {
-            Influencer influencer = _InfluencerApiClient.GetOne(findProfile.UserId);
+            Influencer? influencer = _InfluencerApiClient.GetOne(findProfile.UserId);
         }
+
         catch
         {
             ModelState.AddModelError(nameof(findProfile.UserId), "No influencer profile was found with this User Id.");
+            
             return View(findProfile);
         }
 
@@ -166,6 +167,7 @@ public class InfluencerController : Controller
         try
         {
             Influencer? influencerProfile = _InfluencerApiClient.GetOne(userId);
+
             return View(influencerProfile);
         }
         catch (Exception exception)

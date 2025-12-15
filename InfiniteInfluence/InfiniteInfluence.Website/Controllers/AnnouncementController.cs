@@ -63,7 +63,7 @@ public class AnnouncementController : Controller
             TempData["SuccessMessage"] = "The announcement was created successfully.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Announcement");
         }
 
         catch (Exception exception)
