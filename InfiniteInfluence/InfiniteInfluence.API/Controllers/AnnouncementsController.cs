@@ -33,7 +33,11 @@ public class AnnouncementsController : ControllerBase
     {
         try
         {
-            return Ok(_announcementDao.Create(announcement));
+            // Calls upon the DAO class to create the new object and return its newly generated ID
+            int createdAnnouncementId = _announcementDao.Create(announcement);
+
+            // Returns the HTTP status code 201 (Created) along with the Id of the object that was created
+            return StatusCode(StatusCodes.Status201Created, createdAnnouncementId);
         }
 
         catch (Exception exception)

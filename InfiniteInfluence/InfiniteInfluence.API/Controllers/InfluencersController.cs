@@ -1,4 +1,5 @@
 using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,9 +50,11 @@ public class InfluencersController : ControllerBase
     {
         try
         {
-            // Attempts to create the influencer and returns the new influencer's ID.
-            // Returns HTTP 200 OK (or ideally 201 Created) with the new company's userId if the operation succeeds.
-            return Ok(_influencerDao.Create(influencer));
+            // Calls upon the DAO class to create the new object and return its newly generated ID
+            int createdInfluencerId = _influencerDao.Create(influencer);
+
+            // Returns the HTTP status code 201 (Created) along with the Id of the object that was created
+            return StatusCode(StatusCodes.Status201Created, createdInfluencerId);
         }
 
         catch (Exception exception)

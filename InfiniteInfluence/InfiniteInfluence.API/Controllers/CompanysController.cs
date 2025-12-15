@@ -1,4 +1,5 @@
 ﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,9 +65,11 @@ public class CompanysController : Controller
     {
         try
         {
-            // Attempt to create the company and return the new company's userId
-            // Returns HTTP 200 OK (or ideally 201 Created) with the new company's userId if the operation succeeds.
-            return Ok(_companyDao.Create(company));
+            // Calls upon the DAO class to create the new object and return its newly generated ID
+            int createdCompanyId = _companyDao.Create(company);
+
+            // Returns the HTTP status code 201 (Created) along with the Id of the object that was created
+            return StatusCode(StatusCodes.Status201Created, createdCompanyId);
         }
 
         catch (Exception exception)
