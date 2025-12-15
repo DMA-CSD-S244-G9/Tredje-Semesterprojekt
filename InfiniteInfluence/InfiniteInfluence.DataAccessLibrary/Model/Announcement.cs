@@ -15,10 +15,6 @@ public class Announcement
 
     public string Title { get; set; } = string.Empty;
 
-    // These are obtained from company and not here
-    // public string CompanyName { get; set; }
-    // public string CompanyLogoUrl { get; set; }
-
 
     public DateTime? CreationDateTime { get; set; }
     public DateTime? LastEditDateTime { get; set; }
@@ -41,10 +37,6 @@ public class Announcement
     public List<string> ListOfSubjects { get; set; } = new();
     public string ShortDescriptionText { get; set; } = string.Empty;
     public string AdditionalInformationText { get; set; } = string.Empty;
-
-    //public string CompanyContactPerson { get; set; } = string.Empty;
-    //public string CompanyContactEmailAddress { get; set; } = string.Empty;
-    //public string CompanyContactPhoneNumber { get; set; } = string.Empty;
 
 
     public string StatusType { get; set; } = string.Empty;
