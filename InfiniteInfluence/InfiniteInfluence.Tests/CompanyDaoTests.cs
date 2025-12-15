@@ -140,13 +140,13 @@ public class CompanyDaoTests
     {
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();
 
         connection.Execute(@"DELETE FROM Companys WHERE userId = @UserId;
-          DELETE FROM Users WHERE userId = @UserId;", new { UserId = newCompanyId });
+            DELETE FROM Users WHERE userId = @UserId;", new { UserId = newCompanyId });
     }
 
 

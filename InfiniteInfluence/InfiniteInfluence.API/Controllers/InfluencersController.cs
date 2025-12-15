@@ -35,7 +35,7 @@ public class InfluencersController : ControllerBase
         {
             _logger.LogError(exception, "An error has occured when attempting to create an Influencer.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -75,7 +75,7 @@ public class InfluencersController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(exception, $"An error occurred trying to retrieve the influencer with user id {userId}.");
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
     }

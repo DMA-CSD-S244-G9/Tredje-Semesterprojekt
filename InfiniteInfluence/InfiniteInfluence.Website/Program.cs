@@ -14,7 +14,7 @@ public class Program
 
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container. 
         builder.Services.AddControllersWithViews();
@@ -28,7 +28,7 @@ public class Program
         // Sets up the dependency injection using the AnnouncementApiClient in the API
         builder.Services.AddScoped<IAnnouncementDao>((_) => new AnnouncementApiClient(_apiUrl));
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

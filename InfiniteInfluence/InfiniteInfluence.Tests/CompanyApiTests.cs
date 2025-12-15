@@ -42,7 +42,7 @@ public class CompanyApiTests
         int expectedCompanyId = 6;
 
         // A mock logger, that doesnt log anything, just for testing purposes
-        var nullLogger = NullLogger<CompanysController>.Instance;
+        NullLogger<CompanysController> nullLogger = NullLogger<CompanysController>.Instance;
 
         CompanysController companyApi = new CompanysController(nullLogger, _companyDao);
 

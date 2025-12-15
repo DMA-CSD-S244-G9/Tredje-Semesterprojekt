@@ -70,7 +70,7 @@ public class CompanysController : Controller
         {
             _logger.LogError(exception, "An error has occured when attempting to create a Company.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -112,7 +112,7 @@ public class CompanysController : Controller
         {
             _logger.LogError(exception, $"An error occurred trying to retrieve the company with user id {userId}.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }
@@ -140,7 +140,8 @@ public class CompanysController : Controller
         try
         {
             // Attempt to delete the user by userId
-            var deleted = _companyDao.Delete(userId);
+            bool deleted = _companyDao.Delete(userId);
+            
             if (!deleted)
             {
                 return NoContent();
@@ -152,7 +153,7 @@ public class CompanysController : Controller
         {
             _logger.LogError(exception, $"An error occurred trying to delete the author with id {userId}.");
 
-            var innerMessage = exception.InnerException?.Message;
+            string? innerMessage = exception.InnerException?.Message;
 
             return StatusCode(500, $"Error: {exception.Message} | Inner: {innerMessage}");
         }

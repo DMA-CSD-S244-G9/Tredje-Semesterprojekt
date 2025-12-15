@@ -58,13 +58,13 @@ public class CompanyApiClient : ICompanyDao
     public int Create(Company company)
     {
         //prepare the request and set the method to POST
-        var request = new RestRequest("companys", Method.Post);
+        RestRequest request = new RestRequest("companys", Method.Post);
 
         //add the company object as json body
         request.AddJsonBody(company);
 
         //execute the request and get the response
-        var response = _restClient.Execute<int>(request);
+        RestResponse<int> response = _restClient.Execute<int>(request);
 
         //check for errors
         if (response == null)

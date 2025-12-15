@@ -30,7 +30,7 @@ public class InfluencerApiClient : IInfluencerDao
         request.AddJsonBody(influencer);
 
         // Calls upon the API and expects an integer back in the form of a UserId
-        var response = _restClient.Execute<int>(request);
+        RestResponse<int> response = _restClient.Execute<int>(request);
 
         if (response == null)
         {

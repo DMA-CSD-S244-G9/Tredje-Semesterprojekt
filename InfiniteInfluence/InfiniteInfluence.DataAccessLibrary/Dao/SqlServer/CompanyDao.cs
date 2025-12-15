@@ -232,9 +232,9 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
     //TODO: write comments
     public bool Delete(int userId)
     {
-        var sqlQueryDelete = "DELETE FROM Companys WHERE userId = @UserId";
-        using var connection = CreateConnection();
-        var rows = connection.Execute(sqlQueryDelete, new { UserId = userId });
+        string sqlQueryDelete = "DELETE FROM Companys WHERE userId = @UserId";
+        using IDbConnection connection = CreateConnection();
+        int rows = connection.Execute(sqlQueryDelete, new { UserId = userId });
         return rows > 0;
     }
 

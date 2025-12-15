@@ -38,7 +38,7 @@ public class CompanyController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        var model = new CompanyCreateViewModel
+        CompanyCreateViewModel model = new CompanyCreateViewModel
         {
             //Adds a default value of today datetime, to the DateOfEstablishment field, so it doesnt start at year 1
             DateOfEstablishment = DateTime.Today
@@ -208,13 +208,11 @@ public class CompanyController : Controller
     /// <returns>A Company object ready to be sent to the API for creation.</returns>
     private Company ConvertFromViewModelToApiInfluencer(CompanyCreateViewModel model)
     {
-        var company = new Company
+        Company company = new Company
         {
             // BaseUser related fields
             LoginEmail = model.LoginEmail,
-            // TODO: This should be hashed later on
             PasswordHash = model.Password,
-
 
             // Company related fields
             IsCompanyVerified = false,
@@ -303,5 +301,4 @@ public class CompanyController : Controller
         return Json(true);
     }
     #endregion
-
 }

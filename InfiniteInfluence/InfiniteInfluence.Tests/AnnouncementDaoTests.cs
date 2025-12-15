@@ -75,7 +75,7 @@ public class AnnouncementDaoTests
         // Gets the amount of registered announcements in the Announcement table after the creation of the announcement
         int countAfter = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM Announcements");
 
-        var announcementTableRow = connection.QuerySingle<dynamic>("SELECT * FROM Announcements WHERE announcementId = @Id", new { Id = newAnnouncementId });
+        dynamic announcementTableRow = connection.QuerySingle<dynamic>("SELECT * FROM Announcements WHERE announcementId = @Id", new { Id = newAnnouncementId });
 
 
 

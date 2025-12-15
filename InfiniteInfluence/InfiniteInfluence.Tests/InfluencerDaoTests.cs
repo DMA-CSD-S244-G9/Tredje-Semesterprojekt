@@ -291,7 +291,7 @@ public class InfluencerDaoTests
     {
 
         // Prepares for connecting to the database
-        using var connection = new SqlConnection(_dataBaseConnectionString);
+        using SqlConnection connection = new SqlConnection(_dataBaseConnectionString);
 
         // Establishes the connection to the database
         connection.Open();
