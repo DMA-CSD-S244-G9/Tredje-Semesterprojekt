@@ -64,6 +64,9 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 
 
     #region SQL Query - Get One 
+    // SQL statement for retrieving a Influencer by userId
+    // Uses an INNER JOIN to combine data from Users and Influencedr tables
+    // To ensure that the userId entered is an influencer Id and also to get access to the loginEmail and passwordHash from Users table when login is implemented
     private readonly string? queryFindInfluencer = @"
                 SELECT
                     u.userId, u.loginEmail, u.passwordHash,
@@ -83,7 +86,7 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
                 INNER JOIN Influencers i ON i.userId = u.userId
                 WHERE u.userId = @UserId;";
 
-
+    // SQL statement for retrieving influencer domains by userId
     private readonly string? queryFindInfluencerDomains = @"
                 SELECT domain
                 FROM InfluencerDomains
@@ -179,32 +182,23 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
 
     #region Get one Influencer
     /// <summary>
-    /// Creates a new influencer by inserting data into the Users, Influencers, 
-    /// and InfluencerDomains tables. The entire operation is executed inside
-    /// a database transaction to ensure atomicity.
+    /// Retrieves an Influencer associated with the specified user ID.
     /// </summary>
     /// 
-    /// <param name="influencer">
-    /// The influencer object containing all required data for creation.
-    /// The object must contain valid LoginEmail and PasswordHash for the
-    /// User table, and any influencer-specific fields for the Influencers
-    /// and InfluencerDomains tables.
-    /// </param>
+    /// <remarks>
+    /// This method queries the database to retrieve the Influencer details and its associated domains
+    /// for the given user ID. If no company is found for the specified user ID, the method returns null.
+    /// </remarks>
     /// 
     /// <returns>
-    /// The newly created user's UserId (primary key). This value is generated 
-    /// by the database and assigned to both the Users and Influencers tables.
+    /// A Influencer object containing the company's details and associated domains if the user ID is found;
+    /// otherwise,null.
     /// </returns>
-    /// 
-    /// <exception cref="Exception">
-    /// Thrown if any part of the creation process fails. 
-    /// The database transaction will be rolled back before the exception is rethrown.
-    /// </exception>
     public Influencer? GetOne(int userId)
     {
 
         using IDbConnection connection = CreateConnection();
-        {
+        try{
             // Dapper will be mapping both the BaseUser and the Influencer classes' properties
             Influencer? foundInfluencer = connection.QuerySingleOrDefault<Influencer>(queryFindInfluencer, new { UserId = userId });
 
@@ -221,6 +215,11 @@ public class InfluencerDao : BaseConnectionDao, IInfluencerDao
             foundInfluencer.InfluencerDomains = domains.ToList();
 
             return foundInfluencer;
+        }
+        // Catches any exceptions that occur during the database operations and wraps them in a DataException
+        catch (Exception exception)
+        {
+            throw new DataException("Failed to retrieve influencer from the database.", exception);
         }
     }
     #endregion

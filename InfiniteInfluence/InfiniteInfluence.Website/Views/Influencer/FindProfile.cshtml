@@ -24,7 +24,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6 mb-3">
             <label asp-for="UserId" class="form-label"></label>
-            <input asp-for="UserId" class="form-control" placeholder="Enter user ID" /> 
+            @* inputmode ="numeric" adds numpad on phone
+            type="number" restricts to numbers only in the input field *@
+            <input asp-for="UserId" class="form-control" type="number" inputmode="numeric" placeholder="Please enter your company Id" />
 
             @* error message *@
             <span asp-validation-for="UserId" class="text-danger"></span>
