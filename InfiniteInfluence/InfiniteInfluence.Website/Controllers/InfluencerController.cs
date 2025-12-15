@@ -1,13 +1,8 @@
-﻿using InfiniteInfluence.ApiClient;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-using System;
-using System.Reflection;
-using System.Security.Claims;
 
 
 namespace InfiniteInfluence.Website.Controllers;
@@ -18,7 +13,7 @@ public class InfluencerController : Controller
     private readonly IInfluencerDao _InfluencerApiClient;
     private readonly ILogger<InfluencerController> _logger;
 
-    
+
     // Utilises Dependency injection from the Program.cs 
     public InfluencerController(IInfluencerDao influencerClient, ILogger<InfluencerController> logger)
     {
@@ -91,7 +86,7 @@ public class InfluencerController : Controller
     #endregion
 
     #region Find and show Influencer Profile
-    
+
     /// <summary>
     /// Displays the influencer profile view.
     /// </summary>

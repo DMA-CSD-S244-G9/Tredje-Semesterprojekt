@@ -2,8 +2,6 @@
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Reflection;
 
 
 namespace InfiniteInfluence.Website.Controllers;
@@ -300,7 +298,7 @@ public class AnnouncementController : Controller
             updatedAnnouncement.RowVersion = string.IsNullOrWhiteSpace(announcementEditViewModel.RowVersion) ? Array.Empty<byte>() : Convert.FromBase64String(announcementEditViewModel.RowVersion);
 
             _announcementApiClient.Update(updatedAnnouncement);
-            
+
             // Defines a success message that is stored in the users session or cookies and then shown
             TempData["SuccessMessage"] = "The announcement was updated successfully.";
 

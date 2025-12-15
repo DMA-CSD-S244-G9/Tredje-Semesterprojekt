@@ -3,6 +3,7 @@
 
 namespace InfiniteInfluence.Website.Controllers;
 
+
 public class ErrorController : Controller
 {
     [Route("Error/404")]

@@ -1,13 +1,11 @@
-﻿using InfiniteInfluence.ApiClient;
-using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
-using InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
+﻿using InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 using InfiniteInfluence.DataAccessLibrary.Model;
 using InfiniteInfluence.Website.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Reflection;
+
 
 namespace InfiniteInfluence.Website.Controllers;
+
 
 public class CompanyController : Controller
 {
