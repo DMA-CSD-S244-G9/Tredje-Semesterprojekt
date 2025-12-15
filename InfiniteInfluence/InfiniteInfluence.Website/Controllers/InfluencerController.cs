@@ -72,7 +72,7 @@ public class InfluencerController : Controller
             TempData["SuccessMessage"] = "The influencer profile was successfully created.";
 
             // Redirects the user to the specified page corrosponding to endpoint of the supplied action and controller 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Announcement");
         }
 
         catch (Exception exception)
