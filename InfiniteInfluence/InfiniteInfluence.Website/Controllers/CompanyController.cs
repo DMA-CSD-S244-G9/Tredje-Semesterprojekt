@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 ///  <summary>
 ///  This controller handles HTTP requests related to company operations in the MVC web application.
 ///  It uses dependency injection to access the company data access object ICompanyDao and a logger.
-///  It uses API client to communicate with the API layer.
+///  It uses API Client to communicate with the API.
 ///  </summary>
 
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 ///  <summary>
 ///  This controller handles HTTP requests related to influencer operations in the MVC web application.
 ///  It uses dependency injection to access the influencer data access object IInfluencerDao and a logger.
-///  It uses API client to communicate with the API layer.
+///  It uses API Client to communicate with the API.
 ///  </summary>
 
 
