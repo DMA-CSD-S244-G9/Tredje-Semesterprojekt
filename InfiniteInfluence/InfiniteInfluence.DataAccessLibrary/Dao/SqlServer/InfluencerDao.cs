@@ -11,7 +11,11 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 ///<summary>
 /// This class provides data access methods for managing Influencer entities in a SQL Server database.
 /// It includes functionality to create new influencers and retrieve existing ones by their user ID.
+/// 
 /// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
+/// 
+/// This class does not perform logging or presentation logic; instead, it throws exceptions that
+/// are intended to be handled and logged by higher layers such as API or MVC controllers.
 ///</summary>
 
 public class InfluencerDao : BaseConnectionDao, IInfluencerDao

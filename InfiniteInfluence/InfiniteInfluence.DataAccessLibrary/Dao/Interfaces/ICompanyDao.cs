@@ -15,7 +15,7 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.Interfaces;
 public interface ICompanyDao
 {
     /// <summary>
-    /// Creates a company and return an userId as int.
+    /// Creates a company and return an userId as int and return an int id.
     /// </summary>
     int Create(Company company);
 
@@ -24,7 +24,10 @@ public interface ICompanyDao
     /// </summery>>
     Company? GetOne(int userId);
 
-    /// TODO: Write comments
+    ///<summery>
+    /// This method isnt implement, its used for a test in companyDaoTest.
+    /// Deletes an company from the database tables based on its userId and returns true if the announcement was deleted elsewise returns false
+    /// </summery>
     bool Delete(int userId);
 
 }

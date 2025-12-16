@@ -25,9 +25,29 @@ public class AnnouncementsController : ControllerBase
         _announcementDao = announcementDao;
     }
 
+
+
     #region Create Announcement
-    // POST
-    // ENDPOINT: /announcements/create
+    /// <summary>
+    /// Creates a new announcement in the system.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Method:      POST  
+    /// Controller:  Announcements  
+    /// Endpoint:    /announcements
+    /// 
+    /// This endpoint creates a new announcement based on the provided announcement data.
+    /// On success, HTTP 201 (Created) is returned along with the generated announcement ID.
+    /// </remarks>
+    /// 
+    /// <param name="announcement">
+    /// The announcement object containing the data required to create a new announcement.
+    /// </param>
+    /// 
+    /// <returns>
+    /// Returns the unique identifier of the newly created announcement.
+    /// </returns>
     [HttpPost]
     public ActionResult<int> Create(Announcement announcement)
     {
@@ -52,9 +72,24 @@ public class AnnouncementsController : ControllerBase
     #endregion
 
 
+
     #region Get All Announcements
-    // GET
-    // ENDPOINT: /announcements/index
+    /// <summary>
+    /// Retrieves all announcements available in the system.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Method:      GET  
+    /// Controller:  Announcements  
+    /// Endpoint:    /announcements
+    /// 
+    /// This endpoint returns all announcements stored in the system.
+    /// On success, HTTP 200 (OK) is returned with a list of announcements.
+    /// </remarks>
+    /// 
+    /// <returns>
+    /// A collection of announcements.
+    /// </returns>
     [HttpGet]
     public ActionResult<IEnumerable<Announcement>> GetAll()
     {
@@ -75,9 +110,28 @@ public class AnnouncementsController : ControllerBase
     #endregion
 
 
+
     #region Get one Announcement by ID
-    // GET
-    // ENDPOINT: /announcements/{announcementId}
+    /// <summary>
+    /// Retrieves a single announcement by its unique identifier.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Method:      GET  
+    /// Controller:  Announcements  
+    /// Endpoint:    /announcements/{announcementId}
+    /// 
+    /// This endpoint retrieves a specific announcement by its ID.
+    /// If no announcement is found, HTTP 204 (No Content) is returned.
+    /// </remarks>
+    /// 
+    /// <param name="announcementId">
+    /// The unique identifier of the announcement.
+    /// </param>
+    /// 
+    /// <returns>
+    /// The announcement matching the specified identifier.
+    /// </returns>
     [HttpGet("{announcementId:int}")]
     public ActionResult<Announcement> GetOne(int announcementId)
     {
@@ -104,6 +158,7 @@ public class AnnouncementsController : ControllerBase
         }
     }
     #endregion
+
 
 
     #region Submit Application to Announcement
@@ -171,8 +226,27 @@ public class AnnouncementsController : ControllerBase
 
 
 
-    // DELETE:
-    // ENDPOINT: /announcements/{announcementId}
+    /// <summary>
+    /// Deletes an announcement with the specified identifier.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Method:      DELETE  
+    /// Controller:  Announcements  
+    /// Endpoint:    /announcements/{announcementId}
+    /// 
+    /// This endpoint deletes an announcement by its ID.
+    /// If the announcement does not exist, HTTP 404 (Not Found) is returned.
+    /// On successful deletion, HTTP 200 (OK) is returned.
+    /// </remarks>
+    /// 
+    /// <param name="announcementId">
+    /// The unique identifier of the announcement to delete.
+    /// </param>
+    /// 
+    /// <returns>
+    /// True if the announcement was successfully deleted; otherwise false.
+    /// </returns>
     [HttpDelete("{announcementId}")]
     public ActionResult<bool> Delete(int announcementId)
     {
@@ -203,27 +277,33 @@ public class AnnouncementsController : ControllerBase
     #endregion
 
 
+
     #region Update Announcement
     /// <summary>
-    /// Updates an existing announcement with the specified ID using the provided data.
+    /// Updates an existing announcement.
     /// </summary>
     /// 
     /// <remarks>
-    /// This method validates that the provided ID matches the ID in the announcementDto. 
-    /// If the IDs do not match, a BadRequestResult is returned. 
+    /// Method:      PUT  
+    /// Controller:  Announcements  
+    /// Endpoint:    /announcements/{announcementId}
     /// 
-    /// If an error occurs during the update process, a 500 Internal Server Error is returned with details about the
-    /// exception.
+    /// This endpoint updates an existing announcement using optimistic concurrency control.
+    /// If the announcement does not exist, HTTP 404 (Not Found) is returned.
+    /// If a concurrency conflict occurs, HTTP 409 (Conflict) is returned.
+    /// </remarks>
     /// 
-    /// The unique identifier of the announcement to be updated. Must match the ID in announcementDto
+    /// <param name="announcementId">
+    /// The unique identifier of the announcement to update.
+    /// </param>
     /// 
-    /// announcementDtoThe data transfer object containing the updated announcement details. 
-    /// The AnnouncementUpdateDto.AnnouncementId must match the id.</remarks>
+    /// <param name="announcementDto">
+    /// The data transfer object containing updated announcement data, including RowVersion.
+    /// </param>
     /// 
-    /// <returns>True if the announcement was successfully updated; NoContentResult if the update
-    /// operation did not modify any data; or an appropriate HTTP status code indicating the result of the operation.</returns>
-    // POST
-    // ENDPOINT: /announcements/edit?id={announcementId}
+    /// <returns>
+    /// True if the announcement was successfully updated.
+    /// </returns>
     [HttpPut("{announcementId}")]
     public ActionResult<bool> Update(int announcementId, [FromBody] AnnouncementUpdateDto announcementDto)
     {
@@ -277,6 +357,7 @@ public class AnnouncementsController : ControllerBase
         }
     }
     #endregion
+
 
 
     #region helper method

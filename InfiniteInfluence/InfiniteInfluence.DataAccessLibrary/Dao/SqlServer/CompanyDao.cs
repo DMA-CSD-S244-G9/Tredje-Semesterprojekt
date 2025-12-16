@@ -13,7 +13,11 @@ namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 /// Provides data access operations for managing company in the database.
 /// This class is responsible for creating, retrieving, and deleting company records, 
 /// It ensures atomicity of operations by utilizing transactions for multi-step database interactions.
+/// 
 /// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
+/// 
+/// This class does not perform logging or presentation logic; instead, it throws exceptions that
+/// are intended to be handled and logged by higher layers such as API or MVC controllers.
 /// </summary>
 public class CompanyDao : BaseConnectionDao, ICompanyDao
 {
@@ -233,7 +237,19 @@ public class CompanyDao : BaseConnectionDao, ICompanyDao
 
 
     #region Delete company
-    //TODO: write comments
+    /// <summary>
+    /// This method is not implemented, its use in a CompanyDaoTests, to cleanup
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Upon the announcement being deleted within the Announcement table, a cascade deletion will ensure
+    /// causing the announcement's associated rows within the AnnouncementSubjects and InfluencerAnnouncements tables
+    /// to also be removed.
+    /// </remarks>
+    /// 
+    /// <returns>
+    ///  True if one or multiple rows were affected by the deletion, else returns false
+    /// </returns>
     public bool Delete(int userId)
     {
         string sqlQueryDelete = "DELETE FROM Companys WHERE userId = @UserId";

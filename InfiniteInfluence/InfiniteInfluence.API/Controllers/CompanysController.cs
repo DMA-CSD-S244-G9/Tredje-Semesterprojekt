@@ -47,18 +47,26 @@ public class CompanysController : Controller
 
 
     #region create Company
+
     /// <summary>
-    /// Creates a new company record in the system.
+    /// Creates a new company in the system.
     /// </summary>
     /// 
     /// <remarks>
-    /// This method attempts to create a new company record using the provided company object. 
-    /// Ensure that the input is valid and complete before calling this method. If an error
-    /// occurs, the method logs the exception and returns an appropriate error response.
+    /// Method:      POST  
+    /// Controller:  Company  
+    /// Endpoint:    /companys
+    /// 
+    /// This endpoint creates a new company record and returns its generated identifier.
+    /// On success, the API responds with HTTP 201 (Created).
     /// </remarks>
     /// 
-    /// <returns>An ActionResult{T} containing the unique identifier of the newly created company. Returns a status
-    /// code of 500 if an error occurs during the operation.
+    /// <param name="company">
+    /// The company object containing the information required to create a new company.
+    /// </param>
+    /// 
+    /// <returns>
+    /// Returns the generated identifier of the newly created company.
     /// </returns>
     [HttpPost]
     public ActionResult<int> Create(Company company)
@@ -89,20 +97,26 @@ public class CompanysController : Controller
 
 
     #region Get One Company by UserId 
+
     /// <summary>
-    /// Retrieves the company associated with the specified userId.
+    /// Retrieves a single company based on the associated user identifier.
     /// </summary>
     /// 
     /// <remarks>
-    /// This method attempts to retrieve the company information for the given user ID. If no company
-    /// is found, a 204 No Content response is returned. In the event of an error, a 500 Internal Server Error response
-    /// is returned, and the error is logged.
+    /// Method:      GET  
+    /// Controller:  Company  
+    /// Endpoint:    /companys/{userId}
+    /// 
+    /// This endpoint retrieves a company linked to the specified user identifier.
+    /// If no company exists, a client error response is returned.
     /// </remarks>
     /// 
+    /// <param name="userId">
+    /// The identifier of the user associated with the company.
+    /// </param>
+    /// 
     /// <returns>
-    /// An ActionResult containing the company information if found; NoContentResult if
-    /// no company is associated with the specified user ID; or a StatusCodeResult with a status code of
-    /// 500 if an error occurs.
+    /// Returns the company if found; otherwise an error response.
     /// </returns>
     [HttpGet("{userId}")]
     public ActionResult<Company> GetOne(int userId)
@@ -139,10 +153,30 @@ public class CompanysController : Controller
 
 
     #region Delete Company by UserId
+    // TODO: Fully implement the delete functionality in the system, so it extends
+    // to the ApiClient and actual MVC's interface.
 
     /// <summary>
-    /// This method isnt implemented in the front end, but it deletes a company by userId.
+    /// Deletes a company associated with the specified user identifier.
     /// </summary>
+    /// 
+    /// <remarks>
+    /// Method:      DELETE  
+    /// Controller:  Company  
+    /// Endpoint:    /companys/{userId}
+    /// 
+    /// This endpoint attempts to delete a company linked to the specified user identifier.
+    /// If no company exists for the given userId, HTTP 204 (No Content) is returned.
+    /// On successful deletion, HTTP 200 (OK) is returned with a boolean confirmation.
+    /// </remarks>
+    /// 
+    /// <param name="userId">
+    /// The identifier of the user associated with the company to be deleted.
+    /// </param>
+    /// 
+    /// <returns>
+    /// Returns true if the company was successfully deleted; otherwise false if no company was found.
+    /// </returns>
     [HttpDelete("{userId}")]
     public ActionResult<bool> Delete(int userId)
     {
