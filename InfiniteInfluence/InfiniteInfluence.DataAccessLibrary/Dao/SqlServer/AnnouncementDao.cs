@@ -7,6 +7,20 @@ using System.Transactions;
 
 namespace InfiniteInfluence.DataAccessLibrary.Dao.SqlServer;
 
+/// <summary>
+/// This class handling all database operations related to announcements.
+///
+/// The AnnouncementDao provides methods for creating, retrieving, updating, and deleting announcements,
+/// as well as managing related data such as announcement subjects and influencer applications.
+/// 
+/// It implements the ICompanyDao interface and extends the BaseConnectionDao for database connection management.
+/// 
+/// Optimistic Concurrency control is handled using row versioning where relevant, and business rules such as
+/// maximum applicants and duplicate applications are enforced at the data access level.
+/// 
+/// This class does not perform logging or presentation logic; instead, it throws exceptions that
+/// are intended to be handled and logged by higher layers such as API or MVC controllers.
+/// </summary>
 
 public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
 {
@@ -873,7 +887,7 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
     /// </remarks>
     /// 
     /// <returns>
-    ///   true if one or multiple rows were affected by the deletion, else returns false
+    /// True if one or multiple rows were affected by the deletion, else returns false
     /// </returns>
     public bool Delete(int announcementId)
     {
