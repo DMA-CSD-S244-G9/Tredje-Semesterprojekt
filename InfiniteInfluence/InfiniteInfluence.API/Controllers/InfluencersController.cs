@@ -33,17 +33,24 @@ public class InfluencersController : ControllerBase
 
     #region create Influencer
     /// <summary>
-    /// Creates a new influencer and returns the id of the created record.
+    /// Creates a new influencer in the system.
     /// </summary>
     /// 
-    /// <remarks>If the creation is successful, the method returns an HTTP 200 response with the new
-    /// influencer's ID. If an error occurs during creation, the method returns an HTTP 500 response with error
-    /// details.
+    /// <remarks>
+    /// Method:      POST  
+    /// Controller:  Influencer  
+    /// Endpoint:    /influencers
+    /// 
+    /// This endpoint creates a new influencer record and returns its generated identifier.
+    /// On success, the API responds with HTTP 201 (Created).
     /// </remarks>
     /// 
+    /// <param name="influencer">
+    /// The influencer object containing the information required to create a new influencer.
+    /// </param>
+    /// 
     /// <returns>
-    /// An ActionResult containing the id of the newly created influencer if successful;
-    /// otherwise, an error response.
+    /// Returns the generated identifier of the newly created influencer.
     /// </returns>
     [HttpPost]
     public ActionResult<int> Create(Influencer influencer)
@@ -75,17 +82,24 @@ public class InfluencersController : ControllerBase
 
     #region Get One Influencer
     /// <summary>
-    /// Retrieves an influencer by their user-Id.
+    /// Retrieves a single influencer based on the associated user identifier.
     /// </summary>
     /// 
     /// <remarks>
-    /// Returns a 200 OK response with the influencer if found. Returns a 400 Bad Request if the
-    /// influencer does not exist. Returns a 500 Internal Server Error if an unexpected error occurs.
+    /// Method:      GET  
+    /// Controller:  Influencer  
+    /// Endpoint:    /influencers/{userId}
+    /// 
+    /// This endpoint retrieves an influencer linked to the specified user identifier.
+    /// If no influencer exists with the given userId, HTTP 404 (Not Found) is returned.
     /// </remarks>
     /// 
+    /// <param name="userId">
+    /// The identifier of the user associated with the influencer.
+    /// </param>
+    /// 
     /// <returns>
-    /// An ActionResult containing the Influencer object if found; otherwise, a status
-    /// code indicating the result of the operation.
+    /// Returns the influencer if found; otherwise a 404 Not Found response.
     /// </returns>
     [HttpGet("{userId}")]
     public ActionResult<Influencer> GetOne(int userId)
