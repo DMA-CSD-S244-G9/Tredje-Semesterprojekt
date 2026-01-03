@@ -124,7 +124,7 @@ VALUES
 
 -- Announcement 5 (BeautyBox - Beauty)
 (10, 'Beauty Product Showcase', GETDATE(), GETDATE(),
- '2024-10-06 09:00:00', DATEADD(DAY, 35, GETDATE()), 2, 5, 12000, 'Email', 'Danish',
+ '2024-10-06 09:00:00', DATEADD(DAY, 35, GETDATE()), 2, 4, 12000, 'Email', 'Danish',
  1, 1, 3500.00, 'Showcase our new beauty product line.',
  'Products included for free.', 'Active', 1);
 

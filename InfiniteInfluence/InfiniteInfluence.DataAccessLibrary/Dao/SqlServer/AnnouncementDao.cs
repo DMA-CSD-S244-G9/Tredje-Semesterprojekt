@@ -602,6 +602,9 @@ public class AnnouncementDao : BaseConnectionDao, IAnnouncementDao
                 int maximumNumberOfApplicants = announcementWithConcurrencyInfo.MaximumApplicants;
                 byte[] rowVersion = announcementWithConcurrencyInfo.RowVersion;
 
+                // 3 second delay to simulate long processing time for testing purposes
+                Thread.Sleep(3000);
+
                 // If there already are the same or more appicants than the specified maximum of applicants then execute this section
                 // Note that it would be unlikely there are more unless we make a mistake with our test data in which case this can be the case, else it is unlikely if we can get our concurrency control to work later on
                 if (currentNumberOfApplicants >= maximumNumberOfApplicants)
